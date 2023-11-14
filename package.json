@@ -9,9 +9,11 @@
     "prettier": "prettier",
     "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "build": "tsc",
-    "postbuild": "npx dts-buddy"
+    "postbuild": "npx dts-buddy",
+    "prepublish": "npm run build"
   },
   "type": "module",
+  "files": ["src"],
   "exports": {
     "./expand": {
       "import": "./src/expand.js",
