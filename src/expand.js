@@ -77,7 +77,7 @@ export default async function expand() {
       await unlink(tempFile)
     }
   } else {
-    console.log('usage: parse sam COMMAND [ARGS]')
+    console.log('usage: sam-expand sam COMMAND [ARGS]')
     process.exit(1)
   }
 }
