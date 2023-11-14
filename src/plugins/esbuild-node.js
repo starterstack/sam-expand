@@ -9,7 +9,7 @@ export default async function expand({ template, parse, lifecycle, command }) {
     template?.Metadata?.custom?.esbuild?.config,
     'Metadata.custom.esbuild.config missing'
   )
-  if (command === 'esbuild' && lifecycle === 'expand') {
+  if (command === 'build' && lifecycle === 'expand') {
     const esbuildConfig = parse(
       await readFile(template.Metadata.custom.esbuild.config, 'utf-8')
     )
