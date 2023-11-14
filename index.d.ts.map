@@ -2,17 +2,20 @@
 	"version": 3,
 	"file": "index.d.ts",
 	"names": [
-		"Lifecycle",
 		"Plugin",
-		"Spawn"
+		"Lifecycle",
+		"Spawn",
+		"command"
 	],
 	"sources": [
 		"src/expand.d.ts",
-		"src/spawn.d.ts"
+		"src/spawn.d.ts",
+		"src/plugins/esbuild-node.d.ts"
 	],
 	"sourcesContent": [
 		null,
+		null,
 		null
 	],
-	"mappings": ";;;aACYA,SAASA;aACTC,MAAMA;;;;;;;;MCDNC,KAAKA"
+	"mappings": ";;aAEYA,MAAMA;MADNC,SAASA;;;;;;;;;MCATC,KAAKA;;;;;;;;;;;;MAALA,KAAKA;MDALD,SAASA;;;;;;;;;;;;cEORE,OAAOA;MDPRD,KAAKA;MDALD,SAASA"
 }

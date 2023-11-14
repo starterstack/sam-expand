@@ -17,9 +17,17 @@
     "src"
   ],
   "exports": {
-    "./expand": {
-      "import": "./src/expand.js",
-      "types": "./src/expand.d.ts"
+    "./plugins": {
+      "import": "./src/plugins/index.js",
+      "types": "./src/plugins/index.d.ts"
+    },
+    "./plugins/run-script-hooks": {
+      "import": "./src/plugins/run-script-hooks.js",
+      "types": "./src/plugins/run-script-hooks.d.ts"
+    },
+    "./plugins/esbuild-node": {
+      "import": "./src/plugins/esbuild-node.js",
+      "types": "./src/plugins/esbuild-node.d.ts"
     }
   },
   "bin": {
