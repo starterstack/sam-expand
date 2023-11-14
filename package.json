@@ -13,7 +13,9 @@
     "prepublish": "npm run build"
   },
   "type": "module",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "exports": {
     "./expand": {
       "import": "./src/expand.js",
@@ -21,7 +23,7 @@
     }
   },
   "bin": {
-    "@startedstack/sam-expand": "./src/cli.js"
+    "sam-expand": "src/cli.js"
   },
   "keywords": [
     "serverless",
