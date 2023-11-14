@@ -12,14 +12,16 @@
     "postbuild": "npx dts-buddy",
     "prepublish": "npm run build"
   },
+  "types": "index.d.ts",
   "type": "module",
   "files": [
-    "src"
+    "src/**/*.js",
+    "index.d.ts"
   ],
   "exports": {
     "./plugins": {
-      "import": "./src/plugins/index.js",
-      "types": "./src/plugins/index.d.ts"
+      "import": "./src/plugins/types.js",
+      "types": "./src/plugins/types.d.ts"
     },
     "./plugins/run-script-hooks": {
       "import": "./src/plugins/run-script-hooks.js",
