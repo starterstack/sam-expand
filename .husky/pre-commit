@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#shellcheck disable=SC1090
+. "$(dirname "$0")/_/husky.sh"
+
+if [ -z "${npm_command}" ]; then
+  printf "\e[0m\e[1;33mconsider using npx cz or npm run cz instead of git commit\e[0m\n"
+fi
+
+npx --no-install lint-staged -r

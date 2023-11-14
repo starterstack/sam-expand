@@ -1,0 +1,64 @@
+{
+  "name": "@starterstack/sam-expand",
+  "version": "0.0.1",
+  "description": "A tool to give sam templates more power.",
+  "scripts": {
+    "prepare": "husky install",
+    "cz": "cz",
+    "tsc": "tsc",
+    "prettier": "prettier",
+    "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
+    "build": "tsc",
+    "postbuild": "npx dts-buddy"
+  },
+  "type": "module",
+  "exports": {
+    "./expand": {
+      "import": "./src/expand.js",
+      "types": "./src/expand.d.ts"
+    }
+  },
+  "bin": {
+    "@startedstack/sam-expand": "./src/cli.js"
+  },
+  "keywords": [
+    "serverless",
+    "sam",
+    "serverless-application-model"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starterstack/sam-expand.git"
+  },
+  "bugs": {
+    "url": "https://github.com/starterstack/sam-expand/issues"
+  },
+  "author": "James Kyburz <james.kyburz@gmail.com>",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 20 < 21",
+    "npm": ">= 10"
+  },
+  "lint-staged": {
+    "*.{md,yml,md,ts,js}": "prettier --write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "18.4.1",
+    "@commitlint/config-conventional": "18.4.0",
+    "@types/node": "20.9.0",
+    "commitizen": "4.3.0",
+    "dts-buddy": "0.4.0",
+    "husky": "8.0.3",
+    "lint-staged": "15.1.0",
+    "prettier-config-standard": "7.0.0",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "yaml-cfn": "0.3.2"
+  }
+}

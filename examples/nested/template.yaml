@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: !Ref Timeout
+    Tracing: Active
+    Architectures:
+      - arm64
+    Runtime: nodejs18.x
+    MemorySize: 128
+    PropagateTags: true
+  Api:
+    TracingEnabled: true
+Metadata:
+  plugins:
+    - ../../src/plugins/esbuild-node.mjs
+    - ../../src/plugins/run-script-hooks.mjs
+  custom:
+    esbuild:
+      config: ./esbuild-config.yaml
+    script:
+      hooks:
+        pre:build:
+          - echo: ['pre build!']
+          - echo: ['sleeping']
+          - sleep: ['10']
+          - echo: ['done']
+        post:build:
+          - echo: ['post build!']
+
+Description: |
+  hello
+  Sample SAM Template for hello
+
+Resources:
+  Functions:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./functions.yaml
+      Parameters:
+        Timeout: !Ref Timeout
+
+Parameters:
+  Timeout:
+    Type: Number
+    Description: Default timeout
+
+Outputs:
+  HelloWorldApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value: !GetAtt Functions.Outputs.HelloWorldApi
+  HelloWorldFunction:
+    Description: Hello World Lambda Function ARN
+    Value: !GetAtt Functions.Outputs.HelloWorldFunction
+  HelloWorldFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value: !GetAtt Functions.Outputs.HelloWorldFunctionIamRole
