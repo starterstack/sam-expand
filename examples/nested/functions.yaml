@@ -13,17 +13,10 @@ Globals:
     TracingEnabled: true
 Metadata:
   plugins:
-    - ../../src/plugins/esbuild-node.mjs
-    - ../../src/plugins/run-script-hooks.mjs
+    - '@starterstack/sam-expand/plugins/esbuild-node'
   custom:
     esbuild:
       config: ./esbuild-config.yaml
-    script:
-      hooks:
-        pre:build:
-          - echo: ['pre nested build!']
-        post:build:
-          - echo: ['post nested build!']
 
 Description: |
   hello

@@ -13,8 +13,8 @@ Globals:
     TracingEnabled: true
 Metadata:
   plugins:
-    - ../../src/plugins/esbuild-node.mjs
-    - ../../src/plugins/run-script-hooks.mjs
+    - '@starterstack/sam-expand/plugins/esbuild-node'
+    - '@starterstack/sam-expand/plugins/run-script-hooks'
   custom:
     esbuild:
       config: ./esbuild-config.yaml

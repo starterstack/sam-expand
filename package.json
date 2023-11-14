@@ -73,6 +73,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
+    "@starterstack/sam-expand": "0.0.5",
     "yaml-cfn": "0.3.2"
   }
 }
