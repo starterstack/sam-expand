@@ -4,14 +4,14 @@ version = 0.1
 
 [default]
 [default.global.parameters]
-stack_name = "hello"
+resolve_s3 = true
 
 [default.build.parameters]
 cached = true
 parallel = true
 
 [default.validate.parameters]
-#lint = true
+lint = true
 
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM CAPABILITY_AUTO_EXPAND"
@@ -19,20 +19,15 @@ confirm_changeset = true
 tags = "ManagedBy=dreamstack"
 resolve_s3 = true
 s3_prefix = "hello"
-region = "us-east-1"
-disable_rollback = true
-image_repositories = []
-parameter_overrides = "Timeout=\"4\""
 
 [default.package.parameters]
 resolve_s3 = true
 tags = "ManagedBy=dreamstack"
 
+[dev.package.parameters]
+resolve_s3 = true
+tags = "ManagedBy=dreamstack"
+region = "eu-west-1"
+
 [default.sync.parameters]
 watch = true
-
-[default.local_start_api.parameters]
-warm_containers = "EAGER"
-
-[default.local_start_lambda.parameters]
-warm_containers = "EAGER"

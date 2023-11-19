@@ -5,11 +5,11 @@ import assert from 'node:assert/strict'
 /** @type {import('../expand.js').Plugin} */
 export default async function runScriptHook({ template, spawn, lifecycle }) {
   assert.ok(
-    template?.Metadata?.custom?.script?.hooks,
-    'Metadata.custom.script.hooks missing'
+    template?.Metadata?.expand?.config?.script?.hooks,
+    'Metadata.expand.config.script.hooks missing'
   )
 
-  const hooks = template.Metadata.custom.script.hooks
+  const hooks = template.Metadata.expand.config.script.hooks
   const commands = hooks[lifecycle]
 
   if (commands) {

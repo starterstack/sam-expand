@@ -4,17 +4,36 @@ import assert from 'node:assert/strict'
 import path from 'node:path'
 
 /** @type {import('../expand.js').Plugin} */
-export default async function expand({ template, parse, lifecycle, command }) {
+export default async function expand({
+  template,
+  parse,
+  lifecycle,
+  command,
+  baseDirectory
+}) {
   assert.ok(
-    template?.Metadata?.custom?.esbuild?.config,
-    'Metadata.custom.esbuild.config missing'
+    template?.Metadata?.expand?.config?.esbuild?.config,
+    'Metadata.expand.config.esbuild.config missing'
   )
   if (command === 'build' && lifecycle === 'expand') {
     const esbuildConfig = parse(
-      await readFile(template.Metadata.custom.esbuild.config, 'utf-8')
+      await readFile(template.Metadata.expand.config.esbuild.config, 'utf-8')
     )
     for (const [key, value] of Object.entries(template.Resources ?? {})) {
       if (value?.Type !== 'AWS::Serverless::Function') {
+        continue
+      }
+      const packageType = value?.PackageType ?? 'Zip'
+      if (packageType !== 'Zip') {
+        continue
+      }
+      if (value?.InlineCode) {
+        continue
+      }
+      if (typeof value?.CodeUri !== 'string') {
+        continue
+      }
+      if (value?.CodeUri?.startsWith('s3:')) {
         continue
       }
       assert.ok(
@@ -33,13 +52,22 @@ export default async function expand({ template, parse, lifecycle, command }) {
       value.Metadata.BuildMethod = 'esbuild'
       value.Metadata.BuildProperties = {
         ...esbuildConfig,
-        EntryPoints: [await findHandlerEntry({ codeUri, handler })]
+        EntryPoints: [
+          await findHandlerEntry({ codeUri, handler, baseDirectory })
+        ]
       }
     }
   }
 }
 
-async function findHandlerEntry({ codeUri, handler }) {
+/**
+ * @param {{ codeUri: string, baseDirectory?: string, handler: string }} options
+ * @returns {Promise<string>}
+ **/
+async function findHandlerEntry({ codeUri, baseDirectory, handler }) {
+  if (baseDirectory) {
+    codeUri = path.join(baseDirectory, codeUri)
+  }
   const filename = handler.split('.')[0]
 
   for (const extension of ['.js', '.mjs', '.ts', '.mts']) {
@@ -51,5 +79,3 @@ async function findHandlerEntry({ codeUri, handler }) {
   }
   throw new Error(`no entry point found for ${handler}`)
 }
-
-export const command = 'esbuild'

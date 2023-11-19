@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "allowJs": true,
     "lib": ["ES2022"],
     "moduleResolution": "node16",

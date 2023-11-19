@@ -1,1 +1,1 @@
-export type Plugin = import('../expand.js').Plugin
+export type Plugin = import('../expand.js').Plugin;
