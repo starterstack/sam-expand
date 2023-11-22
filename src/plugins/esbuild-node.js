@@ -23,19 +23,6 @@ export default async function expand({
       if (value?.Type !== 'AWS::Serverless::Function') {
         continue
       }
-      const packageType = value?.PackageType ?? 'Zip'
-      if (packageType !== 'Zip') {
-        continue
-      }
-      if (value?.InlineCode) {
-        continue
-      }
-      if (typeof value?.CodeUri !== 'string') {
-        continue
-      }
-      if (value?.CodeUri?.startsWith('s3:')) {
-        continue
-      }
       assert.ok(
         !value?.Metadata?.BuildMethod,
         `lambda ${key} already has Metadata.BuildMethod specified`
@@ -44,7 +31,21 @@ export default async function expand({
         !value?.Metadata?.BuildProperties,
         `lambda ${key} already has Metadata.BuildProperties specified`
       )
-      const handler = value?.Properties?.Handler
+      const properties = value?.Properties
+      const packageType = properties?.PackageType ?? 'Zip'
+      if (packageType !== 'Zip') {
+        continue
+      }
+      if (properties?.InlineCode) {
+        continue
+      }
+      if (typeof properties?.CodeUri !== 'string') {
+        continue
+      }
+      if (properties?.CodeUri?.startsWith('s3:')) {
+        continue
+      }
+      const handler = properties?.Handler
       assert.ok(handler, `lambda ${key} missing handler`)
       const codeUri = value?.Properties?.CodeUri
       assert.ok(codeUri, `lambda ${key} missing codeUri`)

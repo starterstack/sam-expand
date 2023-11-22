@@ -7,6 +7,7 @@ import spawn from './spawn.js'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import os from 'node:os'
+import { parse as tomlParse } from '@ltd/j-toml'
 
 const windows = os.platform() === 'win32'
 
@@ -72,15 +73,31 @@ export default async function expand() {
     return await spawn('sam', ['--help'])
   }
 
-  const region = String(values.region ?? 'us-east-1')
+  const configFileSettings = await getConfigFileSettings(
+    values['config-file']?.toString()
+  )
+  const config = configFileSettings
+    ? configFileSettings.type === 'toml'
+      ? tomlParse(await readFile(configFileSettings.filePath, 'utf-8'))
+      : yamlParse(await readFile(configFileSettings.filePath, 'utf-8'))
+    : null
+
+  const command = positionals?.[0]
+
   const configEnv = String(values.configEnv ?? 'default')
+  const region = String(
+    values.region ??
+      process.env.AWS_REGION ??
+      config?.[configEnv ?? 'default']?.command?.parameters?.region ??
+      config?.[configEnv ?? 'default']?.global?.parameters?.region ??
+      process.env.AWS_DEFAULT_REGION ??
+      'us-east-1'
+  )
   const baseDirectory = values?.['base-dir']?.toString()
 
   process.env.AWS_REGION = region
 
   const argv = process.argv.slice(2)
-
-  const command = positionals?.[0]
 
   const templateArgumentGiven = ['-t', '--template', '--template-file'].find(
     (x) => argv.includes(x)
@@ -225,7 +242,7 @@ async function runPlugins({
   configEnv,
   baseDirectory
 }) {
-  for (const plugin of template.Metadata?.expand?.plugins ?? []) {
+  for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
     const pluginPath = plugin?.startsWith('.')
       ? path.join(process.env.INIT_CWD ?? process.cwd(), plugin)
       : plugin
@@ -246,12 +263,32 @@ async function runPlugins({
   }
 }
 
+/** @param { string | undefined } filePath
+ * @returns {Promise<null | { filePath: string, type: 'yaml' | 'toml' }>}
+ **/
+async function getConfigFileSettings(filePath) {
+  filePath ||= await findFiles([
+    'samconfig.toml',
+    'samconfig.yaml',
+    'samconfig.yml'
+  ])
+  if (!filePath) return null
+  const type = path.extname(filePath) === '.toml' ? 'toml' : 'yaml'
+  return { filePath, type }
+}
+
 /** @returns {Promise<string>} */
 async function findTemplateFile() {
-  for (const templatePath of ['template.yaml', 'template.yaml']) {
+  return await findFiles(['template.yaml', 'template.yml'])
+}
+
+/** @param {string[]} filePaths }
+ * @returns {Promise<string>} */
+async function findFiles(filePaths) {
+  for (const filePath of filePaths) {
     try {
-      await stat(templatePath)
-      return templatePath
+      await stat(filePath)
+      return filePath
     } catch {}
   }
   return ''
