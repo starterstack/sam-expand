@@ -134,10 +134,6 @@ export default async function expand() {
 
   const baseDirectory = values?.['base-dir']?.toString()
 
-  if (region) {
-    process.env.AWS_REGION = region
-  }
-
   const argv = process.argv.slice(2)
 
   const templateArgumentGiven = ['-t', '--template', '--template-file'].find(

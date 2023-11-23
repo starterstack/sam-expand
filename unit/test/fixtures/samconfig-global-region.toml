@@ -3,13 +3,7 @@
 version = 0.1
 
 [default.global.parameters]
-region = "eu-north-1"
-
-[dev.global.parameters]
-region = "us-east-2"
-
-[default.validate.parameters]
 region = "eu-central-1"
 
-[dev.validate.parameters]
+[dev.global.parameters]
 region = "eu-west-1"
