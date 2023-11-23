@@ -73,6 +73,7 @@ const expandSchema = {
  * @return {Promise<void>}
  **/
 export default async function expand() {
+  debugger
   const { values, positionals } = parseArgs({
     options: {
       help: {
@@ -103,7 +104,8 @@ export default async function expand() {
       }
     },
     allowPositionals: true,
-    strict: false
+    strict: false,
+    args: process.argv.slice(2)
   })
 
   if (values.help) {
