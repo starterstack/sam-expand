@@ -122,12 +122,12 @@ export default async function expand() {
 
   const command = positionals?.[0]
 
-  const configEnv = String(values.configEnv ?? 'default')
+  const configEnv = String(values['config-env'] ?? 'default')
 
   /** @type {string | undefined } */
   const region =
     values.region ??
-    config?.[configEnv ?? 'default']?.command?.parameters?.region ??
+    config?.[configEnv ?? 'default']?.[command]?.parameters?.region ??
     config?.[configEnv ?? 'default']?.global?.parameters?.region ??
     process.env.AWS_REGION ??
     process.env.AWS_DEFAULT_REGION
@@ -247,7 +247,7 @@ async function expandAll({
           data: metadata,
           errors: validate.errors
         })
-        console.log(betterErrors)
+        console.error(betterErrors)
         throw new TypeError('schema validation failed')
       }
     }

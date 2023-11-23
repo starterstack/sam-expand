@@ -37,9 +37,9 @@ test('invalid schema metadata', async (t) => {
     await t.test(
       `sam ${argv.slice(2).join(' ').replace(__dirname, '.')}`,
       async (_t) => {
-        const log = console.log
+        const log = console.error
         const mockLog = mock.fn()
-        console.log = mockLog
+        console.error = mockLog
         const expand = await esmock('../../src/expand.js', {
           'node:process': {
             argv
@@ -64,7 +64,7 @@ test('invalid schema metadata', async (t) => {
         ])
 
         mock.restoreAll()
-        console.log = log
+        console.error = log
       }
     )
   }
