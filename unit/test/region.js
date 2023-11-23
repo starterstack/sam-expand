@@ -1,0 +1,101 @@
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import esmock from 'esmock'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+import { parseArgs } from 'node:util'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+test('empty template with no metadata', async (t) => {
+  /*
+  const region =
+    values.region ??
+    config?.[configEnv ?? 'default']?.command?.parameters?.region ??
+    config?.[configEnv ?? 'default']?.global?.parameters?.region ??
+    process.env.AWS_REGION ??
+    process.env.AWS_DEFAULT_REGION
+
+  */
+
+  await t.test('no region', async (_t) => {
+    let region
+    const expand = await esmock('../../src/expand.js', {
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'empty.yml')
+        ],
+        env: {
+          get AWS_REGION() {},
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(region, undefined)
+  })
+
+  await t.test('AWS_REGION', async (_t) => {
+    let region
+    const expand = await esmock('../../src/expand.js', {
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'empty.yml')
+        ],
+        env: {
+          get AWS_REGION() {
+            return 'us-east-1'
+          },
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(region, 'us-east-1')
+  })
+
+  await t.test('AWS_DEFAULT_REGION', async (_t) => {
+    let region
+    const expand = await esmock('../../src/expand.js', {
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'empty.yml')
+        ],
+        env: {
+          get AWS_REGION() {},
+          get AWS_DEFAULT_REGION() {
+            return 'us-east-2'
+          },
+
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(region, 'us-east-2')
+  })
+})

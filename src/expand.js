@@ -73,7 +73,6 @@ const expandSchema = {
  * @return {Promise<void>}
  **/
 export default async function expand() {
-  debugger
   const { values, positionals } = parseArgs({
     options: {
       help: {

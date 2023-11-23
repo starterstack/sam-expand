@@ -19,25 +19,25 @@ test('empty template with no metadata', async (t) => {
     {
       expected: [
         'sam',
-        ['build', '-t', path.join(__dirname, 'fixtures', 'basic.expanded.yml')]
+        ['build', '-t', path.join(__dirname, 'fixtures', 'empty.expanded.yml')]
       ],
       argv: [
         ...process.argv,
         'build',
         '-t',
-        path.join(__dirname, 'fixtures', 'basic.yml')
+        path.join(__dirname, 'fixtures', 'empty.yml')
       ]
     },
     {
       expected: [
         'sam',
-        ['validate', '-t', path.join(__dirname, 'fixtures', 'basic.yml')]
+        ['validate', '-t', path.join(__dirname, 'fixtures', 'empty.yml')]
       ],
       argv: [
         ...process.argv,
         'validate',
         '-t',
-        path.join(__dirname, 'fixtures/basic.yml')
+        path.join(__dirname, 'fixtures/empty.yml')
       ]
     },
     {
@@ -46,7 +46,7 @@ test('empty template with no metadata', async (t) => {
         [
           'validate',
           '-t',
-          path.join(__dirname, 'fixtures', 'basic.yml'),
+          path.join(__dirname, 'fixtures', 'empty.yml'),
           '--lint'
         ]
       ],
@@ -54,7 +54,7 @@ test('empty template with no metadata', async (t) => {
         ...process.argv,
         'validate',
         '-t',
-        path.join(__dirname, 'fixtures', 'basic.yml'),
+        path.join(__dirname, 'fixtures', 'empty.yml'),
         '--lint'
       ]
     }
