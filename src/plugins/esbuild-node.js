@@ -3,8 +3,22 @@ import { readFile, stat } from 'node:fs/promises'
 import assert from 'node:assert/strict'
 import path from 'node:path'
 
+/** @type {import('./types.js').PluginSchema<{ config: string }>} */
+export const schema = {
+  type: 'object',
+  properties: {
+    config: {
+      type: 'string'
+    }
+  },
+  required: ['config'],
+  additionalProperties: false
+}
+
+export const metadataConfig = 'esbuild'
+
 /** @type {import('../expand.js').Plugin} */
-export default async function expand({
+export const lifecycle = async function expand({
   template,
   parse,
   lifecycle,
@@ -15,6 +29,7 @@ export default async function expand({
     template?.Metadata?.expand?.config?.esbuild?.config,
     'Metadata.expand.config.esbuild.config missing'
   )
+
   if (command === 'build' && lifecycle === 'expand') {
     const esbuildConfig = parse(
       await readFile(template.Metadata.expand.config.esbuild.config, 'utf-8')

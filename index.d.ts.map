@@ -2,17 +2,30 @@
 	"version": 3,
 	"file": "index.d.ts",
 	"names": [
+		"ExpandSchema",
 		"Lifecycle",
 		"Plugin",
-		"Spawn"
+		"PluginSchema",
+		"Spawn",
+		"metadataConfig",
+		"schema",
+		"lifecycle",
+		"Hook",
+		"HookSchema"
 	],
 	"sources": [
 		"src/expand.d.ts",
-		"src/spawn.d.ts"
+		"src/spawn.d.ts",
+		"src/plugins/run-script-hooks.d.ts",
+		"src/plugins/types.d.ts",
+		"src/plugins/esbuild-node.d.ts"
 	],
 	"sourcesContent": [
 		null,
+		null,
+		null,
+		null,
 		null
 	],
-	"mappings": ";;;aACYA,SAASA;aACTC,MAAMA;;;;;;;;;;;;MCDNC,KAAKA;;;;;aDCLD,MAAMA;MADND,SAASA;;;;;;;;;;;;;MCATE,KAAKA;;;;;;;;;;;;;;;;MAALA,KAAKA;MDALF,SAASA;;;;;;;;;;;;;;;;MCATE,KAAKA;MDALF,SAASA"
+	"mappings": ";;;aACYA,YAAYA;;;;;;aAMZC,SAASA;aACTC,MAAMA;;;;;;;;;;;;aAYNC,YAAYA;MCnBZC,KAAKA;;;;;aDOLF,MAAMA;aAYNC,YAAYA;MAbZF,SAASA;;;;;;;;;;;;;;MCNTG,KAAKA;;;;;cCDJC,cAAcA;cACdC,MAAMA;cACNC,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MFGVR,SAASA;MACTC,MAAMA;;;;;;;;;;;;;MGPNC,YAAYA;MFAZC,KAAKA;;;;;cGDJE,MAAMA;;;cAGND,cAAcA;cACdE,SAASA;MJgBVJ,YAAYA;MAbZF,SAASA;MACTC,MAAMA;;;;;;;;;;;;;MCPNE,KAAKA"
 }

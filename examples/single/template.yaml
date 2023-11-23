@@ -19,7 +19,7 @@ Globals:
     Tracing: Active
     Architectures:
       - arm64
-    Runtime: nodejs18.x
+    Runtime: nodejs20.x
     MemorySize: 128
     PropagateTags: true
   Api:
@@ -29,21 +29,17 @@ Metadata:
     plugins:
       - '../../src/plugins/esbuild-node.js'
       - '../../src/plugins/run-script-hooks.js'
-      - '../../src/plugins/variable-overrides.js'
     config:
-      variable-overrides:
-        mappings: ./mappings.mjs
-        parameters: ./parameters.mjs
-        stackName: ./stackname.mjs
-        tags: ./tags.mjs
       esbuild:
         config: ./esbuild-config.yaml
       script:
         hooks:
           pre:build:
-            - echo: ['pre build!']
+            - command: 'echo'
+              args: ['pre build!']
           post:build:
-            - echo: ['post build!']
+            - command: 'echo'
+              args: ['post build!']
 
 Description: |
   hello

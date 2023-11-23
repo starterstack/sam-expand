@@ -8,6 +8,9 @@ import path from 'node:path'
 import { parseArgs } from 'node:util'
 import os from 'node:os'
 import { parse as tomlParse } from '@ltd/j-toml'
+import Ajv from 'ajv'
+import { betterAjvErrors } from '@apideck/better-ajv-errors'
+import assert from 'node:assert/strict'
 
 const windows = os.platform() === 'win32'
 
@@ -17,6 +20,7 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
 }
 
 /**
+ * @typedef {import('ajv').JSONSchemaType<{ expand: { plugins?: string[], config?: Record<string, any>} } >} ExpandSchema
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand'} Lifecycle
  * @typedef {(options: {
  *   template: any,
@@ -26,11 +30,44 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
  *   dump: import('yaml-cfn').yamlDump,
  *   spawn: import('./spawn.js').Spawn,
  *   configEnv: string,
- *   region: string,
+ *   region?: string,
  *   baseDirectory?: string
  *   lifecycle: Lifecycle
  * }) => Promise<void>} Plugin
  **/
+
+/**
+ * @template T
+ * @typedef {import('ajv').JSONSchemaType<T>} PluginSchema
+ **/
+
+/** @type {ExpandSchema} */
+const expandSchema = {
+  type: 'object',
+  required: [],
+  properties: {
+    expand: {
+      required: [],
+      type: 'object',
+      properties: {
+        plugins: {
+          type: 'array',
+          items: {
+            type: 'string'
+          },
+          additionalProperties: false,
+          nullable: true
+        },
+        config: {
+          type: 'object',
+          additionalProperties: false,
+          nullable: true
+        }
+      },
+      additionalProperties: false
+    }
+  }
+}
 
 /**
  * @return {Promise<void>}
@@ -85,17 +122,20 @@ export default async function expand() {
   const command = positionals?.[0]
 
   const configEnv = String(values.configEnv ?? 'default')
-  const region = String(
+
+  /** @type {string | undefined } */
+  const region =
     values.region ??
-      process.env.AWS_REGION ??
-      config?.[configEnv ?? 'default']?.command?.parameters?.region ??
-      config?.[configEnv ?? 'default']?.global?.parameters?.region ??
-      process.env.AWS_DEFAULT_REGION ??
-      'us-east-1'
-  )
+    config?.[configEnv ?? 'default']?.command?.parameters?.region ??
+    config?.[configEnv ?? 'default']?.global?.parameters?.region ??
+    process.env.AWS_REGION ??
+    process.env.AWS_DEFAULT_REGION
+
   const baseDirectory = values?.['base-dir']?.toString()
 
-  process.env.AWS_REGION = region
+  if (region) {
+    process.env.AWS_REGION = region
+  }
 
   const argv = process.argv.slice(2)
 
@@ -113,6 +153,7 @@ export default async function expand() {
 
   /** @type {string[]} */
   const tempFiles = []
+
   const { template, expandedPath } = await expandAll({
     command,
     argv,
@@ -167,7 +208,7 @@ export default async function expand() {
 }
 
 /**
- * @param {{ templateFile: string, tempFiles: string[], command: string, argv: string[], region: string, configEnv: string, baseDirectory?: string }} options
+ * @param {{ templateFile: string, tempFiles: string[], command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string, nested?: boolean }} options
  * @return {Promise<{ expandedPath: string, template: any }>}
  **/
 async function expandAll({
@@ -177,7 +218,8 @@ async function expandAll({
   argv,
   configEnv,
   region,
-  baseDirectory
+  baseDirectory,
+  nested
 }) {
   if (!templateFile) {
     return {
@@ -187,6 +229,28 @@ async function expandAll({
   }
   const templateData = await readFile(templateFile, 'utf-8')
   const template = yamlParse(templateData)
+
+  if (!nested) {
+    if (template.Metadata?.expand) {
+      await applyPluginSchemas({ template })
+      const ajv = new Ajv.default({ strict: false, allErrors: true })
+      const validate = ajv.compile(expandSchema)
+      const metadata = {
+        expand: template.Metadata.expand
+      }
+      if (!validate(metadata)) {
+        /** @type {any} */
+        const anySchema = expandSchema
+        const betterErrors = betterAjvErrors({
+          schema: anySchema,
+          data: metadata,
+          errors: validate.errors
+        })
+        console.log(betterErrors)
+        throw new TypeError('schema validation failed')
+      }
+    }
+  }
 
   await runPlugins({
     template,
@@ -207,7 +271,8 @@ async function expandAll({
           argv,
           configEnv,
           region,
-          baseDirectory
+          baseDirectory,
+          nested: true
         })
         value.Properties.Location = expandedPath
       }
@@ -230,7 +295,7 @@ async function expandAll({
 }
 
 /**
- * @param {{ template: any, lifecycle: Lifecycle, command: string, argv: string[], region: string, configEnv: string, baseDirectory?: string }} options
+ * @param {{ template: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string }} options
  * @returns {Promise<void>}
  **/
 async function runPlugins({
@@ -242,12 +307,18 @@ async function runPlugins({
   configEnv,
   baseDirectory
 }) {
+  expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
     const pluginPath = plugin?.startsWith('.')
       ? path.join(process.env.INIT_CWD ?? process.cwd(), plugin)
       : plugin
-    /** @type {{ default: Plugin }}*/
-    const { default: pluginModule } = await import(pluginPath)
+    /** @type {{ lifecycle: Plugin }}*/
+    const { lifecycle: pluginModule } = await import(pluginPath)
+    assert.equal(
+      pluginModule?.constructor?.name,
+      'AsyncFunction',
+      `plugin: ${plugin} does not export const lifecycle = async function(plugin: Plugin) {}`
+    )
     await pluginModule({
       template,
       parse: yamlParse,
@@ -260,6 +331,44 @@ async function runPlugins({
       configEnv,
       baseDirectory
     })
+  }
+}
+
+/**
+ * @param {{ template: any }} options
+ * @returns {Promise<void>}
+ **/
+async function applyPluginSchemas({ template }) {
+  expandSchema.properties.expand.properties.config.properties ||= {}
+  for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
+    const pluginPath = plugin?.startsWith('.')
+      ? path.join(process.env.INIT_CWD ?? process.cwd(), plugin)
+      : plugin
+    /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
+    const { metadataConfig, schema } = await import(pluginPath)
+    assert.equal(
+      typeof metadataConfig,
+      'string',
+      `plugin: ${plugin} does not export const metadataConfig: string`
+    )
+    assert.equal(
+      typeof schema,
+      'object',
+      `plugin: ${plugin} does not export const schema: PluginSchema<T>`
+    )
+    if (
+      !expandSchema.properties.expand.properties.config.properties[
+        metadataConfig
+      ]
+    ) {
+      expandSchema.properties.expand.properties.config.properties[
+        metadataConfig
+      ] = schema
+    } else {
+      throw new Error(
+        `duplicate config ${metadataConfig} found in plugin: ${plugin}`
+      )
+    }
   }
 }
 
