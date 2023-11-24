@@ -1,0 +1,9 @@
+version: 0.1
+default:
+  global:
+    parameters:
+      region: eu-central-1
+dev:
+  global:
+    parameters:
+      region: eu-west-1

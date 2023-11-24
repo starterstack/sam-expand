@@ -3,7 +3,6 @@ import assert from 'node:assert/strict'
 import esmock from 'esmock'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { parseArgs } from 'node:util'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -283,6 +282,148 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'region.yml'),
           '--config-file',
           path.join(__dirname, 'fixtures', 'samconfig-global-region.toml'),
+          '--config-env',
+          'dev'
+        ],
+        env: {
+          get AWS_REGION() {},
+          get AWS_DEFAULT_REGION() {},
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(mockLifecycle.mock.calls[0].arguments[0].region, 'eu-west-1')
+  })
+
+  await t.test('command region override yaml (default)', async (_t) => {
+    const mockLifecycle = mock.fn()
+    const expand = await esmock.p('../../src/expand.js', {
+      './fixtures/do-nothing-plugin.mjs': {
+        async lifecycle(plugin) {
+          mockLifecycle(plugin)
+        }
+      },
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'region.yml'),
+          '--config-file',
+          path.join(__dirname, 'fixtures', 'samconfig-command-region.yaml')
+        ],
+        env: {
+          get AWS_REGION() {},
+          get AWS_DEFAULT_REGION() {},
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(
+      mockLifecycle.mock.calls[0].arguments[0].region,
+      'eu-central-1'
+    )
+  })
+
+  await t.test('command region override yaml (dev)', async (_t) => {
+    const mockLifecycle = mock.fn()
+    const expand = await esmock.p('../../src/expand.js', {
+      './fixtures/do-nothing-plugin.mjs': {
+        async lifecycle(plugin) {
+          mockLifecycle(plugin)
+        }
+      },
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'region.yml'),
+          '--config-file',
+          path.join(__dirname, 'fixtures', 'samconfig-command-region.yaml'),
+          '--config-env',
+          'dev'
+        ],
+        env: {
+          get AWS_REGION() {},
+          get AWS_DEFAULT_REGION() {},
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(mockLifecycle.mock.calls[0].arguments[0].region, 'eu-west-1')
+  })
+
+  await t.test('global region override yaml (default)', async (_t) => {
+    const mockLifecycle = mock.fn()
+    const expand = await esmock.p('../../src/expand.js', {
+      './fixtures/do-nothing-plugin.mjs': {
+        async lifecycle(plugin) {
+          mockLifecycle(plugin)
+        }
+      },
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'region.yml'),
+          '--config-file',
+          path.join(__dirname, 'fixtures', 'samconfig-global-region.yaml')
+        ],
+        env: {
+          get AWS_REGION() {},
+          get AWS_DEFAULT_REGION() {},
+          /** @param {string} value */
+          set AWS_REGION(value) {
+            region = value
+          }
+        }
+      },
+      async '../../src/spawn.js'() {}
+    })
+    await expand()
+    assert.equal(
+      mockLifecycle.mock.calls[0].arguments[0].region,
+      'eu-central-1'
+    )
+  })
+
+  await t.test('global region override yaml (dev)', async (_t) => {
+    const mockLifecycle = mock.fn()
+    const expand = await esmock.p('../../src/expand.js', {
+      './fixtures/do-nothing-plugin.mjs': {
+        async lifecycle(plugin) {
+          mockLifecycle(plugin)
+        }
+      },
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'validate',
+          '-t',
+          path.join(__dirname, 'fixtures', 'region.yml'),
+          '--config-file',
+          path.join(__dirname, 'fixtures', 'samconfig-global-region.yaml'),
           '--config-env',
           'dev'
         ],
