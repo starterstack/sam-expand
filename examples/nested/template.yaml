@@ -26,9 +26,11 @@ Metadata:
       script:
         hooks:
           pre:build:
-            - echo: ['pre build!']
+            - command: echo
+              args: ['pre build!']
           post:build:
-            - echo: ['post build!']
+            - command: echo
+              args: ['post build!']
 
 Description: |
   hello
