@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/run-script-hooks.js
+    config:
+      script:
+        hooks:
+          pre:build:
+            - command: echo
+              args:
+                - pre:build
+          post:build:
+            - command: echo
+              args:
+                - post:build
+          pre:package:
+            - command: echo
+              args:
+                - pre:package
+          post:package:
+            - command: echo
+              args:
+                - post:package
+          pre:delete:
+            - command: echo
+              args:
+                - pre:delete
+          post:delete:
+            - command: echo
+              args:
+                - post:delete
+          pre:deploy:
+            - command: echo
+              args:
+                - pre:deploy
+          post:deploy:
+            - command: echo
+              args:
+                - post:deploy
+Resources:
+  WaitConditionHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle

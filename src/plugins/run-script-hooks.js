@@ -2,7 +2,7 @@
 
 import assert from 'node:assert/strict'
 
-/** @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy'} Hook */
+/** @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook */
 /** @typedef {import('./types.js').PluginSchema<{
  *    hooks: {
  *      [keyof(Hook)]?: Array<{ command: string, args: string[] }>
@@ -16,7 +16,9 @@ const hooks = [
   'pre:package',
   'post:package',
   'pre:deploy',
-  'post:deploy'
+  'post:deploy',
+  'pre:delete',
+  'post:delete'
 ]
 
 export const metadataConfig = 'script'
