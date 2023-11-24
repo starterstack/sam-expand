@@ -1,29 +1,45 @@
 AWSTemplateFormatVersion: 2010-09-09
-Transform: AWS::Serverless-2016-10-31
+Transform:
+  - AWS::Serverless-2016-10-31
+  - AWS::LanguageExtensions
+Mappings:
+  awsAccounts:
+    111111111111:
+      stage: local
+Conditions:
+  isProductionAccount: !Equals
+    - !FindInMap
+      - awsAccounts
+      - !Ref 'AWS::AccountId'
+      - stage
+    - prod
 Globals:
   Function:
     Timeout: !Ref Timeout
     Tracing: Active
     Architectures:
       - arm64
-    Runtime: nodejs18.x
+    Runtime: nodejs20.x
     MemorySize: 128
     PropagateTags: true
   Api:
     TracingEnabled: true
 Metadata:
-  plugins:
-    - '@starterstack/sam-expand/plugins/esbuild-node'
-    - '@starterstack/sam-expand/plugins/run-script-hooks'
-  custom:
-    esbuild:
-      config: ./esbuild-config.yaml
-    script:
-      hooks:
-        pre:build:
-          - echo: ['pre build!']
-        post:build:
-          - echo: ['post build!']
+  expand:
+    plugins:
+      - '../../src/plugins/esbuild-node.js'
+      - '../../src/plugins/run-script-hooks.js'
+    config:
+      esbuild:
+        config: ./esbuild-config.yaml
+      script:
+        hooks:
+          pre:build:
+            - command: 'echo'
+              args: ['pre build!']
+          post:build:
+            - command: 'echo'
+              args: ['post build!']
 
 Description: |
   hello
@@ -31,6 +47,7 @@ Description: |
 
 Resources:
   HelloWorldFunction:
+    Condition: isProductionAccount
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: hello-world/
@@ -46,15 +63,27 @@ Parameters:
   Timeout:
     Type: Number
     Description: Default timeout
+  DatabaseName:
+    Type: String
+    Description: Name of the database
+
+Rules:
+  ValidateDatabaseName:
+    Assertions:
+      - Assert: !Not [!Equals [!Ref DatabaseName, ""]]
+        AssertDescription: "DatabaseName must not be empty."
 
 Outputs:
   HelloWorldApi:
+    Condition: isProductionAccount
     Description: API Gateway endpoint URL for Prod stage for Hello World function
     Value: !Sub >-
       https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
   HelloWorldFunction:
+    Condition: isProductionAccount
     Description: Hello World Lambda Function ARN
     Value: !GetAtt HelloWorldFunction.Arn
   HelloWorldFunctionIamRole:
+    Condition: isProductionAccount
     Description: Implicit IAM Role created for Hello World function
     Value: !GetAtt HelloWorldFunctionRole.Arn

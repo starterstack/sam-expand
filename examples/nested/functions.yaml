@@ -12,11 +12,12 @@ Globals:
   Api:
     TracingEnabled: true
 Metadata:
-  plugins:
-    - '@starterstack/sam-expand/plugins/esbuild-node'
-  custom:
-    esbuild:
-      config: ./esbuild-config.yaml
+  expand:
+    plugins:
+      - '../../src/plugins/esbuild-node.js'
+    config:
+      esbuild:
+        config: ./esbuild-config.yaml
 
 Description: |
   hello

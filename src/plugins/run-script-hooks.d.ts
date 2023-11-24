@@ -1,8 +1,14 @@
-export default function runScriptHook(options: {
-  template: any
-  command: string
-  parse: typeof import('yaml-cfn').yamlParse
-  dump: typeof import('yaml-cfn').yamlDump
-  spawn: import('../spawn.js').Spawn
-  lifecycle: import('../expand.js').Lifecycle
-}): Promise<void>
+export const metadataConfig: "script";
+export const schema: HookSchema;
+export const lifecycle: import('../expand.js').Plugin;
+export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
+export type HookSchema = import('./types.js').PluginSchema<{
+    hooks: {
+        [keyof(Hook)]?: Array<{
+            command: string;
+            args: string[];
+        }>;
+    };
+}>;
+declare const hooks: Hook[];
+export {};

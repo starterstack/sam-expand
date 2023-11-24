@@ -16,18 +16,13 @@ lint = true
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM CAPABILITY_AUTO_EXPAND"
 confirm_changeset = true
-tags = "ManagedBy=dreamstack"
 resolve_s3 = true
-s3_prefix = "hello"
 
 [default.package.parameters]
 resolve_s3 = true
-tags = "ManagedBy=dreamstack"
 
 [dev.package.parameters]
 resolve_s3 = true
-tags = "ManagedBy=dreamstack"
-region = "eu-west-1"
 
 [default.sync.parameters]
 watch = true

@@ -12,18 +12,25 @@ Globals:
   Api:
     TracingEnabled: true
 Metadata:
-  plugins:
-    - '@starterstack/sam-expand/plugins/esbuild-node'
-    - '@starterstack/sam-expand/plugins/run-script-hooks'
-  custom:
-    esbuild:
-      config: ./esbuild-config.yaml
-    script:
-      hooks:
-        pre:build:
-          - echo: ['pre build!']
-        post:build:
-          - echo: ['post build!']
+  cfn-lint:
+    config:
+      ignore_checks:
+        - W3002
+  expand:
+    plugins:
+      - '../../src/plugins/esbuild-node.js'
+      - '../../src/plugins/run-script-hooks.js'
+    config:
+      esbuild:
+        config: ./esbuild-config.yaml
+      script:
+        hooks:
+          pre:build:
+            - command: echo
+              args: ['pre build!']
+          post:build:
+            - command: echo
+              args: ['post build!']
 
 Description: |
   hello

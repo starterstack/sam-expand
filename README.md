@@ -6,9 +6,9 @@ A tool to give sam templates more power.
 
 ```sh
 npm install @starterstack/sam-expand
-npx sam-expand sam build
-npx sam-expand sam package
-npx sam-expand sam deploy \
+npx sam-expand build
+npx sam-expand package
+npx sam-expand deploy \
   --guided \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
 ```

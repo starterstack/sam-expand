@@ -5,12 +5,11 @@
   "scripts": {
     "prepare": "husky install",
     "cz": "cz",
-    "tsc": "tsc",
-    "prettier": "prettier",
     "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "build": "tsc",
     "postbuild": "npx dts-buddy",
-    "prepublish": "npm run build"
+    "test": "npm --prefix unit t",
+    "prepublish": "npm test && npm run build"
   },
   "types": "index.d.ts",
   "type": "module",
@@ -19,6 +18,10 @@
     "index.d.ts"
   ],
   "exports": {
+    ".": {
+      "import": "./src/expand.js",
+      "types": "./src/expand.d.ts"
+    },
     "./plugins": {
       "import": "./src/plugins/types.js",
       "types": "./src/plugins/types.d.ts"
@@ -64,15 +67,22 @@
   "devDependencies": {
     "@commitlint/cli": "18.4.1",
     "@commitlint/config-conventional": "18.4.0",
-    "@types/node": "20.9.0",
+    "@types/js-yaml": "4.0.9",
+    "@types/json-schema": "7.0.15",
+    "@types/node": "20.9.1",
     "commitizen": "4.3.0",
     "dts-buddy": "0.4.0",
+    "esmock": "2.6.0",
     "husky": "8.0.3",
     "lint-staged": "15.1.0",
     "prettier-config-standard": "7.0.0",
     "typescript": "5.2.2"
   },
   "dependencies": {
+    "@apideck/better-ajv-errors": "0.3.6",
+    "@ltd/j-toml": "1.38.0",
+    "ajv": "8.12.0",
+    "js-yaml": "4.1.0",
     "yaml-cfn": "0.3.2"
   }
 }

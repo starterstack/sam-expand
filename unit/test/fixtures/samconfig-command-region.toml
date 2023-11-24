@@ -1,0 +1,15 @@
+# More information about the configuration file can be found here:
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
+version = 0.1
+
+[default.global.parameters]
+region = "eu-north-1"
+
+[dev.global.parameters]
+region = "us-east-2"
+
+[default.validate.parameters]
+region = "eu-central-1"
+
+[dev.validate.parameters]
+region = "eu-west-1"

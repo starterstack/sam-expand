@@ -1,0 +1,15 @@
+version: 0.1
+default:
+  global:
+    parameters:
+      region: eu-north-1
+  validate:
+    parameters:
+      region: eu-central-1
+dev:
+  global:
+    parameters:
+      region: us-east-2
+  validate:
+    parameters:
+      region: eu-west-1
