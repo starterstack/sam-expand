@@ -24,6 +24,7 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand'} Lifecycle
  * @typedef {(options: {
  *   template: any,
+ *   config: any,
  *   command: string
  *   argv: string[]
  *   parse: import('yaml-cfn').yamlParse,
@@ -152,6 +153,7 @@ export default async function expand() {
   const tempFiles = []
 
   const { template, expandedPath } = await expandAll({
+    config,
     command,
     argv,
     templateFile,
@@ -173,6 +175,7 @@ export default async function expand() {
     if (hookCommand) {
       await runPlugins({
         template,
+        config,
         lifecycle: `pre:${hookCommand}`,
         command,
         argv,
@@ -190,6 +193,7 @@ export default async function expand() {
     if (hookCommand) {
       await runPlugins({
         template,
+        config,
         lifecycle: `post:${hookCommand}`,
         command,
         argv,
@@ -205,12 +209,13 @@ export default async function expand() {
 }
 
 /**
- * @param {{ templateFile: string, tempFiles: string[], command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string, nested?: boolean }} options
+ * @param {{ templateFile: string, tempFiles: string[], config: any, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string, nested?: boolean }} options
  * @return {Promise<{ expandedPath: string, template: any }>}
  **/
 async function expandAll({
   templateFile,
   tempFiles,
+  config,
   command,
   argv,
   configEnv,
@@ -251,6 +256,7 @@ async function expandAll({
 
   await runPlugins({
     template,
+    config,
     lifecycle: 'expand',
     command,
     argv,
@@ -264,6 +270,7 @@ async function expandAll({
         const { expandedPath } = await expandAll({
           templateFile: value.Properties.Location,
           tempFiles,
+          config,
           command,
           argv,
           configEnv,
@@ -292,11 +299,12 @@ async function expandAll({
 }
 
 /**
- * @param {{ template: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string }} options
+ * @param {{ template: any, config: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string }} options
  * @returns {Promise<void>}
  **/
 async function runPlugins({
   template,
+  config,
   lifecycle,
   command,
   argv,

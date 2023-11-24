@@ -8,8 +8,8 @@ import path from 'node:path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 test('plugin lifecycles', async (t) => {
-  for (const command of ['validate', 'package', 'deploy', 'delete']) {
-    await t.test(command, async (t) => {
+  for (const command of ['validate', 'build', 'package', 'deploy', 'delete']) {
+    await t.test(command, async (_t) => {
       let getMetadataConfig
       let getSchema
       const mockLifecycle = mock.fn()

@@ -38,15 +38,19 @@ export const lifecycle = async function expand({
       if (value?.Type !== 'AWS::Serverless::Function') {
         continue
       }
-      assert.ok(
-        !value?.Metadata?.BuildMethod,
-        `lambda ${key} already has Metadata.BuildMethod specified`
-      )
-      assert.ok(
-        !value?.Metadata?.BuildProperties,
-        `lambda ${key} already has Metadata.BuildProperties specified`
-      )
       const properties = value?.Properties
+
+      if (properties.Runtime && !properties.Runtime?.startsWith('nodejs')) {
+        continue
+      }
+
+      if (
+        !properties.Runtime &&
+        !template.Globals?.Function?.Runtime?.startsWith('nodejs')
+      ) {
+        continue
+      }
+
       const packageType = properties?.PackageType ?? 'Zip'
       if (packageType !== 'Zip') {
         continue
@@ -60,6 +64,14 @@ export const lifecycle = async function expand({
       if (properties?.CodeUri?.startsWith('s3:')) {
         continue
       }
+      assert.ok(
+        !value?.Metadata?.BuildMethod,
+        `lambda ${key} already has Metadata.BuildMethod specified`
+      )
+      assert.ok(
+        !value?.Metadata?.BuildProperties,
+        `lambda ${key} already has Metadata.BuildProperties specified`
+      )
       const handler = properties?.Handler
       assert.ok(handler, `lambda ${key} missing handler`)
       const codeUri = value?.Properties?.CodeUri
