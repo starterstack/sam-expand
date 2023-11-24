@@ -409,7 +409,8 @@ test('ignore rules', async (t) => {
       templateDirectory: path.join(__dirname, 'fixtures'),
       command: 'build',
       lifecycle: 'expand',
-      parse() {}
+      parse() {},
+      log() {}
     })
 
     assert.deepEqual(template, copy)
@@ -426,7 +427,8 @@ test('ignore rules', async (t) => {
       templateDirectory: path.join(__dirname, 'fixtures'),
       command: 'build',
       lifecycle: 'expand',
-      parse() {}
+      parse() {},
+      log() {}
     })
 
     assert.deepEqual(template, copy)
@@ -443,7 +445,8 @@ test('ignore rules', async (t) => {
       templateDirectory: path.join(__dirname, 'fixtures'),
       command: 'build',
       lifecycle: 'expand',
-      parse() {}
+      parse() {},
+      log() {}
     })
 
     assert.deepEqual(template, copy)
@@ -460,7 +463,8 @@ test('ignore rules', async (t) => {
       templateDirectory: path.join(__dirname, 'fixtures'),
       command: 'build',
       lifecycle: 'expand',
-      parse() {}
+      parse() {},
+      log() {}
     })
 
     assert.deepEqual(template, copy)
@@ -477,7 +481,8 @@ test('ignore rules', async (t) => {
       templateDirectory: path.join(__dirname, 'fixtures'),
       command: 'build',
       lifecycle: 'expand',
-      parse() {}
+      parse() {},
+      log() {}
     })
 
     assert.deepEqual(template, copy)
@@ -495,7 +500,8 @@ test('ignore rules', async (t) => {
         templateDirectory: path.join(__dirname, 'fixtures'),
         command: 'build',
         lifecycle: 'expand',
-        parse() {}
+        parse() {},
+        log() {}
       }),
       (err) => {
         assert.equal(
@@ -521,7 +527,8 @@ test('ignore rules', async (t) => {
         templateDirectory: path.join(__dirname, 'fixtures'),
         command: 'build',
         lifecycle: 'expand',
-        parse() {}
+        parse() {},
+        log() {}
       }),
       (err) => {
         assert.equal(
@@ -547,7 +554,8 @@ test('ignore rules', async (t) => {
         templateDirectory: path.join(__dirname, 'fixtures'),
         command: 'build',
         lifecycle: 'expand',
-        parse() {}
+        parse() {},
+        log() {}
       }),
       (err) => {
         assert.equal(err.message, 'lambda HelloWorldFunction missing handler')
@@ -569,8 +577,10 @@ test('ignore rules', async (t) => {
         template,
         templateDirectory: path.join(__dirname, 'fixtures'),
         command: 'build',
+        log() {},
         lifecycle: 'expand',
-        parse() {}
+        parse() {},
+        log() {}
       }),
       (err) => {
         assert.equal(err.message, 'lambda HelloWorldFunction missing codeUri')

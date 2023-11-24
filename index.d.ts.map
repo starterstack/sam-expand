@@ -4,6 +4,7 @@
 	"names": [
 		"ExpandSchema",
 		"Lifecycle",
+		"Log",
 		"Plugin",
 		"PluginSchema",
 		"Spawn",
@@ -15,6 +16,7 @@
 	],
 	"sources": [
 		"src/expand.d.ts",
+		"src/log.d.ts",
 		"src/spawn.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
 		"src/plugins/types.d.ts",
@@ -25,7 +27,8 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";;;aACYA,YAAYA;;;;;;aAMZC,SAASA;aACTC,MAAMA;;;;;;;;;;;;;;aAcNC,YAAYA;MCrBZC,KAAKA;;;;;aDOLF,MAAMA;aAcNC,YAAYA;MAfZF,SAASA;;;;;;;;;;;;;;;;MCNTG,KAAKA;;;;;cCDJC,cAAcA;cACdC,MAAMA;cACNC,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MFGVR,SAASA;MACTC,MAAMA;;;;;;;;;;;;;;;MGPNC,YAAYA;MFAZC,KAAKA;;;;;cGDJE,MAAMA;;;cAGND,cAAcA;cACdE,SAASA;MJkBVJ,YAAYA;MAfZF,SAASA;MACTC,MAAMA;;;;;;;;;;;;;;;MCPNE,KAAKA"
+	"mappings": ";;;aACYA,YAAYA;;;;;;aAMZC,SAASA;aCNTC,GAAGA;aDQHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;MEvBZC,KAAKA;;;;;aFQLF,MAAMA;aAeNC,YAAYA;MAjBZH,SAASA;;;;;;;;;;;;;;;;;MCNTC,GAAGA;MCAHG,KAAKA;;;;;cCDJC,cAAcA;cACdC,MAAMA;cACNC,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MHGVT,SAASA;MAETE,MAAMA;;;;;;;;;;;;;;;;MIRNC,YAAYA;MHAZF,GAAGA;MCAHG,KAAKA;;;;;cGDJE,MAAMA;;;cAGND,cAAcA;cACdE,SAASA;MLoBVJ,YAAYA;MAjBZH,SAASA;MAETE,MAAMA;;;;;;;;;;;;;;;;MCRND,GAAGA;MCAHG,KAAKA"
 }

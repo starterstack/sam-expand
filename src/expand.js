@@ -12,6 +12,7 @@ import { parse as tomlParse } from '@ltd/j-toml'
 import Ajv from 'ajv'
 import { betterAjvErrors } from '@apideck/better-ajv-errors'
 import assert from 'node:assert/strict'
+import debugLog from './log.js'
 
 const windows = os.platform() === 'win32'
 
@@ -23,10 +24,12 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
 /**
  * @typedef {import('ajv').JSONSchemaType<{ expand: { plugins?: string[], config?: Record<string, any>} } >} ExpandSchema
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand'} Lifecycle
+ * @typedef {import('./log.js').Log} Log
  * @typedef {(options: {
  *   template: any,
  *   templateDirectory: string
  *   config: any,
+ *   log: import('./log.js').Log,
  *   command: string
  *   argv: string[]
  *   parse: import('yaml-cfn').yamlParse,
@@ -81,6 +84,9 @@ export default async function expand() {
       help: {
         type: 'boolean'
       },
+      debug: {
+        type: 'boolean'
+      },
       region: {
         type: 'string'
       },
@@ -110,13 +116,24 @@ export default async function expand() {
     args: process.argv.slice(2)
   })
 
+  const log =
+    values.debug ?? process.env.DEBUG
+      ? debugLog
+      : /** @type {Log} */ (_format, ..._args) => {}
+
+  log('cli args %O', { args: { ...values } })
+
   if (values.help) {
+    log('sam %O', ['--help'])
     return await spawn('sam', ['--help'])
   }
 
   const configFileSettings = await getConfigFileSettings(
     values['config-file']?.toString()
   )
+
+  log('config settings %O', configFileSettings)
+
   const config = configFileSettings
     ? configFileSettings.type === 'toml'
       ? tomlParse(await readFile(configFileSettings.filePath, 'utf-8'))
@@ -126,6 +143,7 @@ export default async function expand() {
   const command = positionals?.[0]
 
   const configEnv = String(values['config-env'] ?? 'default')
+  log('configEnv %O', configEnv)
 
   /** @type {string | undefined } */
   const region =
@@ -134,6 +152,8 @@ export default async function expand() {
     config?.[configEnv ?? 'default']?.global?.parameters?.region ??
     process.env.AWS_REGION ??
     process.env.AWS_DEFAULT_REGION
+
+  log('region %O', region)
 
   const baseDirectory = values?.['base-dir']?.toString()
 
@@ -146,6 +166,8 @@ export default async function expand() {
   const templateFile = String(
     values.template ?? values['template-file'] ?? (await findTemplateFile())
   )
+
+  log('use template %O', templateFile)
 
   if (templateArgumentGiven && command === 'build') {
     argv.splice(argv.indexOf(templateArgumentGiven), 2)
@@ -162,6 +184,7 @@ export default async function expand() {
     tempFiles,
     configEnv,
     region,
+    log,
     baseDirectory
   })
 
@@ -183,6 +206,7 @@ export default async function expand() {
         command,
         argv,
         region,
+        log,
         configEnv,
         baseDirectory
       })
@@ -191,6 +215,7 @@ export default async function expand() {
       argv.push(...['-t', expandedPath])
     }
   }
+  log('sam %O', argv)
   await spawn('sam', argv)
   if (command) {
     if (hookCommand) {
@@ -202,18 +227,20 @@ export default async function expand() {
         command,
         argv,
         region,
+        log,
         configEnv,
         baseDirectory
       })
     }
   }
   for (const tempFile of tempFiles) {
+    log('deleting %O', tempFile)
     await unlink(tempFile)
   }
 }
 
 /**
- * @param {{ templateFile: string, tempFiles: string[], config: any, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string, nested?: boolean }} options
+ * @param {{ templateFile: string, tempFiles: string[], config: any, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string, nested?: boolean }} options
  * @return {Promise<{ expandedPath: string, template: any }>}
  **/
 async function expandAll({
@@ -224,6 +251,7 @@ async function expandAll({
   argv,
   configEnv,
   region,
+  log,
   baseDirectory,
   nested
 }) {
@@ -233,6 +261,7 @@ async function expandAll({
       template: null
     }
   }
+  log('reading template %O', templateFile)
   const templateData = await readFile(templateFile, 'utf-8')
   const template = yamlParse(templateData)
 
@@ -240,7 +269,8 @@ async function expandAll({
     if (template.Metadata?.expand) {
       await applyPluginSchemas({
         templateDirectory: path.dirname(templateFile),
-        template
+        template,
+        log
       })
       const ajv = new Ajv.default({ strict: false, allErrors: true })
       const validate = ajv.compile(expandSchema)
@@ -273,6 +303,7 @@ async function expandAll({
     command,
     argv,
     region,
+    log,
     configEnv,
     baseDirectory
   })
@@ -287,6 +318,7 @@ async function expandAll({
           argv,
           configEnv,
           region,
+          log,
           baseDirectory,
           nested: true
         })
@@ -302,6 +334,7 @@ async function expandAll({
       templateDirectory,
       templateBaseName + '.expanded' + extname
     )
+    log('writing expanded template %O', expandedPath)
     await writeFile(expandedPath, yamlDump(template))
     tempFiles.push(expandedPath)
     return { expandedPath, template }
@@ -311,7 +344,7 @@ async function expandAll({
 }
 
 /**
- * @param {{ template: any, templateDirectory: string, config: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string }} options
+ * @param {{ template: any, templateDirectory: string, config: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
  * @returns {Promise<void>}
  **/
 async function runPlugins({
@@ -322,6 +355,7 @@ async function runPlugins({
   command,
   argv,
   region,
+  log,
   configEnv,
   baseDirectory
 }) {
@@ -349,6 +383,7 @@ async function runPlugins({
       config,
       argv,
       region,
+      log,
       configEnv,
       baseDirectory
     })
@@ -356,10 +391,10 @@ async function runPlugins({
 }
 
 /**
- * @param {{ templateDirectory: string, template: any }} options
+ * @param {{ templateDirectory: string, template: any, log: Log }} options
  * @returns {Promise<void>}
  **/
-async function applyPluginSchemas({ templateDirectory, template }) {
+async function applyPluginSchemas({ templateDirectory, template, log }) {
   expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
     if (typeof plugin !== 'string') continue
@@ -368,6 +403,7 @@ async function applyPluginSchemas({ templateDirectory, template }) {
       : plugin
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
     const { metadataConfig, schema } = await import(pluginPath)
+    log('plugin apply schema %O', { plugin, metadataConfig })
     assert.equal(
       typeof metadataConfig,
       'string',

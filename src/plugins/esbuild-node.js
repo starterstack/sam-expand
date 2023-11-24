@@ -22,6 +22,7 @@ export const lifecycle = async function expand({
   template,
   templateDirectory,
   parse,
+  log,
   lifecycle,
   command,
   baseDirectory
@@ -32,15 +33,14 @@ export const lifecycle = async function expand({
   )
 
   if (command === 'build' && lifecycle === 'expand') {
-    const esbuildConfig = parse(
-      await readFile(
-        resolvePath(
-          templateDirectory,
-          template.Metadata.expand.config.esbuild.config
-        ),
-        'utf-8'
-      )
+    log('esbuild lifecycle %O', { command, lifecycle })
+    const esbuildConfigPath = resolvePath(
+      templateDirectory,
+      template.Metadata.expand.config.esbuild.config
     )
+
+    log('esbuild config %O', esbuildConfigPath)
+    const esbuildConfig = parse(await readFile(esbuildConfigPath, 'utf-8'))
     for (const [key, value] of Object.entries(template.Resources ?? {})) {
       if (value?.Type !== 'AWS::Serverless::Function') {
         continue
@@ -48,6 +48,7 @@ export const lifecycle = async function expand({
       const properties = value?.Properties
 
       if (properties.Runtime && !properties.Runtime?.startsWith('nodejs')) {
+        log('Skipping esbuild, no runtime detected %O', { lambda: key })
         continue
       }
 
@@ -55,20 +56,25 @@ export const lifecycle = async function expand({
         !properties.Runtime &&
         !template.Globals?.Function?.Runtime?.startsWith('nodejs')
       ) {
+        log('Skipping esbuild, runtime not nodejs %O', { lambda: key })
         continue
       }
 
       const packageType = properties?.PackageType ?? 'Zip'
       if (packageType !== 'Zip') {
+        log('Skipping esbuild, package type not Zip %O', { lambda: key })
         continue
       }
       if (properties?.InlineCode) {
+        log('Skipping esbuild, inline code set %O', { lambda: key })
         continue
       }
       if (typeof properties?.CodeUri !== 'string') {
+        log('Skipping esbuild, code uri not local path %O', { lambda: key })
         continue
       }
       if (properties?.CodeUri?.startsWith('s3:')) {
+        log('Skipping esbuild, code uri s3 %O', { lambda: key })
         continue
       }
       assert.ok(
@@ -85,19 +91,21 @@ export const lifecycle = async function expand({
       assert.ok(codeUri, `lambda ${key} missing codeUri`)
       value.Metadata ||= {}
       value.Metadata.BuildMethod = 'esbuild'
+      const lambdaEntrypoint = await findHandlerEntry({
+        codeUri,
+        handler,
+        baseDirectory: baseDirectory
+          ? resolvePath(templateDirectory, baseDirectory)
+          : templateDirectory
+      })
+      log('lambda entrypoint %O', { lambda: key, entry: lambdaEntrypoint })
       value.Metadata.BuildProperties = {
         ...esbuildConfig,
-        EntryPoints: [
-          await findHandlerEntry({
-            codeUri,
-            handler,
-            baseDirectory: baseDirectory
-              ? resolvePath(templateDirectory, baseDirectory)
-              : templateDirectory
-          })
-        ]
+        EntryPoints: [lambdaEntrypoint]
       }
     }
+  } else {
+    log('skipping esbuild lifecycle %O', { command, lifecycle })
   }
 }
 

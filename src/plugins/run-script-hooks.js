@@ -77,6 +77,7 @@ export const schema = {
 export const lifecycle = async function runScriptHook({
   template,
   spawn,
+  log,
   lifecycle
 }) {
   assert.ok(
@@ -89,7 +90,10 @@ export const lifecycle = async function runScriptHook({
 
   if (commands) {
     for (const { command, args } of commands) {
+      log('running script hook %O', { lifecycle, command, args })
       await spawn(command, args ?? [])
     }
+  } else {
+    log('skipping script hook %O', { lifecycle })
   }
 }
