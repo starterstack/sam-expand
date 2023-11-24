@@ -250,12 +250,16 @@ async function expandAll({
       if (!validate(metadata)) {
         /** @type {any} */
         const anySchema = expandSchema
-        const betterErrors = betterAjvErrors({
-          schema: anySchema,
-          data: metadata,
-          errors: validate.errors
-        })
-        console.error(betterErrors)
+        try {
+          const betterErrors = betterAjvErrors({
+            schema: anySchema,
+            data: metadata,
+            errors: validate.errors
+          })
+          console.error(betterErrors)
+        } catch {
+          console.error(validate.errors)
+        }
         throw new TypeError('schema validation failed')
       }
     }
@@ -272,11 +276,11 @@ async function expandAll({
     configEnv,
     baseDirectory
   })
-  for (const value of Object.values(template.Resources)) {
+  for (const value of Object.values(template.Resources ?? {})) {
     if (value.Type === 'AWS::Serverless::Application') {
       if (typeof value.Properties.Location === 'string') {
         const { expandedPath } = await expandAll({
-          templateFile: value.Properties.Location,
+          templateFile: await findFiles([value.Properties.Location]),
           tempFiles,
           config,
           command,
