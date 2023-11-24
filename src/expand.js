@@ -1,7 +1,8 @@
 //@ts-check
 
 import process from 'node:process'
-import { yamlParse, yamlDump } from 'yaml-cfn'
+import { yamlParse, schema as yamlSchema } from 'yaml-cfn'
+import { dump } from 'js-yaml'
 import { stat, writeFile, readFile, unlink } from 'node:fs/promises'
 import spawn from './spawn.js'
 import path from 'node:path'
@@ -24,11 +25,12 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand'} Lifecycle
  * @typedef {(options: {
  *   template: any,
+ *   templateDirectory: string
  *   config: any,
  *   command: string
  *   argv: string[]
  *   parse: import('yaml-cfn').yamlParse,
- *   dump: import('yaml-cfn').yamlDump,
+ *   dump: (o: any) => string,
  *   spawn: import('./spawn.js').Spawn,
  *   configEnv: string,
  *   region?: string,
@@ -175,6 +177,7 @@ export default async function expand() {
     if (hookCommand) {
       await runPlugins({
         template,
+        templateDirectory: path.dirname(templateFile),
         config,
         lifecycle: `pre:${hookCommand}`,
         command,
@@ -193,6 +196,7 @@ export default async function expand() {
     if (hookCommand) {
       await runPlugins({
         template,
+        templateDirectory: path.dirname(templateFile),
         config,
         lifecycle: `post:${hookCommand}`,
         command,
@@ -234,7 +238,10 @@ async function expandAll({
 
   if (!nested) {
     if (template.Metadata?.expand) {
-      await applyPluginSchemas({ template })
+      await applyPluginSchemas({
+        templateDirectory: path.dirname(templateFile),
+        template
+      })
       const ajv = new Ajv.default({ strict: false, allErrors: true })
       const validate = ajv.compile(expandSchema)
       const metadata = {
@@ -256,6 +263,7 @@ async function expandAll({
 
   await runPlugins({
     template,
+    templateDirectory: path.dirname(templateFile),
     config,
     lifecycle: 'expand',
     command,
@@ -299,11 +307,12 @@ async function expandAll({
 }
 
 /**
- * @param {{ template: any, config: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string }} options
+ * @param {{ template: any, templateDirectory: string, config: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, configEnv: string, baseDirectory?: string }} options
  * @returns {Promise<void>}
  **/
 async function runPlugins({
   template,
+  templateDirectory,
   config,
   lifecycle,
   command,
@@ -315,7 +324,7 @@ async function runPlugins({
   expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
     const pluginPath = plugin?.startsWith('.')
-      ? path.join(process.env.INIT_CWD ?? process.cwd(), plugin)
+      ? path.join(templateDirectory, plugin)
       : plugin
     /** @type {{ lifecycle: Plugin }}*/
     const { lifecycle: pluginModule } = await import(pluginPath)
@@ -326,11 +335,13 @@ async function runPlugins({
     )
     await pluginModule({
       template,
+      templateDirectory,
       parse: yamlParse,
       dump: yamlDump,
       lifecycle,
       spawn,
       command,
+      config,
       argv,
       region,
       configEnv,
@@ -340,14 +351,14 @@ async function runPlugins({
 }
 
 /**
- * @param {{ template: any }} options
+ * @param {{ templateDirectory: string, template: any }} options
  * @returns {Promise<void>}
  **/
-async function applyPluginSchemas({ template }) {
+async function applyPluginSchemas({ templateDirectory, template }) {
   expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
     const pluginPath = plugin?.startsWith('.')
-      ? path.join(process.env.INIT_CWD ?? process.cwd(), plugin)
+      ? path.join(templateDirectory, plugin)
       : plugin
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
     const { metadataConfig, schema } = await import(pluginPath)
@@ -401,9 +412,22 @@ async function findTemplateFile() {
 async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
-      await stat(filePath)
-      return filePath
+      const fullPath = path.join(
+        process.env.INIT_CWD ?? process.cwd(),
+        filePath
+      )
+      await stat(fullPath)
+      return fullPath
     } catch {}
   }
   return ''
+}
+
+/**
+ * @param {any} template
+ * @returns {string}
+ **/
+
+function yamlDump(template) {
+  return dump(template, { schema: yamlSchema, noRefs: true })
 }

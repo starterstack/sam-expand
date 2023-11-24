@@ -20,6 +20,7 @@ export const metadataConfig = 'esbuild'
 /** @type {import('../expand.js').Plugin} */
 export const lifecycle = async function expand({
   template,
+  templateDirectory,
   parse,
   lifecycle,
   command,
@@ -32,7 +33,13 @@ export const lifecycle = async function expand({
 
   if (command === 'build' && lifecycle === 'expand') {
     const esbuildConfig = parse(
-      await readFile(template.Metadata.expand.config.esbuild.config, 'utf-8')
+      await readFile(
+        resolvePath(
+          templateDirectory,
+          template.Metadata.expand.config.esbuild.config
+        ),
+        'utf-8'
+      )
     )
     for (const [key, value] of Object.entries(template.Resources ?? {})) {
       if (value?.Type !== 'AWS::Serverless::Function') {
@@ -81,7 +88,13 @@ export const lifecycle = async function expand({
       value.Metadata.BuildProperties = {
         ...esbuildConfig,
         EntryPoints: [
-          await findHandlerEntry({ codeUri, handler, baseDirectory })
+          await findHandlerEntry({
+            codeUri,
+            handler,
+            baseDirectory: baseDirectory
+              ? resolvePath(templateDirectory, baseDirectory)
+              : templateDirectory
+          })
         ]
       }
     }
@@ -106,4 +119,18 @@ async function findHandlerEntry({ codeUri, baseDirectory, handler }) {
     } catch {}
   }
   throw new Error(`no entry point found for ${handler}`)
+}
+
+/**
+ * @param {string} baseDirectory
+ * @param {string} filePath
+ * @returns string
+ **/
+
+function resolvePath(baseDirectory, filePath) {
+  if (filePath?.startsWith('.')) {
+    return path.join(baseDirectory, filePath)
+  } else {
+    return filePath
+  }
 }

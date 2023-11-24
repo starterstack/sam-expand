@@ -4,7 +4,7 @@ Transform:
 Metadata:
   expand:
     plugins:
-      - ./fixtures/do-nothing-plugin.mjs
+      - ./do-nothing-plugin.mjs
     config:
       'do-nothing': {}
 Resources:

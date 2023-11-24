@@ -1,5 +1,5 @@
 declare module '@starterstack/sam-expand' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlParse } from 'yaml-cfn';
 	export default function expand(): Promise<void>;
 	export type ExpandSchema = import('ajv').JSONSchemaType<{
 		expand: {
@@ -10,14 +10,16 @@ declare module '@starterstack/sam-expand' {
 	export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
 	export type Plugin = (options: {
 		template: any;
+		templateDirectory: string;
+		config: any;
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: typeof yamlDump;
+		dump: (o: any) => string;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string;
-		baseDirectory?: string;
+		region?: string | undefined;
+		baseDirectory?: string | undefined;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	export type PluginSchema<T> = import('ajv').JSONSchemaType<T>;
@@ -25,20 +27,22 @@ declare module '@starterstack/sam-expand' {
 }
 
 declare module '@starterstack/sam-expand/plugins' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlParse } from 'yaml-cfn';
 	export type Plugin = Plugin_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
 	type Plugin_1 = (options: {
 		template: any;
+		templateDirectory: string;
+		config: any;
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: typeof yamlDump;
+		dump: (o: any) => string;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string;
-		baseDirectory?: string;
+		region?: string | undefined;
+		baseDirectory?: string | undefined;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
@@ -46,7 +50,7 @@ declare module '@starterstack/sam-expand/plugins' {
 }
 
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlParse } from 'yaml-cfn';
 	export const metadataConfig: "script";
 	export const schema: HookSchema;
 	export const lifecycle: Plugin;
@@ -62,14 +66,16 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
 	type Plugin = (options: {
 		template: any;
+		templateDirectory: string;
+		config: any;
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: typeof yamlDump;
+		dump: (o: any) => string;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string;
-		baseDirectory?: string;
+		region?: string | undefined;
+		baseDirectory?: string | undefined;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
@@ -78,7 +84,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 }
 
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlParse } from 'yaml-cfn';
 	export const schema: PluginSchema<{
 		config: string;
 	}>;
@@ -88,14 +94,16 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
 	type Plugin = (options: {
 		template: any;
+		templateDirectory: string;
+		config: any;
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: typeof yamlDump;
+		dump: (o: any) => string;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string;
-		baseDirectory?: string;
+		region?: string | undefined;
+		baseDirectory?: string | undefined;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
