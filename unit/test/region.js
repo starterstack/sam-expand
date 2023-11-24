@@ -24,6 +24,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'region.yml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {}
         }
       },
@@ -51,6 +54,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'region.yml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {
             return 'us-east-1'
           }
@@ -79,6 +85,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'region.yml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {
             return 'us-east-2'
@@ -110,6 +119,9 @@ test('region resolution', async (t) => {
             path.join(__dirname, 'fixtures', 'region.yml')
           ],
           env: {
+            get INIT_CWD() {
+              return __dirname
+            },
             get AWS_REGION() {
               return 'eu-west-1'
             },
@@ -144,6 +156,9 @@ test('region resolution', async (t) => {
           'eu-north-1'
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {
             return 'us-east-1'
           },
@@ -177,6 +192,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'samconfig-command-region.toml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -215,6 +233,9 @@ test('region resolution', async (t) => {
           'dev'
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -248,6 +269,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'samconfig-global-region.toml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -286,6 +310,9 @@ test('region resolution', async (t) => {
           'dev'
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -319,6 +346,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'samconfig-command-region.yaml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -357,6 +387,9 @@ test('region resolution', async (t) => {
           'dev'
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -390,6 +423,9 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'samconfig-global-region.yaml')
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
@@ -428,6 +464,9 @@ test('region resolution', async (t) => {
           'dev'
         ],
         env: {
+          get INIT_CWD() {
+            return __dirname
+          },
           get AWS_REGION() {},
           get AWS_DEFAULT_REGION() {},
           /** @param {string} value */
