@@ -3,7 +3,7 @@ Format: esm
 OutExtension:
   - .js=.mjs
 Sourcemap: true
-Target: node18
+Target: node20
 External:
   - '@aws-sdk/*'
 Define:

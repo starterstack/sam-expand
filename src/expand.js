@@ -327,6 +327,7 @@ async function runPlugins({
 }) {
   expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
+    if (typeof plugin !== 'string') continue
     const pluginPath = plugin?.startsWith('.')
       ? path.join(templateDirectory, plugin)
       : plugin
@@ -361,6 +362,7 @@ async function runPlugins({
 async function applyPluginSchemas({ templateDirectory, template }) {
   expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
+    if (typeof plugin !== 'string') continue
     const pluginPath = plugin?.startsWith('.')
       ? path.join(templateDirectory, plugin)
       : plugin
