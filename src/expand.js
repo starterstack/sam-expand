@@ -24,6 +24,7 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
 /**
  * @typedef {import('ajv').JSONSchemaType<{ expand: { plugins?: string[], config?: Record<string, any>} } >} ExpandSchema
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand'} Lifecycle
+ * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
  * @typedef {(options: {
  *   template: any,
@@ -365,28 +366,35 @@ async function runPlugins({
     const pluginPath = plugin?.startsWith('.')
       ? path.join(templateDirectory, plugin)
       : plugin
-    /** @type {{ lifecycle: Plugin }}*/
-    const { lifecycle: pluginModule } = await import(pluginPath)
+    /** @type {{ lifecycle: Plugin, lifecycles: Lifecycles }}*/
+    const { lifecycle: pluginModule, lifecycles } = await import(pluginPath)
     assert.equal(
       pluginModule?.constructor?.name,
       'AsyncFunction',
       `plugin: ${plugin} does not export const lifecycle = async function(plugin: Plugin) {}`
     )
-    await pluginModule({
-      template,
-      templateDirectory,
-      parse: yamlParse,
-      dump: yamlDump,
-      lifecycle,
-      spawn,
-      command,
-      config,
-      argv,
-      region,
-      log,
-      configEnv,
-      baseDirectory
-    })
+    assert.ok(
+      Array.isArray(lifecycles),
+      `plugin: ${plugin} does not export const lifecycles: Lifecycles`
+    )
+
+    if (lifecycles.includes(lifecycle)) {
+      await pluginModule({
+        template,
+        templateDirectory,
+        parse: yamlParse,
+        dump: yamlDump,
+        lifecycle,
+        spawn,
+        command,
+        config,
+        argv,
+        region,
+        log,
+        configEnv,
+        baseDirectory
+      })
+    }
   }
 }
 

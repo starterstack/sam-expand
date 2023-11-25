@@ -1,4 +1,5 @@
 export const metadataConfig: "script";
+export const lifecycles: Hook[];
 export const schema: HookSchema;
 export const lifecycle: import('../expand.js').Plugin;
 export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';

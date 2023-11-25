@@ -17,6 +17,8 @@ export const schema = {
 
 export const metadataConfig = 'esbuild'
 
+export const lifecycles = ['expand']
+
 /** @type {import('../expand.js').Plugin} */
 export const lifecycle = async function expand({
   template,

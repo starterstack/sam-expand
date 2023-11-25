@@ -23,6 +23,8 @@ const hooks = [
 
 export const metadataConfig = 'script'
 
+export const lifecycles = hooks
+
 /** @type {HookSchema} */
 export const schema = {
   type: 'object',

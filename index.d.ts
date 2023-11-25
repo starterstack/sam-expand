@@ -8,6 +8,7 @@ declare module '@starterstack/sam-expand' {
 		};
 	}>;
 	export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+	export type Lifecycles = Array<Lifecycle>;
 	export type Log = Log_1;
 	export type Plugin = (options: {
 		template: any;
@@ -32,8 +33,10 @@ declare module '@starterstack/sam-expand' {
 declare module '@starterstack/sam-expand/plugins' {
 	import type { yamlParse } from 'yaml-cfn';
 	export type Plugin = Plugin_1;
+	export type Lifecycles = Lifecycles_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+	type Lifecycles_1 = Array<Lifecycle>;
 	type Plugin_1 = (options: {
 		template: any;
 		templateDirectory: string;
@@ -57,6 +60,7 @@ declare module '@starterstack/sam-expand/plugins' {
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const metadataConfig: "script";
+	export const lifecycles: Hook[];
 	export const schema: HookSchema;
 	export const lifecycle: Plugin;
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
@@ -96,6 +100,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		config: string;
 	}>;
 	export const metadataConfig: "esbuild";
+	export const lifecycles: string[];
 	export const lifecycle: Plugin;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
