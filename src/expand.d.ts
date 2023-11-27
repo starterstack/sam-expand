@@ -5,7 +5,7 @@ export type ExpandSchema = import('ajv').JSONSchemaType<{
         config?: Record<string, any>;
     };
 }>;
-export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 export type Lifecycles = Array<Lifecycle>;
 export type Log = import('./log.js').Log;
 export type Plugin = (options: {

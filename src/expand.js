@@ -23,7 +23,7 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
 
 /**
  * @typedef {import('ajv').JSONSchemaType<{ expand: { plugins?: string[], config?: Record<string, any>} } >} ExpandSchema
- * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand'} Lifecycle
+ * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
  * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
  * @typedef {(options: {
@@ -274,18 +274,24 @@ async function expandAll({
 
   validateTemplate({ template })
 
-  await runPlugins({
-    template,
-    templateDirectory: path.dirname(templateFile),
-    config,
-    lifecycle: 'expand',
-    command,
-    argv,
-    region,
-    log,
-    configEnv,
-    baseDirectory
-  })
+  /** @type {Lifecycle[]} */
+  const expandLifecycles = ['pre:expand', 'expand', 'post:expand']
+
+  for (const lifecycle of expandLifecycles) {
+    await runPlugins({
+      template,
+      templateDirectory: path.dirname(templateFile),
+      config,
+      lifecycle,
+      command,
+      argv,
+      region,
+      log,
+      configEnv,
+      baseDirectory
+    })
+  }
+
   for (const value of Object.values(template.Resources ?? {})) {
     if (value.Type === 'AWS::Serverless::Application') {
       if (typeof value.Properties.Location === 'string') {

@@ -19,7 +19,7 @@ Globals:
     Tracing: Active
     Architectures:
       - arm64
-    Runtime: nodejs20.x
+    Runtime: nodejs18.x
     MemorySize: 128
     PropagateTags: true
   Api:
@@ -63,15 +63,12 @@ Parameters:
   Timeout:
     Type: Number
     Description: Default timeout
-  DatabaseName:
-    Type: String
-    Description: Name of the database
 
 Rules:
-  ValidateDatabaseName:
+  ValidateTimeout:
     Assertions:
-      - Assert: !Not [!Equals [!Ref DatabaseName, ""]]
-        AssertDescription: "DatabaseName must not be empty."
+      - Assert: !Not [!Equals [!Ref Timeout, 0]]
+        AssertDescription: "Timeout must not be 0."
 
 Outputs:
   HelloWorldApi:

@@ -7,7 +7,7 @@ declare module '@starterstack/sam-expand' {
 			config?: Record<string, any>;
 		};
 	}>;
-	export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+	export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	export type Lifecycles = Array<Lifecycle>;
 	export type Log = Log_1;
 	export type Plugin = (options: {
@@ -35,7 +35,7 @@ declare module '@starterstack/sam-expand/plugins' {
 	export type Plugin = Plugin_1;
 	export type Lifecycles = Lifecycles_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type Plugin_1 = (options: {
 		template: any;
@@ -75,7 +75,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type Plugin_1 = (options: {
 		template: any;
@@ -108,7 +108,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type Plugin_1 = (options: {
 		template: any;
