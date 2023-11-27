@@ -1,7 +1,5 @@
 // @ts-check
 
-import assert from 'node:assert/strict'
-
 /** @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook */
 /** @typedef {import('./types.js').PluginSchema<{
  *    hooks: {
@@ -23,6 +21,7 @@ const hooks = [
 
 export const metadataConfig = 'script'
 
+/** @type {import('./types.js').Lifecycles} */
 export const lifecycles = hooks
 
 /** @type {HookSchema} */
@@ -75,18 +74,13 @@ export const schema = {
   nullable: false
 }
 
-/** @type {import('../expand.js').Plugin} */
+/** @type {import('./types.js').Plugin} */
 export const lifecycle = async function runScriptHook({
   template,
   spawn,
   log,
   lifecycle
 }) {
-  assert.ok(
-    template?.Metadata?.expand?.config?.script?.hooks,
-    'Metadata.expand.config.script.hooks missing'
-  )
-
   const hooks = template.Metadata.expand.config.script.hooks
   const commands = hooks[lifecycle]
 

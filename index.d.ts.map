@@ -21,7 +21,6 @@
 		"src/log.d.ts",
 		"src/spawn.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
-		"src/plugins/types.d.ts",
 		"src/plugins/esbuild-node.d.ts"
 	],
 	"sourcesContent": [
@@ -29,8 +28,7 @@
 		null,
 		null,
 		null,
-		null,
 		null
 	],
-	"mappings": ";;;aACYA,YAAYA;;;;;;aAMZC,SAASA;aACTC,UAAUA;aCPVC,GAAGA;aDSHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;MExBZC,KAAKA;;;;;aFSLF,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCNTE,GAAGA;MCAHG,KAAKA;;;;;cCDJC,cAAcA;cACdC,UAAUA;cACVC,MAAMA;cACNC,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MHEVX,SAASA;MAGTG,MAAMA;;;;;;;;;;;;;;;;MIRNC,YAAYA;MHDZF,GAAGA;MCAHG,KAAKA;;;;;cGDJG,MAAMA;;;cAGNF,cAAcA;cACdC,UAAUA;cACVE,SAASA;MLoBVL,YAAYA;MAlBZJ,SAASA;MAGTG,MAAMA;;;;;;;;;;;;;;;;MCTND,GAAGA;MCAHG,KAAKA"
+	"mappings": ";;;aACYA,YAAYA;;;;;;aAMZC,SAASA;aACTC,UAAUA;aCPVC,GAAGA;aDSHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;MExBZC,KAAKA;;;;;aFSLF,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCNTE,GAAGA;MCAHG,KAAKA;;;;;cCDJC,cAAcA;cACdC,UAAUA;cACVC,MAAMA;cACNC,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MHKVR,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCNTE,GAAGA;MCAHG,KAAKA;;;;;cEDJE,UAAUA;cACVC,MAAMA;;;cAGNF,cAAcA;cACdG,SAASA;MJKVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCNTE,GAAGA;MCAHG,KAAKA"
 }

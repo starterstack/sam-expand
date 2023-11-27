@@ -3,6 +3,9 @@ import { readFile, stat } from 'node:fs/promises'
 import assert from 'node:assert/strict'
 import path from 'node:path'
 
+/** @type {import('./types.js').Lifecycles} */
+export const lifecycles = ['expand']
+
 /** @type {import('./types.js').PluginSchema<{ config: string }>} */
 export const schema = {
   type: 'object',
@@ -17,9 +20,7 @@ export const schema = {
 
 export const metadataConfig = 'esbuild'
 
-export const lifecycles = ['expand']
-
-/** @type {import('../expand.js').Plugin} */
+/** @type {import('./types.js').Plugin} */
 export const lifecycle = async function expand({
   template,
   templateDirectory,
@@ -29,13 +30,8 @@ export const lifecycle = async function expand({
   command,
   baseDirectory
 }) {
-  assert.ok(
-    template?.Metadata?.expand?.config?.esbuild?.config,
-    'Metadata.expand.config.esbuild.config missing'
-  )
-
   if (command === 'build' && lifecycle === 'expand') {
-    log('esbuild lifecycle %O', { command, lifecycle })
+    log('esbuild lifecycle %O', { command, expand })
     const esbuildConfigPath = resolvePath(
       templateDirectory,
       template.Metadata.expand.config.esbuild.config
