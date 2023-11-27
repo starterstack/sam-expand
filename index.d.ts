@@ -60,7 +60,7 @@ declare module '@starterstack/sam-expand/plugins' {
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const metadataConfig: "script";
-	export const lifecycles: Hook[];
+	export const lifecycles: Lifecycles;
 	export const schema: HookSchema;
 	export const lifecycle: Plugin;
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
@@ -72,8 +72,12 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 			}>;
 		};
 	}>;
+	type Plugin = Plugin_1;
+	type Lifecycles = Lifecycles_1;
+	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
-	type Plugin = (options: {
+	type Lifecycles_1 = Array<Lifecycle>;
+	type Plugin_1 = (options: {
 		template: any;
 		templateDirectory: string;
 		config: any;
@@ -89,22 +93,24 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
-	type PluginSchema<T> = PluginSchema_1<T>;
 	type Log = (format: string, ...args: any) => void;
 	type Spawn = (cmd: string, args: string[]) => Promise<void>;
 }
 
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	import type { yamlParse } from 'yaml-cfn';
+	export const lifecycles: Lifecycles;
 	export const schema: PluginSchema<{
 		config: string;
 	}>;
 	export const metadataConfig: "esbuild";
-	export const lifecycles: string[];
 	export const lifecycle: Plugin;
+	type Plugin = Plugin_1;
+	type Lifecycles = Lifecycles_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'expand';
-	type Plugin = (options: {
+	type Lifecycles_1 = Array<Lifecycle>;
+	type Plugin_1 = (options: {
 		template: any;
 		templateDirectory: string;
 		config: any;

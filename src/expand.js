@@ -68,7 +68,8 @@ const expandSchema = {
         config: {
           type: 'object',
           additionalProperties: false,
-          nullable: true
+          nullable: true,
+          required: []
         }
       },
       additionalProperties: false
@@ -241,7 +242,7 @@ export default async function expand() {
 }
 
 /**
- * @param {{ templateFile: string, tempFiles: string[], config: any, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string, nested?: boolean }} options
+ * @param {{ templateFile: string, tempFiles: string[], config: any, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
  * @return {Promise<{ expandedPath: string, template: any }>}
  **/
 async function expandAll({
@@ -253,8 +254,7 @@ async function expandAll({
   configEnv,
   region,
   log,
-  baseDirectory,
-  nested
+  baseDirectory
 }) {
   if (!templateFile) {
     return {
@@ -266,35 +266,13 @@ async function expandAll({
   const templateData = await readFile(templateFile, 'utf-8')
   const template = yamlParse(templateData)
 
-  if (!nested) {
-    if (template.Metadata?.expand) {
-      await applyPluginSchemas({
-        templateDirectory: path.dirname(templateFile),
-        template,
-        log
-      })
-      const ajv = new Ajv.default({ strict: false, allErrors: true })
-      const validate = ajv.compile(expandSchema)
-      const metadata = {
-        expand: template.Metadata.expand
-      }
-      if (!validate(metadata)) {
-        /** @type {any} */
-        const anySchema = expandSchema
-        try {
-          const betterErrors = betterAjvErrors({
-            schema: anySchema,
-            data: metadata,
-            errors: validate.errors
-          })
-          console.error(betterErrors)
-        } catch {
-          console.error(validate.errors)
-        }
-        throw new TypeError('schema validation failed')
-      }
-    }
-  }
+  await applyPluginSchemas({
+    templateDirectory: path.dirname(templateFile),
+    template,
+    log
+  })
+
+  validateTemplate({ template })
 
   await runPlugins({
     template,
@@ -320,8 +298,7 @@ async function expandAll({
           configEnv,
           region,
           log,
-          baseDirectory,
-          nested: true
+          baseDirectory
         })
         value.Properties.Location = expandedPath
       }
@@ -404,7 +381,14 @@ async function runPlugins({
  **/
 async function applyPluginSchemas({ templateDirectory, template, log }) {
   expandSchema.properties.expand.properties.config.properties ||= {}
-  for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
+  const plugins = template?.Metadata?.expand?.plugins ?? []
+  if (plugins.length > 0) {
+    expandSchema.properties.expand.required = ['plugins', 'config']
+    expandSchema.properties.expand.properties.plugins.nullable = false
+    expandSchema.properties.expand.properties.config.nullable = false
+  }
+
+  for (const plugin of plugins) {
     if (typeof plugin !== 'string') continue
     const pluginPath = plugin?.startsWith('.')
       ? path.join(templateDirectory, plugin)
@@ -422,6 +406,15 @@ async function applyPluginSchemas({ templateDirectory, template, log }) {
       'object',
       `plugin: ${plugin} does not export const schema: PluginSchema<T>`
     )
+    if (
+      !expandSchema.properties.expand.properties.config.required.includes(
+        metadataConfig
+      )
+    ) {
+      expandSchema.properties.expand.properties.config.required.push(
+        metadataConfig
+      )
+    }
     if (
       !expandSchema.properties.expand.properties.config.properties[
         metadataConfig
@@ -480,4 +473,34 @@ async function findFiles(filePaths) {
 
 function yamlDump(template) {
   return dump(template, { schema: yamlSchema, noRefs: true })
+}
+
+/**
+ * @param {{ template: any }} options
+ * @returns {void}
+ **/
+
+function validateTemplate({ template }) {
+  if (template.Metadata?.expand) {
+    const ajv = new Ajv.default({ strict: false, allErrors: true })
+    const validate = ajv.compile(expandSchema)
+    const metadata = {
+      expand: template.Metadata.expand
+    }
+    if (!validate(metadata)) {
+      try {
+        /** @type {any} */
+        const anySchema = expandSchema
+        const betterErrors = betterAjvErrors({
+          schema: anySchema,
+          data: metadata,
+          errors: validate.errors
+        })
+        console.error(betterErrors)
+      } catch {
+        console.error(validate.errors)
+      }
+      throw new TypeError('schema validation failed')
+    }
+  }
 }
