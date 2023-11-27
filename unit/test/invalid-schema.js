@@ -6,6 +6,8 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+process.env.FORCE_COLOR = '0'
+
 test('invalid schema metadata', async (t) => {
   for (const { argv } of [
     {
@@ -51,16 +53,14 @@ test('invalid schema metadata', async (t) => {
         })
         assert.equal(mockLog.mock.calls.length, 1)
         assert.deepEqual(mockLog.mock.calls[0].arguments, [
-          [
-            {
-              context: {
-                errorType: 'additionalProperties'
-              },
-              message: "'invalid' property is not expected to be here",
-              path: '{base}.expand',
-              suggestion: "Did you mean property 'config'?"
-            }
-          ]
+          'ADDTIONAL PROPERTY must NOT have additional properties\n' +
+            '\n' +
+            '  1 | {\n' +
+            '  2 |   "expand": {\n' +
+            '> 3 |     "invalid": true\n' +
+            '    |     ^^^^^^^^^ 😲  invalid is not expected to be here!\n' +
+            '  4 |   }\n' +
+            '  5 | }'
         ])
 
         mock.restoreAll()
