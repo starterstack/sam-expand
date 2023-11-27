@@ -10,7 +10,7 @@ import { parseArgs } from 'node:util'
 import os from 'node:os'
 import { parse as tomlParse } from '@ltd/j-toml'
 import Ajv from 'ajv'
-import { betterAjvErrors } from '@apideck/better-ajv-errors'
+import betterAjvErrors from 'better-ajv-errors'
 import assert from 'node:assert/strict'
 import debugLog from './log.js'
 
@@ -497,11 +497,12 @@ function validateTemplate({ template }) {
       try {
         /** @type {any} */
         const anySchema = expandSchema
-        const betterErrors = betterAjvErrors({
-          schema: anySchema,
-          data: metadata,
-          errors: validate.errors
-        })
+        const betterErrors = betterAjvErrors(
+          anySchema,
+          metadata,
+          validate.errors,
+          { indent: 2 }
+        )
         console.error(betterErrors)
       } catch {
         console.error(validate.errors)

@@ -79,9 +79,9 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "@apideck/better-ajv-errors": "0.3.6",
     "@ltd/j-toml": "1.38.0",
     "ajv": "8.12.0",
+    "better-ajv-errors": "1.2.0",
     "js-yaml": "4.1.0",
     "yaml-cfn": "0.3.2"
   }
