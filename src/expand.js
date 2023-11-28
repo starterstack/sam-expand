@@ -10,6 +10,8 @@ import { parseArgs } from 'node:util'
 import os from 'node:os'
 import { parse as tomlParse } from '@ltd/j-toml'
 import Ajv from 'ajv'
+
+// @ts-ignore they got their type exports wrong so there are none :)
 import betterAjvErrors from 'better-ajv-errors'
 import assert from 'node:assert/strict'
 import debugLog from './log.js'
