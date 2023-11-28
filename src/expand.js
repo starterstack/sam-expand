@@ -24,7 +24,6 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
 }
 
 /**
- * @typedef {import('ajv').JSONSchemaType<{ expand: { plugins?: string[], config?: Record<string, any>} } >} ExpandSchema
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
  * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
@@ -49,35 +48,6 @@ if (windows && !/bash/.test(String(process.env.SHELL))) {
  * @template T
  * @typedef {import('ajv').JSONSchemaType<T>} PluginSchema
  **/
-
-/** @type {ExpandSchema} */
-const expandSchema = {
-  type: 'object',
-  required: [],
-  properties: {
-    expand: {
-      required: [],
-      type: 'object',
-      properties: {
-        plugins: {
-          type: 'array',
-          items: {
-            type: 'string'
-          },
-          additionalProperties: false,
-          nullable: true
-        },
-        config: {
-          type: 'object',
-          additionalProperties: false,
-          nullable: true,
-          required: []
-        }
-      },
-      additionalProperties: false
-    }
-  }
-}
 
 /**
  * @return {Promise<void>}
@@ -268,13 +238,13 @@ async function expandAll({
   const templateData = await readFile(templateFile, 'utf-8')
   const template = yamlParse(templateData)
 
-  await applyPluginSchemas({
-    templateDirectory: path.dirname(templateFile),
-    template,
-    log
-  })
-
-  validateTemplate({ template })
+  if (template.Metadata?.expand) {
+    await validatePluginSchemas({
+      templateDirectory: path.dirname(templateFile),
+      template,
+      log
+    })
+  }
 
   /** @type {Lifecycle[]} */
   const expandLifecycles = ['pre:expand', 'expand', 'post:expand']
@@ -345,7 +315,6 @@ async function runPlugins({
   configEnv,
   baseDirectory
 }) {
-  expandSchema.properties.expand.properties.config.properties ||= {}
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
     if (typeof plugin !== 'string') continue
     const pluginPath = plugin?.startsWith('.')
@@ -387,13 +356,34 @@ async function runPlugins({
  * @param {{ templateDirectory: string, template: any, log: Log }} options
  * @returns {Promise<void>}
  **/
-async function applyPluginSchemas({ templateDirectory, template, log }) {
-  expandSchema.properties.expand.properties.config.properties ||= {}
+async function validatePluginSchemas({ templateDirectory, template, log }) {
   const plugins = template?.Metadata?.expand?.plugins ?? []
-  if (plugins.length > 0) {
-    expandSchema.properties.expand.required = ['plugins', 'config']
-    expandSchema.properties.expand.properties.plugins.nullable = false
-    expandSchema.properties.expand.properties.config.nullable = false
+
+  const expandSchema = {
+    type: 'object',
+    required: [],
+    properties: {
+      expand: {
+        required: plugins.length ? ['plugins', 'config'] : [],
+        type: 'object',
+        properties: {
+          plugins: {
+            type: 'array',
+            items: {
+              type: 'string'
+            },
+            additionalProperties: false
+          },
+          config: {
+            type: 'object',
+            additionalProperties: false,
+            required: [],
+            properties: {}
+          }
+        },
+        additionalProperties: false
+      }
+    }
   }
 
   for (const plugin of plugins) {
@@ -403,39 +393,57 @@ async function applyPluginSchemas({ templateDirectory, template, log }) {
       : plugin
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
     const { metadataConfig, schema } = await import(pluginPath)
-    log('plugin apply schema %O', { plugin, metadataConfig })
-    assert.equal(
-      typeof metadataConfig,
-      'string',
-      `plugin: ${plugin} does not export const metadataConfig: string`
-    )
-    assert.equal(
-      typeof schema,
-      'object',
-      `plugin: ${plugin} does not export const schema: PluginSchema<T>`
-    )
-    if (
-      !expandSchema.properties.expand.properties.config.required.includes(
-        metadataConfig
+
+    if (metadataConfig || schema) {
+      log('plugin apply schema %O', { plugin, metadataConfig })
+      assert.equal(
+        typeof metadataConfig,
+        'string',
+        `plugin: ${plugin} does not export const metadataConfig: string`
       )
-    ) {
-      expandSchema.properties.expand.properties.config.required.push(
-        metadataConfig
+      assert.equal(
+        typeof schema,
+        'object',
+        `plugin: ${plugin} does not export const schema: PluginSchema<T>`
       )
+
+      /** @type {string[]} */
+      const required = expandSchema.properties.expand.properties.config.required
+      if (!required.includes(metadataConfig)) {
+        required.push(metadataConfig)
+      }
+
+      /** @type {Record<string, any>} */
+      const configProperties =
+        expandSchema.properties.expand.properties.config.properties
+      if (!configProperties[metadataConfig]) {
+        configProperties[metadataConfig] = schema
+      } else {
+        throw new Error(
+          `duplicate config ${metadataConfig} found in plugin: ${plugin}`
+        )
+      }
     }
-    if (
-      !expandSchema.properties.expand.properties.config.properties[
-        metadataConfig
-      ]
-    ) {
-      expandSchema.properties.expand.properties.config.properties[
-        metadataConfig
-      ] = schema
-    } else {
-      throw new Error(
-        `duplicate config ${metadataConfig} found in plugin: ${plugin}`
+  }
+
+  const ajv = new Ajv.default({ strict: false, allErrors: true })
+  const validate = ajv.compile(expandSchema)
+  const metadata = {
+    expand: template.Metadata.expand
+  }
+  if (!validate(metadata)) {
+    try {
+      const betterErrors = betterAjvErrors(
+        expandSchema,
+        metadata,
+        validate.errors,
+        { indent: 2 }
       )
+      console.error(betterErrors)
+    } catch {
+      console.error(validate.errors)
     }
+    throw new TypeError('schema validation failed')
   }
 }
 
@@ -481,35 +489,4 @@ async function findFiles(filePaths) {
 
 function yamlDump(template) {
   return dump(template, { schema: yamlSchema, noRefs: true })
-}
-
-/**
- * @param {{ template: any }} options
- * @returns {void}
- **/
-
-function validateTemplate({ template }) {
-  if (template.Metadata?.expand) {
-    const ajv = new Ajv.default({ strict: false, allErrors: true })
-    const validate = ajv.compile(expandSchema)
-    const metadata = {
-      expand: template.Metadata.expand
-    }
-    if (!validate(metadata)) {
-      try {
-        /** @type {any} */
-        const anySchema = expandSchema
-        const betterErrors = betterAjvErrors(
-          anySchema,
-          metadata,
-          validate.errors,
-          { indent: 2 }
-        )
-        console.error(betterErrors)
-      } catch {
-        console.error(validate.errors)
-      }
-      throw new TypeError('schema validation failed')
-    }
-  }
 }
