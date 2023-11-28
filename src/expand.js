@@ -264,11 +264,15 @@ async function expandAll({
     })
   }
 
-  for (const value of Object.values(template.Resources ?? {})) {
+  for (const [key, value] of Object.entries(template.Resources ?? {})) {
     if (value.Type === 'AWS::Serverless::Application') {
       if (typeof value.Properties.Location === 'string') {
+        const nestedLocation = await findFiles([value.Properties.Location])
+        if (!nestedLocation) {
+          throw new Error(`${value.Properties.Location} not found for ${key}`)
+        }
         const { expandedPath } = await expandAll({
-          templateFile: await findFiles([value.Properties.Location]),
+          templateFile: nestedLocation,
           tempFiles,
           config,
           command,
