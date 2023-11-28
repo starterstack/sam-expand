@@ -138,7 +138,11 @@ export default async function expand() {
   )
 
   const templateFile = String(
-    values.template ?? values['template-file'] ?? (await findTemplateFile())
+    await findTemplateFile(
+      values['template']?.toString() ??
+        values['template-file']?.toString() ??
+        ''
+    )
   )
 
   log('use template %O', templateFile)
@@ -368,7 +372,7 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
     required: [],
     properties: {
       expand: {
-        required: plugins.length ? ['plugins', 'config'] : [],
+        required: plugins.length ? ['plugins'] : [],
         type: 'object',
         properties: {
           plugins: {
@@ -395,6 +399,8 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
     const pluginPath = plugin?.startsWith('.')
       ? path.join(templateDirectory, plugin)
       : plugin
+
+    log('import plugin %O', { pluginPath })
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
     const { metadataConfig, schema } = await import(pluginPath)
 
@@ -465,9 +471,14 @@ async function getConfigFileSettings(filePath) {
   return { filePath, type }
 }
 
-/** @returns {Promise<string>} */
-async function findTemplateFile() {
-  return await findFiles(['template.yaml', 'template.yml'])
+/**
+ * @param {string} filePath
+ * @returns {Promise<string>}
+ **/
+async function findTemplateFile(filePath) {
+  return await findFiles(
+    [filePath, 'template.yaml', 'template.yml'].filter(Boolean)
+  )
 }
 
 /** @param {string[]} filePaths }
@@ -475,10 +486,9 @@ async function findTemplateFile() {
 async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
-      const fullPath = path.join(
-        process.env.INIT_CWD ?? process.cwd(),
-        filePath
-      )
+      const fullPath = filePath?.startsWith('.')
+        ? path.join(process.env.INIT_CWD ?? process.cwd(), filePath)
+        : filePath
       await stat(fullPath)
       return fullPath
     } catch {}

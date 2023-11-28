@@ -26,6 +26,10 @@
       "import": "./src/plugins/types.js",
       "types": "./src/plugins/types.d.ts"
     },
+    "./plugins/stack-stage-overrides": {
+      "import": "./src/plugins/stack-stage-overrides.js",
+      "types": "./src/plugins/stack-stage-overrides.d.ts"
+    },
     "./plugins/run-script-hooks": {
       "import": "./src/plugins/run-script-hooks.js",
       "types": "./src/plugins/run-script-hooks.d.ts"

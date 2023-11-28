@@ -5,8 +5,6 @@ Metadata:
   expand:
     plugins:
       - ./do-nothing-plugin.mjs
-    config:
-      'do-nothing': {}
 Resources:
   WaitConditionHandle:
     Type: AWS::CloudFormation::WaitConditionHandle
