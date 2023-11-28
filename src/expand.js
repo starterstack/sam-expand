@@ -126,10 +126,12 @@ export default async function expand() {
       : /** @type {Log} */ (_format, ..._args) => {}
 
   log('cli args %O', { args: { ...values } })
+  const command = positionals?.[0]
 
   if (values.help) {
-    log('sam %O', ['--help'])
-    return await spawn('sam', ['--help'])
+    const helpArgs = [command, '--help'].filter(Boolean)
+    log('sam %O', helpArgs)
+    return await spawn('sam', helpArgs)
   }
 
   const configFileSettings = await getConfigFileSettings(
@@ -143,8 +145,6 @@ export default async function expand() {
       ? tomlParse(await readFile(configFileSettings.filePath, 'utf-8'))
       : yamlParse(await readFile(configFileSettings.filePath, 'utf-8'))
     : null
-
-  const command = positionals?.[0]
 
   const configEnv = String(values['config-env'] ?? 'default')
   log('configEnv %O', configEnv)
