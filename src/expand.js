@@ -328,6 +328,7 @@ async function runPlugins({
     const pluginPath = plugin?.startsWith('.')
       ? path.join(templateDirectory, plugin)
       : plugin
+
     /** @type {{ lifecycle: Plugin, lifecycles: Lifecycles }}*/
     const { lifecycle: pluginModule, lifecycles } = await import(pluginPath)
     assert.equal(
@@ -462,9 +463,9 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
  **/
 async function getConfigFileSettings(filePath) {
   filePath ||= await findFiles([
-    'samconfig.toml',
-    'samconfig.yaml',
-    'samconfig.yml'
+    './samconfig.toml',
+    './samconfig.yaml',
+    './samconfig.yml'
   ])
   if (!filePath) return null
   const type = path.extname(filePath) === '.toml' ? 'toml' : 'yaml'
@@ -477,7 +478,7 @@ async function getConfigFileSettings(filePath) {
  **/
 async function findTemplateFile(filePath) {
   return await findFiles(
-    [filePath, 'template.yaml', 'template.yml'].filter(Boolean)
+    [filePath, './template.yaml', './template.yml'].filter(Boolean)
   )
 }
 
