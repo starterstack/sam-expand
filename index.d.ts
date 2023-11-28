@@ -1,12 +1,6 @@
 declare module '@starterstack/sam-expand' {
 	import type { yamlParse } from 'yaml-cfn';
 	export default function expand(): Promise<void>;
-	export type ExpandSchema = import('ajv').JSONSchemaType<{
-		expand: {
-			plugins?: string[];
-			config?: Record<string, any>;
-		};
-	}>;
 	export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	export type Lifecycles = Array<Lifecycle>;
 	export type Log = Log_1;
