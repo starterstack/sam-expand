@@ -10,6 +10,7 @@ import { parseArgs } from 'node:util'
 import os from 'node:os'
 import { parse as tomlParse } from '@ltd/j-toml'
 import Ajv from 'ajv'
+import freeze from './freeze.js'
 
 // @ts-ignore they got their type exports wrong so there are none :)
 import betterAjvErrors from 'better-ajv-errors'
@@ -112,8 +113,8 @@ export default async function expand() {
 
   const config = configFileSettings
     ? configFileSettings.type === 'toml'
-      ? tomlParse(await readFile(configFileSettings.filePath, 'utf-8'))
-      : yamlParse(await readFile(configFileSettings.filePath, 'utf-8'))
+      ? freeze(tomlParse(await readFile(configFileSettings.filePath, 'utf-8')))
+      : freeze(yamlParse(await readFile(configFileSettings.filePath, 'utf-8')))
     : null
 
   const configEnv = String(values['config-env'] ?? 'default')
@@ -137,12 +138,11 @@ export default async function expand() {
     (x) => argv.includes(x)
   )
 
+  const templatePath =
+    values['template']?.toString() ?? values['template-file']?.toString() ?? ''
+
   const templateFile = String(
-    await findTemplateFile(
-      values['template']?.toString() ??
-        values['template-file']?.toString() ??
-        ''
-    )
+    await findTemplateFile({ filePath: templatePath, command })
   )
 
   log('use template %O', templateFile)
@@ -245,7 +245,7 @@ async function expandAll({
   if (template.Metadata?.expand) {
     await validatePluginSchemas({
       templateDirectory: path.dirname(templateFile),
-      template,
+      template: freeze(template),
       log
     })
   }
@@ -255,7 +255,7 @@ async function expandAll({
 
   for (const lifecycle of expandLifecycles) {
     await runPlugins({
-      template,
+      template: command === 'build' ? template : freeze(template),
       templateDirectory: path.dirname(templateFile),
       config,
       lifecycle,
@@ -301,9 +301,9 @@ async function expandAll({
     log('writing expanded template %O', expandedPath)
     await writeFile(expandedPath, yamlDump(template))
     tempFiles.push(expandedPath)
-    return { expandedPath, template }
+    return { expandedPath, template: freeze(template) }
   } else {
-    return { expandedPath: templateFile, template }
+    return { expandedPath: templateFile, template: freeze(template) }
   }
 }
 
@@ -473,12 +473,17 @@ async function getConfigFileSettings(filePath) {
 }
 
 /**
- * @param {string} filePath
+ * @param {{ filePath: string, command: string }} options
  * @returns {Promise<string>}
  **/
-async function findTemplateFile(filePath) {
+async function findTemplateFile({ filePath, command }) {
   return await findFiles(
-    [filePath, './template.yaml', './template.yml'].filter(Boolean)
+    [
+      filePath,
+      command === 'package' ? '.aws-sam/build/template.yaml' : '',
+      './template.yaml',
+      './template.yml'
+    ].filter(Boolean)
   )
 }
 
