@@ -21,7 +21,7 @@ declare module '@starterstack/sam-expand' {
 	}) => Promise<void>;
 	export type PluginSchema<T> = import('ajv').JSONSchemaType<T>;
 	type Log_1 = (format: string, ...args: any) => void;
-	type Spawn = (cmd: string, args: string[]) => Promise<void>;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
 declare module '@starterstack/sam-expand/plugins' {
@@ -48,7 +48,7 @@ declare module '@starterstack/sam-expand/plugins' {
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
-	type Spawn = (cmd: string, args: string[]) => Promise<void>;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
 declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
@@ -84,7 +84,7 @@ declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
-	type Spawn = (cmd: string, args: string[]) => Promise<void>;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
@@ -124,7 +124,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
-	type Spawn = (cmd: string, args: string[]) => Promise<void>;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
@@ -157,7 +157,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
-	type Spawn = (cmd: string, args: string[]) => Promise<void>;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
 //# sourceMappingURL=index.d.ts.map
