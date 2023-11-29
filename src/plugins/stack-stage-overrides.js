@@ -3,7 +3,7 @@
 import path from 'node:path'
 
 /** @type {import('./types.js').Lifecycles} */
-export const lifecycles = ['pre:deploy', 'pre:package']
+export const lifecycles = ['pre:deploy', 'pre:package', 'pre:delete']
 
 /** @type {import('./types.js').PluginSchema<{ region?: string, 'suffix-stage': boolean, 'config-env'?: string, stage?: string }>} */
 export const schema = {
@@ -40,7 +40,11 @@ export const lifecycle = async function expand({
   lifecycle
 }) {
   const config = template.Metadata.expand.config?.['stack-stage-overrides']
-  if (lifecycle === 'pre:deploy' || lifecycle === 'pre:package') {
+  if (
+    lifecycle === 'pre:deploy' ||
+    lifecycle === 'pre:package' ||
+    lifecycle === 'pre:delete'
+  ) {
     log('original argv %O', argv)
     if (config.region) {
       const regionIndex = argv.indexOf('--region')
@@ -57,7 +61,7 @@ export const lifecycle = async function expand({
       argv.push(...['--config-env', config['config-env']])
     }
   }
-  if (lifecycle === 'pre:deploy') {
+  if (lifecycle === 'pre:deploy' || lifecycle === 'pre:delete') {
     const stackParameter = argv.find((x) => x?.startsWith('Stack='))
     if (config['stage']) {
       const stageParameterIndex = argv.findIndex((x) => x?.startsWith('Stage='))
@@ -104,7 +108,7 @@ export const lifecycle = async function expand({
         argv.push(...['--stack-name', stackName])
       }
     }
-    if (stackParameter) {
+    if (stackParameter && lifecycle !== 'pre:delete') {
       const tagsIndex = argv.indexOf('--tags')
       const tagArguments = [
         '--tags',
@@ -115,6 +119,21 @@ export const lifecycle = async function expand({
       } else if (!argv.find((x) => x?.startsWith('ManagedBy='))) {
         argv.splice(tagsIndex, 1, ...tagArguments)
       }
+    }
+  }
+
+  if (lifecycle === 'pre:delete') {
+    // sam delete doesn't have parameter-overrides which we use
+    // here we remove them from argv so allow sam to work
+    const parameterOverridesIndex = argv.indexOf('--parameter-overrides')
+    if (parameterOverridesIndex !== -1) {
+      const endIndex = argv.findIndex(
+        (x, i) => i > parameterOverridesIndex && x.startsWith('-')
+      )
+      argv.splice(
+        parameterOverridesIndex,
+        endIndex === -1 ? argv.length : endIndex - parameterOverridesIndex
+      )
     }
   }
 }

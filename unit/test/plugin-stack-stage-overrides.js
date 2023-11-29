@@ -115,7 +115,7 @@ test('arguments', async (t) => {
   })
 
   await t.test('--region', async (t) => {
-    for (const lifecycle of ['pre:package', 'pre:deploy']) {
+    for (const lifecycle of ['pre:package', 'pre:deploy', 'pre:delete']) {
       await t.test(lifecycle, async () => {
         const template = structuredClone(baseTemplate)
         template.Metadata.expand.config['stack-stage-overrides'] = {
@@ -136,7 +136,7 @@ test('arguments', async (t) => {
   })
 
   await t.test('--config-env', async (t) => {
-    for (const lifecycle of ['pre:package', 'pre:deploy']) {
+    for (const lifecycle of ['pre:package', 'pre:deploy', 'pre:delete']) {
       await t.test(lifecycle, async () => {
         const template = structuredClone(baseTemplate)
         template.Metadata.expand.config['stack-stage-overrides'] = {
@@ -237,6 +237,24 @@ test('arguments', async (t) => {
     ])
   })
 
+  await t.test('delete stack name with suffix', async (_t) => {
+    const template = structuredClone(baseTemplate)
+    template.Metadata.expand.config['stack-stage-overrides'] = {
+      'suffix-stage': true
+    }
+
+    const argv = ['--parameter-overrides', 'Stack=mystack', 'Stage=feature']
+
+    await stackStagePlugin({
+      template,
+      templateDirectory: path.join(__dirname, 'fixtures'),
+      lifecycle: 'pre:delete',
+      argv,
+      log() {}
+    })
+    assert.deepEqual(argv, ['--stack-name', 'mystack-fixtures-feature'])
+  })
+
   await t.test('stack name with suffix with missing stage', async (_t) => {
     const template = structuredClone(baseTemplate)
     template.Metadata.expand.config['stack-stage-overrides'] = {
@@ -262,6 +280,35 @@ test('arguments', async (t) => {
       }
     )
   })
+
+  await t.test(
+    'delete stack name with suffix with missing stage',
+    async (_t) => {
+      const template = structuredClone(baseTemplate)
+      template.Metadata.expand.config['stack-stage-overrides'] = {
+        'suffix-stage': true
+      }
+
+      const argv = ['--parameter-overrides', 'Stack=mystack']
+
+      await assert.rejects(
+        stackStagePlugin({
+          template,
+          templateDirectory: path.join(__dirname, 'fixtures'),
+          lifecycle: 'pre:delete',
+          argv,
+          log() {}
+        }),
+        (err) => {
+          assert.equal(
+            err.message,
+            'suffix-stage only works with --parameter-overrides "Stage="'
+          )
+          return true
+        }
+      )
+    }
+  )
 
   await t.test('stack name with suffix with missing stack', async (_t) => {
     const template = structuredClone(baseTemplate)
@@ -290,6 +337,35 @@ test('arguments', async (t) => {
   })
 
   await t.test(
+    'delete stack name with suffix with missing stack',
+    async (_t) => {
+      const template = structuredClone(baseTemplate)
+      template.Metadata.expand.config['stack-stage-overrides'] = {
+        'suffix-stage': true
+      }
+
+      const argv = ['--parameter-overrides', 'Stage=dev']
+
+      await assert.rejects(
+        stackStagePlugin({
+          template,
+          templateDirectory: path.join(__dirname, 'fixtures'),
+          lifecycle: 'pre:delete',
+          argv,
+          log() {}
+        }),
+        (err) => {
+          assert.equal(
+            err.message,
+            'suffix-stage only works with both --parameter-overrides "Stage=" and (--stack-name or "Stack=")'
+          )
+          return true
+        }
+      )
+    }
+  )
+
+  await t.test(
     'no default stack name with no suffix with missing stack',
     async (_t) => {
       const template = structuredClone(baseTemplate)
@@ -308,6 +384,28 @@ test('arguments', async (t) => {
       })
 
       assert.deepEqual(argv, ['--parameter-overrides', 'Stage=dev'])
+    }
+  )
+
+  await t.test(
+    'delete: no default stack name with no suffix with missing stack',
+    async (_t) => {
+      const template = structuredClone(baseTemplate)
+      template.Metadata.expand.config['stack-stage-overrides'] = {
+        'suffix-stage': false
+      }
+
+      const argv = ['--parameter-overrides', 'Stage=dev']
+
+      await stackStagePlugin({
+        template,
+        templateDirectory: path.join(__dirname, 'fixtures'),
+        lifecycle: 'pre:delete',
+        argv,
+        log() {}
+      })
+
+      assert.deepEqual(argv, [])
     }
   )
 
@@ -336,6 +434,25 @@ test('arguments', async (t) => {
       '--tags',
       'ManagedBy=mystack'
     ])
+  })
+
+  await t.test('delete default stack name with no suffix', async (_t) => {
+    const template = structuredClone(baseTemplate)
+    template.Metadata.expand.config['stack-stage-overrides'] = {
+      'suffix-stage': false
+    }
+
+    const argv = ['--parameter-overrides', 'Stage=dev', 'Stack=mystack']
+
+    await stackStagePlugin({
+      template,
+      templateDirectory: path.join(__dirname, 'fixtures'),
+      lifecycle: 'pre:delete',
+      argv,
+      log() {}
+    })
+
+    assert.deepEqual(argv, ['--stack-name', 'mystack-fixtures'])
   })
 
   await t.test(
@@ -371,6 +488,33 @@ test('arguments', async (t) => {
   )
 
   await t.test(
+    'delete stack name with suffix with missing stack parameter and --stack-name',
+    async (_t) => {
+      const template = structuredClone(baseTemplate)
+      template.Metadata.expand.config['stack-stage-overrides'] = {
+        'suffix-stage': true
+      }
+
+      const argv = [
+        '--parameter-overrides',
+        'Stage=dev',
+        '--stack-name',
+        'mystack-fixtures'
+      ]
+
+      await stackStagePlugin({
+        template,
+        templateDirectory: path.join(__dirname, 'fixtures'),
+        lifecycle: 'pre:delete',
+        argv,
+        log() {}
+      })
+
+      assert.deepEqual(argv, ['--stack-name', 'mystack-fixtures-dev'])
+    }
+  )
+
+  await t.test(
     'default stack name with no suffix with missing stack parameter and --stack-name',
     async (_t) => {
       const template = structuredClone(baseTemplate)
@@ -399,6 +543,33 @@ test('arguments', async (t) => {
         '--stack-name',
         'mystack-fixtures'
       ])
+    }
+  )
+
+  await t.test(
+    'delete default stack name with no suffix with missing stack parameter and --stack-name',
+    async (_t) => {
+      const template = structuredClone(baseTemplate)
+      template.Metadata.expand.config['stack-stage-overrides'] = {
+        'suffix-stage': false
+      }
+
+      const argv = [
+        '--parameter-overrides',
+        'Stage=dev',
+        '--stack-name',
+        'mystack-fixtures'
+      ]
+
+      await stackStagePlugin({
+        template,
+        templateDirectory: path.join(__dirname, 'fixtures'),
+        lifecycle: 'pre:delete',
+        argv,
+        log() {}
+      })
+
+      assert.deepEqual(argv, ['--stack-name', 'mystack-fixtures'])
     }
   )
 })
