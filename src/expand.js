@@ -102,7 +102,8 @@ export default async function expand() {
   if (values.help) {
     const helpArgs = [command, '--help'].filter(Boolean)
     log('sam %O', helpArgs)
-    return await spawn('sam', helpArgs)
+    await spawn('sam', helpArgs)
+    return
   }
 
   const configFileSettings = await getConfigFileSettings(
