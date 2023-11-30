@@ -79,14 +79,13 @@ export const lifecycle = async function expand({ template, region }) {
           StackName: parameter.resolver.cloudFormation.stackName
         })
       )
-      const output =
-        result.Stacks?.[0]?.Outputs?.[
-          parameter.resolver.cloudFormation.exportName
-        ]
-      console.log(output)
-
-      console.log(result)
-      console.log('cloudformation', parameter.resolver.cloudFormation)
+      if (result?.Stacks?.[0] && result?.Stacks?.[0]?.Outputs) {
+        const stack = result.Stacks[0]
+        const outputs = stack.Outputs
+        console.log(outputs)
+        console.log(result)
+        console.log('cloudformation', parameter.resolver.cloudFormation)
+      }
     }
   }
 }

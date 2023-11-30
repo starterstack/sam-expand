@@ -19,7 +19,7 @@ import debugLog from './log.js'
 
 const windows = os.platform() === 'win32'
 
-if (windows && !/bash/.test(String(process.env.SHELL))) {
+if (windows && !/bash/.test(String(process.env['SHELL']))) {
   console.error('\x1B[91monly git bash supported in windows!\x1B[0m')
   process.exit(1)
 }
@@ -92,15 +92,15 @@ export default async function expand() {
   })
 
   const log =
-    values.debug ?? process.env.DEBUG
+    values.debug ?? process.env['DEBUG']
       ? debugLog
       : /** @type {Log} */ (_format, ..._args) => {}
 
   log('cli args %O', { args: { ...values } })
-  const command = positionals?.[0]
+  const command = positionals?.[0] ?? ''
 
   if (values.help) {
-    const helpArgs = [command, '--help'].filter(Boolean)
+    const helpArgs = command ? [command, '--help'] : ['--help']
     log('sam %O', helpArgs)
     await spawn('sam', helpArgs)
     return
@@ -126,8 +126,8 @@ export default async function expand() {
     values.region ??
     config?.[configEnv ?? 'default']?.[command]?.parameters?.region ??
     config?.[configEnv ?? 'default']?.global?.parameters?.region ??
-    process.env.AWS_REGION ??
-    process.env.AWS_DEFAULT_REGION
+    process.env['AWS_REGION'] ??
+    process.env['AWS_DEFAULT_REGION']
 
   log('region %O', region)
 
@@ -494,7 +494,7 @@ async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
       const fullPath = filePath?.startsWith('.')
-        ? path.join(process.env.INIT_CWD ?? process.cwd(), filePath)
+        ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
         : filePath
       await stat(fullPath)
       return fullPath

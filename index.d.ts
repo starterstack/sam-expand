@@ -54,6 +54,7 @@ declare module '@starterstack/sam-expand/plugins' {
 declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
+
 	export const schema: PluginSchema<{
 		region?: string;
 		'suffix-stage': boolean;
@@ -61,6 +62,7 @@ declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
 		stage?: string;
 	}>;
 	export const metadataConfig: "stack-stage-overrides";
+
 	export const lifecycle: Plugin;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;
@@ -90,21 +92,28 @@ declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
 declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
-	export const schema: PluginSchema<Array<{
-		name: string;
-		resolver: CloudFormation | File;
-	}>>;
+
+
+	export const schema: PluginSchema<Schema>;
 	export const metadataConfig: "parameter-overrides";
+
 	export const lifecycle: Plugin;
 	export type CloudFormation = {
 		region?: string;
-		stack: string;
+		stackName: string;
 		exportName: string;
 	};
 	export type File = {
 		location: string;
 		exportName: string;
 	};
+	export type Schema = Array<{
+		name: string;
+		resolver: {
+			file?: File;
+			cloudFormation?: CloudFormation;
+		};
+	}>;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
@@ -133,8 +142,11 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const metadataConfig: "script";
+
 	export const lifecycles: Lifecycles;
+
 	export const schema: HookSchema;
+
 	export const lifecycle: Plugin;
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
 	export type HookSchema = PluginSchema<{
@@ -173,10 +185,12 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
+
 	export const schema: PluginSchema<{
 		config: string;
 	}>;
 	export const metadataConfig: "esbuild";
+
 	export const lifecycle: Plugin;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;

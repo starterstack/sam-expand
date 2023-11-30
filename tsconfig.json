@@ -1,16 +1,10 @@
 {
+  "extends": "@sindresorhus/tsconfig",
   "compilerOptions": {
-    "strict": true,
     "allowJs": true,
     "lib": ["ES2022"],
-    "moduleResolution": "node16",
-    "module": "node16",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "removeComments": true,
     "sourceMap": true,
     "target": "ES2022",
-    "declaration": true,
     "declarationMap": false,
     "emitDeclarationOnly": true
   },
