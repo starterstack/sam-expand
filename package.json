@@ -30,6 +30,10 @@
       "import": "./src/plugins/stack-stage-overrides.js",
       "types": "./src/plugins/stack-stage-overrides.d.ts"
     },
+    "./plugins/parameter-overrides": {
+      "import": "./src/plugins/parameter-overrides.js",
+      "types": "./src/plugins/parameter-overrides.d.ts"
+    },
     "./plugins/run-script-hooks": {
       "import": "./src/plugins/run-script-hooks.js",
       "types": "./src/plugins/run-script-hooks.d.ts"
@@ -83,6 +87,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudformation": "3.362.0",
     "@ltd/j-toml": "1.38.0",
     "ajv": "8.12.0",
     "better-ajv-errors": "1.2.0",

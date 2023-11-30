@@ -87,6 +87,49 @@ declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
+declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
+	import type { yamlParse } from 'yaml-cfn';
+	export const lifecycles: Lifecycles;
+	export const schema: PluginSchema<Array<{
+		name: string;
+		resolver: CloudFormation | File;
+	}>>;
+	export const metadataConfig: "parameter-overrides";
+	export const lifecycle: Plugin;
+	export type CloudFormation = {
+		region?: string;
+		stack: string;
+		exportName: string;
+	};
+	export type File = {
+		location: string;
+		exportName: string;
+	};
+	type Plugin = Plugin_1;
+	type Lifecycles = Lifecycles_1;
+	type PluginSchema<T> = PluginSchema_1<T>;
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycles_1 = Array<Lifecycle>;
+	type Plugin_1 = (options: {
+		template: any;
+		templateDirectory: string;
+		config: any;
+		log: Log;
+		command: string;
+		argv: string[];
+		parse: typeof yamlParse;
+		dump: (o: any) => string;
+		spawn: Spawn;
+		configEnv: string;
+		region?: string | undefined;
+		baseDirectory?: string | undefined;
+		lifecycle: Lifecycle;
+	}) => Promise<void>;
+	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
+	type Log = (format: string, ...args: any) => void;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+}
+
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const metadataConfig: "script";

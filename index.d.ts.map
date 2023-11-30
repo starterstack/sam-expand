@@ -12,6 +12,8 @@
 		"schema",
 		"metadataConfig",
 		"lifecycle",
+		"CloudFormation",
+		"File",
 		"Hook",
 		"HookSchema"
 	],
@@ -20,6 +22,7 @@
 		"src/log.d.ts",
 		"src/spawn.d.ts",
 		"src/plugins/stack-stage-overrides.d.ts",
+		"src/plugins/parameter-overrides.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
 		"src/plugins/esbuild-node.d.ts"
 	],
@@ -29,7 +32,8 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";;;aACYA,SAASA;aACTC,UAAUA;aCDVC,GAAGA;aDGHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;MElBZC,KAAKA;;;;;aFGLF,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cCDJC,UAAUA;cACVC,MAAMA;;;;;;cAMNC,cAAcA;cACdC,SAASA;MHJVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cEDJG,cAAcA;cACdF,UAAUA;cACVC,MAAMA;cACNE,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MJDVR,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cGDJC,UAAUA;cACVC,MAAMA;;;cAGNC,cAAcA;cACdC,SAASA;MLDVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA"
+	"mappings": ";;;aACYA,SAASA;aACTC,UAAUA;aCDVC,GAAGA;aDGHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;MElBZC,KAAKA;;;;;aFGLF,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cCDJC,UAAUA;cACVC,MAAMA;;;;;;cAMNC,cAAcA;cACdC,SAASA;MHJVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cEDJC,UAAUA;cACVC,MAAMA;;;;cAINC,cAAcA;cACdC,SAASA;aACVC,cAAcA;;;;;aAKdC,IAAIA;;;;MJRJR,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cGDJG,cAAcA;cACdF,UAAUA;cACVC,MAAMA;cACNE,SAASA;aACVG,IAAIA;aACJC,UAAUA;;;;;;;;MLDVV,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cIDJC,UAAUA;cACVC,MAAMA;;;cAGNC,cAAcA;cACdC,SAASA;MNDVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA"
 }
