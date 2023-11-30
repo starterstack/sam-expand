@@ -7,14 +7,14 @@
     "cz": "cz",
     "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "build": "tsc",
-    "postbuild": "npx dts-buddy",
+    "postbuild": "npx dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "test": "npm --prefix unit t",
     "prepublish": "npm test && npm run build"
   },
   "types": "index.d.ts",
   "type": "module",
   "files": [
-    "src/**/*.js",
+    "src",
     "index.d.ts"
   ],
   "exports": {
