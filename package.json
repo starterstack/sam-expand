@@ -26,10 +26,6 @@
       "import": "./src/plugins/types.js",
       "types": "./src/plugins/types.d.ts"
     },
-    "./plugins/stack-stage-overrides": {
-      "import": "./src/plugins/stack-stage-overrides.js",
-      "types": "./src/plugins/stack-stage-overrides.d.ts"
-    },
     "./plugins/parameter-overrides": {
       "import": "./src/plugins/parameter-overrides.js",
       "types": "./src/plugins/parameter-overrides.d.ts"
