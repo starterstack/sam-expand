@@ -140,16 +140,17 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		exportName: string;
 		defaultValue?: string;
 	};
+	export type Command = {
+		command: string;
+		args: Array<{
+			value?: string;
+			file?: File;
+			cloudFormation?: CloudFormation;
+		}>;
+	};
 	export type HookSchema = PluginSchema<{
 		hooks: {
-			[keyof(Hook)]?: Array<{
-				command: string;
-				args: Array<{
-					value?: string;
-					file?: File;
-					cloudFormation?: CloudFormation;
-				}>;
-			}>;
+			[keyof(Hook)]?: Array<Command>;
 		};
 	}>;
 	type Plugin = Plugin_1;

@@ -1,13 +1,17 @@
 // @ts-check
 
-/** @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
+import { resolveFile, resolveCloudFormationOutput } from '../resolve.js'
+
+/**
+ * @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
  * @typedef {{ stackRegion?: string, stackName: string, outputKey: string, defaultValue?: string }} CloudFormation
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
+ * @typedef {{ command: string, args: Array<{ value?: string, file?: File, cloudFormation?: CloudFormation}> }} Command
  **/
 
 /** @typedef {import('./types.js').PluginSchema<{
  *    hooks: {
- *      [keyof(Hook)]?: Array<{ command: string, args: Array<{ value?: string, file?: File, cloudFormation?: CloudFormation}> }>
+ *      [keyof(Hook)]?: Array<Command>
  *    }
  *  }>} HookSchema
  **/
@@ -110,16 +114,50 @@ export const schema = {
 export const lifecycle = async function runScriptHook({
   template,
   spawn,
+  parse,
+  region,
   log,
   lifecycle
 }) {
+  /** @type {HookSchema['Hooks']} */
   const hooks = template.Metadata.expand.config.script.hooks
+
+  /** @type {Command[]} */
   const commands = hooks[lifecycle]
 
   if (commands) {
     for (const { command, args } of commands) {
-      log('running script hook %O', { lifecycle, command, args })
-      await spawn(command, args ?? [])
+      /** @type {Array<string | undefined>} */
+      const parsedArguments = await Promise.all(
+        args.map((arg) => {
+          if (arg.value) {
+            return arg.value
+          } else if (arg.file) {
+            const { location, defaultValue, exportName } = arg.file
+            return resolveFile({ location, defaultValue, exportName, parse })
+          } else if (arg.cloudFormation) {
+            const { stackName, defaultValue, stackRegion, outputKey } =
+              arg.cloudFormation
+            if (!region && !stackRegion) {
+              throw new Error(
+                `${stackName}.${outputKey} can't be resolved, missing region`
+              )
+            }
+            return resolveCloudFormationOutput({
+              stackName,
+              defaultValue,
+              stackRegion: String(stackRegion ?? region),
+              outputKey
+            })
+          } else {
+            return
+          }
+        })
+      )
+      /** @type {string[]} */
+      const spawnArgs = parsedArguments.filter(Boolean).map(String)
+      log('running script hook %O', { lifecycle, command, args: spawnArgs })
+      await spawn(command, spawnArgs)
     }
   } else {
     log('skipping script hook %O', { lifecycle })
