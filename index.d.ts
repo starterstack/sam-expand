@@ -24,6 +24,34 @@ declare module '@starterstack/sam-expand' {
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
+declare module '@starterstack/sam-expand/resolve' {
+	export function resolveFile({ location, templateDirectory, parse, exportName, defaultValue, command, lifecycle, configEnv, region }: {
+		location: string;
+		templateDirectory: string;
+		parse: typeof import("yaml-cfn").yamlParse;
+		exportName: string;
+		defaultValue?: string;
+		command: string;
+		lifecycle: Lifecycle;
+		configEnv: string;
+		region?: string;
+	}): Promise<string | undefined>;
+
+	export function resolveCloudFormationOutput({ stackRegion, outputKey, stackName, defaultValue }: {
+		stackRegion: string;
+		outputKey: string;
+		stackName: string;
+		defaultValue?: string;
+	}): Promise<string | undefined>;
+	export type FileResolver = (options: {
+		command: string;
+		lifecycle: Lifecycle;
+		configEnv: string;
+		region?: string;
+	}) => Promise<Record<string, string | undefined>>;
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+}
+
 declare module '@starterstack/sam-expand/plugins' {
 	import type { yamlParse } from 'yaml-cfn';
 	export type Plugin = Plugin_1;
@@ -51,17 +79,31 @@ declare module '@starterstack/sam-expand/plugins' {
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
-declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
+declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
-	export const schema: PluginSchema<{
-		region?: string;
-		'suffix-stage': boolean;
-		'config-env'?: string;
-		stage?: string;
-	}>;
-	export const metadataConfig: "stack-stage-overrides";
+
+
+	export const schema: PluginSchema<Schema>;
+	export const metadataConfig: "parameterOverrides";
+
 	export const lifecycle: Plugin;
+	export type CloudFormation = {
+		stackRegion?: string;
+		stackName: string;
+		outputKey: string;
+		defaultValue?: string;
+	};
+	export type File = {
+		location: string;
+		exportName: string;
+		defaultValue?: string;
+	};
+	export type Schema = Array<{
+		name: string;
+		file?: File;
+		cloudFormation?: CloudFormation;
+	}>;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
@@ -90,16 +132,35 @@ declare module '@starterstack/sam-expand/plugins/stack-stage-overrides' {
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const metadataConfig: "script";
+
 	export const lifecycles: Lifecycles;
+
 	export const schema: HookSchema;
+
 	export const lifecycle: Plugin;
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
+	export type CloudFormation = {
+		stackRegion?: string;
+		stackName: string;
+		outputKey: string;
+		defaultValue?: string;
+	};
+	export type File = {
+		location: string;
+		exportName: string;
+		defaultValue?: string;
+	};
+	export type Command = {
+		command: string;
+		args: Array<{
+			value?: string;
+			file?: File;
+			cloudFormation?: CloudFormation;
+		}>;
+	};
 	export type HookSchema = PluginSchema<{
 		hooks: {
-			[keyof(Hook)]?: Array<{
-				command: string;
-				args: string[];
-			}>;
+			[keyof(Hook)]?: Array<Command>;
 		};
 	}>;
 	type Plugin = Plugin_1;
@@ -130,10 +191,12 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	import type { yamlParse } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
+
 	export const schema: PluginSchema<{
 		config: string;
 	}>;
 	export const metadataConfig: "esbuild";
+
 	export const lifecycle: Plugin;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;

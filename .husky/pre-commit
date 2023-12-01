@@ -8,3 +8,5 @@ if [ -z "${npm_command}" ]; then
 fi
 
 npx --no-install lint-staged -r
+
+npm run build

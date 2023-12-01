@@ -8,18 +8,26 @@
 		"Plugin",
 		"PluginSchema",
 		"Spawn",
+		"resolveFile",
+		"resolveCloudFormationOutput",
+		"FileResolver",
 		"lifecycles",
 		"schema",
 		"metadataConfig",
 		"lifecycle",
+		"CloudFormation",
+		"File",
+		"Schema",
 		"Hook",
+		"Command",
 		"HookSchema"
 	],
 	"sources": [
 		"src/expand.d.ts",
 		"src/log.d.ts",
 		"src/spawn.d.ts",
-		"src/plugins/stack-stage-overrides.d.ts",
+		"src/resolve.d.ts",
+		"src/plugins/parameter-overrides.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
 		"src/plugins/esbuild-node.d.ts"
 	],
@@ -29,7 +37,8 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";;;aACYA,SAASA;aACTC,UAAUA;aCDVC,GAAGA;aDGHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;MElBZC,KAAKA;;;;;aFGLF,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cCDJC,UAAUA;cACVC,MAAMA;;;;;;cAMNC,cAAcA;cACdC,SAASA;MHJVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cEDJG,cAAcA;cACdF,UAAUA;cACVC,MAAMA;cACNE,SAASA;aACVC,IAAIA;aACJC,UAAUA;;;;;;;;MJDVR,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA;;;;;cGDJC,UAAUA;cACVC,MAAMA;;;cAGNC,cAAcA;cACdC,SAASA;MLDVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MCATE,GAAGA;MCAHG,KAAKA"
+	"mappings": ";;;aA4BYA,SAASA;aACTC,UAAUA;aC5BVC,GAAGA;aD8BHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;ME7CZC,KAAKA;;;;iBCqBDC,WAAWA;;;;;;;;;;;;iBAeXC,2BAA2BA;;;;;;aAM/BC,YAAYA;;;;;;MHfZR,SAASA;;;;;aAGTG,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cEAJI,UAAUA;;;cASVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJC,MAAMA;;;;;MJMNZ,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cGDJM,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVI,IAAIA;aACJH,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJG,OAAOA;;;;;;;;aAQPC,UAAUA;;;;;MLIVf,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cIAJI,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MNuBVT,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA"
 }
