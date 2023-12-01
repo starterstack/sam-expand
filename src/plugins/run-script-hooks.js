@@ -1,9 +1,13 @@
 // @ts-check
 
-/** @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook */
+/** @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
+ * @typedef {{ stackRegion?: string, stackName: string, outputKey: string, defaultValue?: string }} CloudFormation
+ * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
+ **/
+
 /** @typedef {import('./types.js').PluginSchema<{
  *    hooks: {
- *      [keyof(Hook)]?: Array<{ command: string, args: string[] }>
+ *      [keyof(Hook)]?: Array<{ command: string, args: Array<{ value?: string, file?: File, cloudFormation?: CloudFormation}> }>
  *    }
  *  }>} HookSchema
  **/
@@ -52,7 +56,35 @@ export const schema = {
                   args: {
                     type: 'array',
                     items: {
-                      type: 'string'
+                      type: 'object',
+                      properties: {
+                        value: {
+                          type: 'string'
+                        },
+                        cloudFormation: {
+                          type: 'object',
+                          properties: {
+                            stackRegion: { type: 'string', nullable: true },
+                            stackName: { type: 'string' },
+                            outputKey: { type: 'string' },
+                            defaultValue: { type: 'string', nullable: true }
+                          },
+                          required: ['stackName', 'outputKey'],
+                          additionalProperties: false,
+                          nullable: true
+                        },
+                        file: {
+                          type: 'object',
+                          properties: {
+                            location: { type: 'string' },
+                            exportName: { type: 'string' },
+                            defaultValue: { type: 'string', nullable: true }
+                          },
+                          required: ['location', 'exportName'],
+                          additionalProperties: false,
+                          nullable: true
+                        }
+                      }
                     },
                     minItems: 0
                   }

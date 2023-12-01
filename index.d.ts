@@ -24,6 +24,22 @@ declare module '@starterstack/sam-expand' {
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
+declare module '@starterstack/sam-expand/resolve' {
+	export function resolveFile({ location, parse, exportName, defaultValue }: {
+		location: string;
+		parse: typeof import("yaml-cfn").yamlParse;
+		exportName: string;
+		defaultValue?: string;
+	}): Promise<string | undefined>;
+
+	export function resolveCloudFormationOutput({ stackRegion, outputKey, stackName, defaultValue }: {
+		stackRegion: string;
+		outputKey: string;
+		stackName: string;
+		defaultValue?: string;
+	}): Promise<string | undefined>;
+}
+
 declare module '@starterstack/sam-expand/plugins' {
 	import type { yamlParse } from 'yaml-cfn';
 	export type Plugin = Plugin_1;
@@ -61,13 +77,15 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 
 	export const lifecycle: Plugin;
 	export type CloudFormation = {
-		region?: string;
+		stackRegion?: string;
 		stackName: string;
-		exportName: string;
+		outputKey: string;
+		defaultValue?: string;
 	};
 	export type File = {
 		location: string;
 		exportName: string;
+		defaultValue?: string;
 	};
 	export type Schema = Array<{
 		name: string;
@@ -111,11 +129,26 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 
 	export const lifecycle: Plugin;
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
+	export type CloudFormation = {
+		stackRegion?: string;
+		stackName: string;
+		outputKey: string;
+		defaultValue?: string;
+	};
+	export type File = {
+		location: string;
+		exportName: string;
+		defaultValue?: string;
+	};
 	export type HookSchema = PluginSchema<{
 		hooks: {
 			[keyof(Hook)]?: Array<{
 				command: string;
-				args: string[];
+				args: Array<{
+					value?: string;
+					file?: File;
+					cloudFormation?: CloudFormation;
+				}>;
 			}>;
 		};
 	}>;

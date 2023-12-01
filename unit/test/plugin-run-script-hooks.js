@@ -97,11 +97,11 @@ test('run scripts hook plugin hooks', async (t) => {
       assert.equal(spawnMock.mock.calls[1].arguments[1][0], command)
       assert.deepEqual(spawnMock.mock.calls[0].arguments, [
         'echo',
-        [`pre:${command}`]
+        [{ value: `pre:${command}` }]
       ])
       assert.deepEqual(spawnMock.mock.calls[2].arguments, [
         'echo',
-        [`post:${command}`]
+        [{ value: `post:${command}` }]
       ])
       mock.restoreAll()
     })

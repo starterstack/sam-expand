@@ -11,35 +11,35 @@ Metadata:
           pre:build:
             - command: echo
               args:
-                - pre:build
+                - value: pre:build
           post:build:
             - command: echo
               args:
-                - post:build
+                - value: post:build
           pre:package:
             - command: echo
               args:
-                - pre:package
+                - value: pre:package
           post:package:
             - command: echo
               args:
-                - post:package
+                - value: post:package
           pre:delete:
             - command: echo
               args:
-                - pre:delete
+                - value: pre:delete
           post:delete:
             - command: echo
               args:
-                - post:delete
+                - value: post:delete
           pre:deploy:
             - command: echo
               args:
-                - pre:deploy
+                - value: pre:deploy
           post:deploy:
             - command: echo
               args:
-                - post:deploy
+                - value: post:deploy
 Resources:
   WaitConditionHandle:
     Type: AWS::CloudFormation::WaitConditionHandle

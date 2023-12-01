@@ -8,6 +8,8 @@
 		"Plugin",
 		"PluginSchema",
 		"Spawn",
+		"resolveFile",
+		"resolveCloudFormationOutput",
 		"lifecycles",
 		"schema",
 		"metadataConfig",
@@ -22,6 +24,7 @@
 		"src/expand.d.ts",
 		"src/log.d.ts",
 		"src/spawn.d.ts",
+		"src/resolve.d.ts",
 		"src/plugins/parameter-overrides.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
 		"src/plugins/esbuild-node.d.ts"
@@ -32,7 +35,8 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";;;aA4BYA,SAASA;aACTC,UAAUA;aC5BVC,GAAGA;aD8BHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;ME7CZC,KAAKA;;;;;aF8BLF,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cCAJC,UAAUA;;;cASVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,cAAcA;;;;;aAKdC,IAAIA;;;;aAIJC,MAAMA;;;;;;;MHQNT,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cEDJG,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVI,IAAIA;aACJC,UAAUA;;;;;;;;MJuBVX,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cGAJC,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MLuBVN,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA"
+	"mappings": ";;;aA4BYA,SAASA;aACTC,UAAUA;aC5BVC,GAAGA;aD8BHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;ME7CZC,KAAKA;;;;iBCGDC,WAAWA;;;;;;;iBAUXC,2BAA2BA;;;;;;;;;;aHiB/BJ,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cEAJG,UAAUA;;;cASVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJC,MAAMA;;;;;;;MJMNX,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cGDJK,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVI,IAAIA;aACJH,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJG,UAAUA;;;;;;;;;;;;MLYVb,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cIAJG,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MNuBVR,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA"
 }

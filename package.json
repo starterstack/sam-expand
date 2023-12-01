@@ -22,6 +22,10 @@
       "import": "./src/expand.js",
       "types": "./src/expand.d.ts"
     },
+    "./resolve": {
+      "import": "./src/resolve.js",
+      "types": "./src/resolve.d.ts"
+    },
     "./plugins": {
       "import": "./src/plugins/types.js",
       "types": "./src/plugins/types.d.ts"
