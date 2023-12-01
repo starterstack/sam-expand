@@ -1,6 +1,5 @@
 // @ts-check
 
-import path from 'node:path'
 import { resolveFile, resolveCloudFormationOutput } from '../resolve.js'
 
 /** @type {import('./types.js').Lifecycles} */
@@ -58,34 +57,39 @@ export const schema = {
   }
 }
 
-export const metadataConfig = 'parameter-overrides'
+export const metadataConfig = 'parameterOverrides'
 
 /** @type {import('./types.js').Plugin} */
 export const lifecycle = async function expand({
   template,
+  command,
+  lifecycle,
+  configEnv,
   parse,
   templateDirectory,
   region,
   argv
 }) {
   /** @type {Schema} */
-  const config = template.Metadata.expand.config?.['parameter-overrides']
+  const parameterOverrides =
+    template.Metadata.expand.config?.['parameterOverrides']
 
-  for (const parameter of config) {
+  for (const parameter of parameterOverrides) {
     if (!template.Parameters?.[parameter.name]) {
       throw new Error(`parameter ${parameter.name} not found in template`)
     }
     if (parameter.resolver.file) {
-      const resolveLocation = path.join(
-        templateDirectory,
-        parameter.resolver.file.location
-      )
-      const { exportName, defaultValue } = parameter.resolver.file
+      const { exportName, defaultValue, location } = parameter.resolver.file
       const value = await resolveFile({
-        location: resolveLocation,
+        location,
+        templateDirectory,
         exportName,
         defaultValue,
-        parse
+        parse,
+        command,
+        lifecycle,
+        configEnv,
+        region
       })
       if (!value) {
         throw new Error(

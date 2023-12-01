@@ -25,11 +25,16 @@ declare module '@starterstack/sam-expand' {
 }
 
 declare module '@starterstack/sam-expand/resolve' {
-	export function resolveFile({ location, parse, exportName, defaultValue }: {
+	export function resolveFile({ location, templateDirectory, parse, exportName, defaultValue, command, lifecycle, configEnv, region }: {
 		location: string;
+		templateDirectory: string;
 		parse: typeof import("yaml-cfn").yamlParse;
 		exportName: string;
 		defaultValue?: string;
+		command: string;
+		lifecycle: Lifecycle;
+		configEnv: string;
+		region?: string;
 	}): Promise<string | undefined>;
 
 	export function resolveCloudFormationOutput({ stackRegion, outputKey, stackName, defaultValue }: {
@@ -38,6 +43,13 @@ declare module '@starterstack/sam-expand/resolve' {
 		stackName: string;
 		defaultValue?: string;
 	}): Promise<string | undefined>;
+	export type FileResolver = (options: {
+		command: string;
+		lifecycle: Lifecycle;
+		configEnv: string;
+		region?: string;
+	}) => Promise<Record<string, string | undefined>>;
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 }
 
 declare module '@starterstack/sam-expand/plugins' {
@@ -73,7 +85,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 
 
 	export const schema: PluginSchema<Schema>;
-	export const metadataConfig: "parameter-overrides";
+	export const metadataConfig: "parameterOverrides";
 
 	export const lifecycle: Plugin;
 	export type CloudFormation = {

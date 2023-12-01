@@ -113,11 +113,14 @@ export const schema = {
 /** @type {import('./types.js').Plugin} */
 export const lifecycle = async function runScriptHook({
   template,
+  templateDirectory,
   spawn,
   parse,
   region,
   log,
-  lifecycle
+  lifecycle,
+  configEnv,
+  command
 }) {
   /** @type {HookSchema['Hooks']} */
   const hooks = template.Metadata.expand.config.script.hooks
@@ -126,38 +129,74 @@ export const lifecycle = async function runScriptHook({
   const commands = hooks[lifecycle]
 
   if (commands) {
-    for (const { command, args } of commands) {
-      /** @type {Array<string | undefined>} */
-      const parsedArguments = await Promise.all(
-        args.map((arg) => {
-          if (arg.value) {
-            return arg.value
-          } else if (arg.file) {
-            const { location, defaultValue, exportName } = arg.file
-            return resolveFile({ location, defaultValue, exportName, parse })
-          } else if (arg.cloudFormation) {
-            const { stackName, defaultValue, stackRegion, outputKey } =
-              arg.cloudFormation
-            if (!region && !stackRegion) {
-              throw new Error(
-                `${stackName}.${outputKey} can't be resolved, missing region`
-              )
-            }
-            return resolveCloudFormationOutput({
-              stackName,
-              defaultValue,
-              stackRegion: String(stackRegion ?? region),
-              outputKey
-            })
-          } else {
-            return
-          }
-        })
-      )
+    for (const { command: spawnCommand, args } of commands) {
       /** @type {string[]} */
-      const spawnArgs = parsedArguments.filter(Boolean).map(String)
-      log('running script hook %O', { lifecycle, command, args: spawnArgs })
-      await spawn(command, spawnArgs)
+      const spawnArgs = (
+        await Promise.all(
+          args.map(async function map(arg) {
+            /** @type {string[]} */
+            const values = []
+            const keyOrder = Object.keys(arg)
+
+            for (const key of keyOrder) {
+              if (key === 'value') {
+                if (arg.value) {
+                  values.push(arg.value)
+                }
+              } else if (key === 'file') {
+                if (arg.file) {
+                  const { location, defaultValue, exportName } = arg.file
+                  const value = await resolveFile({
+                    location,
+                    templateDirectory,
+                    defaultValue,
+                    exportName,
+                    parse,
+                    region,
+                    lifecycle,
+                    configEnv,
+                    command
+                  })
+                  if (typeof value === 'string') {
+                    values.push(value)
+                  } else {
+                    throw new Error(`${location}.${exportName} is missing`)
+                  }
+                }
+              } else if (key === 'cloudFormation') {
+                if (arg.cloudFormation) {
+                  const { stackName, defaultValue, stackRegion, outputKey } =
+                    arg.cloudFormation
+                  if (!region && !stackRegion) {
+                    throw new Error(
+                      `${stackName}.${outputKey} can't be resolved, missing region`
+                    )
+                  }
+                  const value = await resolveCloudFormationOutput({
+                    stackName,
+                    defaultValue,
+                    stackRegion: String(stackRegion ?? region),
+                    outputKey
+                  })
+
+                  if (typeof value === 'string') {
+                    values.push(value)
+                  } else {
+                    throw new Error(`${stackName}.${outputKey} is missing`)
+                  }
+                }
+              }
+            }
+            return values.join('')
+          })
+        )
+      ).filter(Boolean)
+      log('running script hook %O', {
+        lifecycle,
+        command: spawnCommand,
+        args: spawnArgs
+      })
+      await spawn(spawnCommand, spawnArgs)
     }
   } else {
     log('skipping script hook %O', { lifecycle })
