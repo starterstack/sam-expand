@@ -53,7 +53,7 @@ export async function resolveFile({
     ? path.join(templateDirectory, location)
     : location
   const extname = path.extname(fullPath)
-  if (!['.mjs', '.json', '.yaml', '.yml']) {
+  if (!['.mjs', '.json', '.yaml', '.yml'].includes(extname)) {
     throw new Error(
       `unsupported file ${location} must be .mjs, .json, .yaml, or .yml`
     )

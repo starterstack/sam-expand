@@ -101,10 +101,8 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	};
 	export type Schema = Array<{
 		name: string;
-		resolver: {
-			file?: File;
-			cloudFormation?: CloudFormation;
-		};
+		file?: File;
+		cloudFormation?: CloudFormation;
 	}>;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;

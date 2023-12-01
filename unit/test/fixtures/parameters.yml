@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  MJSName:
+    Type: String
+  MJSNameWithDefault:
+    Type: String
+  YMLName:
+    Type: String
+  YMLNameWithDefault:
+    Type: String
+  YAMLName:
+    Type: String
+  YAMLNameWithDefault:
+    Type: String
+  JSONName:
+    Type: String
+  JSONNameWithDefault:
+    Type: String
+  CFName:
+    Type: String
+  CFNameWithDefault:
+    Type: String
+Metadata:
+  expand:
+    plugins:
+      - '../../../src/plugins/parameter-overrides.js'
+    config:
+      parameterOverrides:
+        - name: MJSName
+          file:
+            location: ./parameter-name.mjs
+            exportName: name
+        - name: MJSNameWithDefault
+          file:
+            location: ./parameter-name.mjs
+            exportName: sjdhfjsdhf
+            defaultValue: someValue
+        - name: YMLName
+          file:
+            location: ./parameter-name.yml
+            exportName: name
+        - name: YMLNameWithDefault
+          file:
+            location: ./parameter-name.yml
+            exportName: sjdhfjsdhf
+            defaultValue: someValue
+        - name: YAMLName
+          file:
+            location: ./parameter-name.yaml
+            exportName: name
+        - name: YAMLNameWithDefault
+          file:
+            location: ./parameter-name.yaml
+            exportName: sjdhfjsdhf
+            defaultValue: someValue
+        - name: JSONName
+          file:
+            location: ./parameter-name.json
+            exportName: name
+        - name: JSONNameWithDefault
+          file:
+            location: ./parameter-name.json
+            exportName: sjdhfjsdhf
+            defaultValue: someValue
+        - name: CFName
+          cloudFormation:
+            stackRegion: us-east-1
+            stackName: a-stack
+            outputKey: an-output
+        - name: CFNameWithDefault
+          cloudFormation:
+            stackRegion: us-east-1
+            stackName: a-stack
+            outputKey: djhsdjfhjsdhf
+            defaultValue: someValue
+Resources:
+  WaitConditionHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle

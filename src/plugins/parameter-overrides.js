@@ -8,7 +8,7 @@ export const lifecycles = ['pre:deploy']
 /**
  * @typedef {{ stackRegion?: string, stackName: string, outputKey: string, defaultValue?: string }} CloudFormation
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
- * @typedef {Array<{ name: string, resolver: { file?: File, cloudFormation?: CloudFormation } }>} Schema
+ * @typedef {Array<{ name: string, file?: File, cloudFormation?: CloudFormation }>} Schema
  **/
 
 /**
@@ -21,38 +21,32 @@ export const schema = {
     type: 'object',
     properties: {
       name: { type: 'string' },
-      resolver: {
+      cloudFormation: {
         type: 'object',
         properties: {
-          cloudFormation: {
-            type: 'object',
-            properties: {
-              stackRegion: { type: 'string', nullable: true },
-              stackName: { type: 'string' },
-              outputKey: { type: 'string' },
-              defaultValue: { type: 'string', nullable: true }
-            },
-            required: ['stackName', 'outputKey'],
-            additionalProperties: false,
-            nullable: true
-          },
-          file: {
-            type: 'object',
-            properties: {
-              location: { type: 'string' },
-              exportName: { type: 'string' },
-              defaultValue: { type: 'string', nullable: true }
-            },
-            required: ['location', 'exportName'],
-            additionalProperties: false,
-            nullable: true
-          }
+          stackRegion: { type: 'string', nullable: true },
+          stackName: { type: 'string' },
+          outputKey: { type: 'string' },
+          defaultValue: { type: 'string', nullable: true }
         },
-        additionalProperties: false
+        required: ['stackName', 'outputKey'],
+        additionalProperties: false,
+        nullable: true
+      },
+      file: {
+        type: 'object',
+        properties: {
+          location: { type: 'string' },
+          exportName: { type: 'string' },
+          defaultValue: { type: 'string', nullable: true }
+        },
+        required: ['location', 'exportName'],
+        additionalProperties: false,
+        nullable: true
       },
       additionalProperties: false
     },
-    required: ['name', 'resolver'],
+    required: ['name'],
     additionalProperties: false
   }
 }
@@ -78,8 +72,8 @@ export const lifecycle = async function expand({
     if (!template.Parameters?.[parameter.name]) {
       throw new Error(`parameter ${parameter.name} not found in template`)
     }
-    if (parameter.resolver.file) {
-      const { exportName, defaultValue, location } = parameter.resolver.file
+    if (parameter.file) {
+      const { exportName, defaultValue, location } = parameter.file
       const value = await resolveFile({
         location,
         templateDirectory,
@@ -91,15 +85,15 @@ export const lifecycle = async function expand({
         configEnv,
         region
       })
-      if (!value) {
+      if (typeof value === 'undefined') {
         throw new Error(
-          `parameter ${parameter.name} resolver ${parameter.resolver.file.location} missing ${exportName}`
+          `parameter ${parameter.name} resolver ${parameter.file.location} missing ${exportName}`
         )
       }
       addParameter({ argv, name: parameter.name, value })
-    } else if (parameter.resolver.cloudFormation) {
+    } else if (parameter.cloudFormation) {
       const { stackName, defaultValue, stackRegion, outputKey } =
-        parameter.resolver.cloudFormation
+        parameter.cloudFormation
 
       if (!region && !stackRegion) {
         throw new Error(
@@ -112,7 +106,7 @@ export const lifecycle = async function expand({
         defaultValue,
         outputKey
       })
-      if (!value) {
+      if (typeof value === 'undefined') {
         throw new Error(
           `parameter ${parameter.name} stack ${stackName} missing output ${outputKey}`
         )
