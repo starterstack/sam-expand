@@ -314,7 +314,9 @@ async function expandAll({
       templateBaseName + '.expanded' + extname
     )
     log('writing expanded template %O', expandedPath)
-    template.Metadata.expandBuiltFrom = templateDirectory
+    if (template.Metadata?.expand) {
+      template.Metadata.expandBuiltFrom = templateDirectory
+    }
     await writeFile(expandedPath, yamlDump(template))
     tempFiles.push(expandedPath)
     return { expandedPath, template: freeze(template) }
