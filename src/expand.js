@@ -71,6 +71,10 @@ export default async function expand() {
       'config-file': {
         type: 'string'
       },
+      'build-dir': {
+        type: 'string',
+        short: 'b'
+      },
       'stack-name': {
         type: 'string'
       },
@@ -143,7 +147,12 @@ export default async function expand() {
     values['template']?.toString() ?? values['template-file']?.toString() ?? ''
 
   const templateFile = String(
-    await findTemplateFile({ filePath: templatePath, command })
+    await findTemplateFile({
+      filePath: templatePath,
+      command,
+      ...(command === 'build' &&
+        values['build-dir'] && { buildDirectory: values['build-dir'] })
+    })
   )
 
   log('use template %O', templateFile)
@@ -175,11 +184,14 @@ export default async function expand() {
       ? command
       : null
 
+  const templateDirectory =
+    template?.Metadata?.expandBuiltFrom ?? path.dirname(templateFile)
+
   if (command && template) {
     if (hookCommand) {
       await runPlugins({
         template,
-        templateDirectory: path.dirname(templateFile),
+        templateDirectory,
         config,
         lifecycle: `pre:${hookCommand}`,
         command,
@@ -200,7 +212,7 @@ export default async function expand() {
     if (hookCommand) {
       await runPlugins({
         template,
-        templateDirectory: path.dirname(templateFile),
+        templateDirectory,
         config,
         lifecycle: `post:${hookCommand}`,
         command,
@@ -242,10 +254,12 @@ async function expandAll({
   log('reading template %O', templateFile)
   const templateData = await readFile(templateFile, 'utf-8')
   const template = yamlParse(templateData)
+  const templateDirectory =
+    template?.Metadata?.expandBuiltFrom ?? path.dirname(templateFile)
 
   if (template.Metadata?.expand) {
     await validatePluginSchemas({
-      templateDirectory: path.dirname(templateFile),
+      templateDirectory,
       template: freeze(template),
       log
     })
@@ -257,7 +271,7 @@ async function expandAll({
   for (const lifecycle of expandLifecycles) {
     await runPlugins({
       template: command === 'build' ? template : freeze(template),
-      templateDirectory: path.dirname(templateFile),
+      templateDirectory,
       config,
       lifecycle,
       command,
@@ -300,6 +314,7 @@ async function expandAll({
       templateBaseName + '.expanded' + extname
     )
     log('writing expanded template %O', expandedPath)
+    template.Metadata.expandBuiltFrom = templateDirectory
     await writeFile(expandedPath, yamlDump(template))
     tempFiles.push(expandedPath)
     return { expandedPath, template: freeze(template) }
@@ -481,7 +496,9 @@ async function findTemplateFile({ filePath, command }) {
   return await findFiles(
     [
       filePath,
-      command === 'package' ? '.aws-sam/build/template.yaml' : '',
+      ['package', 'deploy'].includes(command)
+        ? '.aws-sam/build/template.yaml'
+        : '',
       './template.yaml',
       './template.yml'
     ].filter(Boolean)
