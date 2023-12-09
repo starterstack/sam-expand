@@ -100,7 +100,6 @@ Metadata:
     config:
       esbuild:
         config: ./esbuild-config.yaml
-  expandBuiltFrom: ${path.join(__dirname, 'fixtures')}
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
@@ -191,7 +190,6 @@ Metadata:
     config:
       esbuild:
         config: ./esbuild-config.yaml
-  expandBuiltFrom: ${path.join(__dirname, 'fixtures')}
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
@@ -319,7 +317,6 @@ Metadata:
     config:
       esbuild:
         config: ./esbuild-config.yaml
-  expandBuiltFrom: ${path.join(__dirname, 'fixtures')}
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function

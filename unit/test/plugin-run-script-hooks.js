@@ -96,13 +96,7 @@ test('run scripts hook plugin hooks', async (t) => {
       assert.equal(spawnMock.mock.calls.length, 3)
       if (command === 'build') {
         assert.equal(writeMock.mock.calls.length, 1)
-        assert.equal(
-          writeMock.mock.calls[0].arguments[1].replace(
-            /\s*expandBuiltFrom:\s*.*/,
-            ''
-          ),
-          templateContents
-        )
+        assert.equal(writeMock.mock.calls[0].arguments[1], templateContents)
       } else {
         assert.equal(writeMock.mock.calls.length, 0)
       }
@@ -219,13 +213,7 @@ test('run scripts hook plugin hooks with cloudformation resolver', async (t) => 
       assert.equal(spawnMock.mock.calls.length, 3)
       if (command === 'build') {
         assert.equal(writeMock.mock.calls.length, 1)
-        assert.equal(
-          writeMock.mock.calls[0].arguments[1].replace(
-            /\s*expandBuiltFrom:\s*.*/,
-            ''
-          ),
-          templateContents
-        )
+        assert.equal(writeMock.mock.calls[0].arguments[1], templateContents)
       } else {
         assert.equal(writeMock.mock.calls.length, 0)
       }

@@ -184,8 +184,7 @@ export default async function expand() {
       ? command
       : null
 
-  const templateDirectory =
-    template?.Metadata?.expandBuiltFrom ?? path.dirname(templateFile)
+  const templateDirectory = templateDirectoryFromFile(templateFile)
 
   if (command && template) {
     if (hookCommand) {
@@ -254,8 +253,7 @@ async function expandAll({
   log('reading template %O', templateFile)
   const templateData = await readFile(templateFile, 'utf-8')
   const template = yamlParse(templateData)
-  const templateDirectory =
-    template?.Metadata?.expandBuiltFrom ?? path.dirname(templateFile)
+  const templateDirectory = templateDirectoryFromFile(templateFile)
 
   if (template.Metadata?.expand) {
     await validatePluginSchemas({
@@ -313,10 +311,8 @@ async function expandAll({
       templateDirectory,
       templateBaseName + '.expanded' + extname
     )
+
     log('writing expanded template %O', expandedPath)
-    if (template.Metadata?.expand) {
-      template.Metadata.expandBuiltFrom = templateDirectory
-    }
     await writeFile(expandedPath, yamlDump(template))
     tempFiles.push(expandedPath)
     return { expandedPath, template: freeze(template) }
@@ -512,9 +508,10 @@ async function findTemplateFile({ filePath, command }) {
 async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
-      const fullPath = filePath?.startsWith('.')
-        ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
-        : filePath
+      const fullPath =
+        path.resolve(filePath) === filePath
+          ? filePath
+          : path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
       await stat(fullPath)
       return fullPath
     } catch {}
@@ -529,4 +526,17 @@ async function findFiles(filePaths) {
 
 function yamlDump(template) {
   return dump(template, { schema: yamlSchema, noRefs: true })
+}
+
+/**
+ * @param {string} templatePath
+ * @returns {string}
+ **/
+function templateDirectoryFromFile(templatePath) {
+  const directory = path.dirname(templatePath)
+  if (directory.endsWith('build')) {
+    return path.resolve(path.join(directory, '..', '..'))
+  } else {
+    return path.resolve(directory)
+  }
 }
