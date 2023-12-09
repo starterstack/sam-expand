@@ -509,9 +509,9 @@ async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
       const fullPath =
-        path.resolve(filePath) === filePath
-          ? filePath
-          : path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
+        !filePath.startsWith('.') && !filePath.startsWith('/')
+          ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
+          : filePath
       await stat(fullPath)
       return fullPath
     } catch {}
