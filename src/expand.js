@@ -3,14 +3,14 @@
 import process from 'node:process'
 import { yamlParse, schema as yamlSchema } from 'yaml-cfn'
 import { dump } from 'js-yaml'
-import { stat, writeFile, readFile, unlink } from 'node:fs/promises'
+import { stat, writeFile, unlink } from 'node:fs/promises'
 import spawn from './spawn.js'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import os from 'node:os'
-import { parse as tomlParse } from '@ltd/j-toml'
 import Ajv from 'ajv'
 import freeze from './freeze.js'
+import * as parse from './parse.js'
 
 // @ts-ignore they got their type exports wrong so there are none :)
 import betterAjvErrors from 'better-ajv-errors'
@@ -110,17 +110,13 @@ export default async function expand() {
     return
   }
 
-  const configFileSettings = await getConfigFileSettings(
+  const samConfigPath = await getSamConfigPath(
     values['config-file']?.toString()
   )
 
-  log('config settings %O', configFileSettings)
+  log('samConfig %O', samConfigPath)
 
-  const config = configFileSettings
-    ? configFileSettings.type === 'toml'
-      ? freeze(tomlParse(await readFile(configFileSettings.filePath, 'utf-8')))
-      : freeze(yamlParse(await readFile(configFileSettings.filePath, 'utf-8')))
-    : null
+  const config = samConfigPath ? await parse.samConfig(samConfigPath) : null
 
   const configEnv = String(values['config-env'] ?? 'default')
   log('configEnv %O', configEnv)
@@ -251,8 +247,7 @@ async function expandAll({
     }
   }
   log('reading template %O', templateFile)
-  const templateData = await readFile(templateFile, 'utf-8')
-  const template = yamlParse(templateData)
+  const template = await parse.template(templateFile)
   const templateDirectory = templateDirectoryFromFile(templateFile)
 
   if (template.Metadata?.expand) {
@@ -473,17 +468,15 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
 }
 
 /** @param { string | undefined } filePath
- * @returns {Promise<null | { filePath: string, type: 'yaml' | 'toml' }>}
+ * @returns {Promise<null | string>}
  **/
-async function getConfigFileSettings(filePath) {
+async function getSamConfigPath(filePath) {
   filePath ||= await findFiles([
     './samconfig.toml',
     './samconfig.yaml',
     './samconfig.yml'
   ])
-  if (!filePath) return null
-  const type = path.extname(filePath) === '.toml' ? 'toml' : 'yaml'
-  return { filePath, type }
+  return filePath || null
 }
 
 /**

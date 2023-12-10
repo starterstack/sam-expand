@@ -1,27 +1,7 @@
-declare module '@starterstack/sam-expand' {
-	import type { yamlParse } from 'yaml-cfn';
-	export default function expand(): Promise<void>;
-	export type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
-	export type Lifecycles = Array<Lifecycle>;
-	export type Log = Log_1;
-	export type Plugin = (options: {
-		template: any;
-		templateDirectory: string;
-		config: any;
-		log: Log_1;
-		command: string;
-		argv: string[];
-		parse: typeof yamlParse;
-		dump: (o: any) => string;
-		spawn: Spawn;
-		configEnv: string;
-		region?: string | undefined;
-		baseDirectory?: string | undefined;
-		lifecycle: Lifecycle;
-	}) => Promise<void>;
-	export type PluginSchema<T> = import('ajv').JSONSchemaType<T>;
-	type Log_1 = (format: string, ...args: any) => void;
-	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+declare module '@starterstack/sam-expand/parse' {
+	export function template(templatePath: string): Promise<any>;
+
+	export function samConfig(configPath: string): Promise<any>;
 }
 
 declare module '@starterstack/sam-expand/resolve' {

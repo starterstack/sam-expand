@@ -2,15 +2,17 @@
 	"version": 3,
 	"file": "index.d.ts",
 	"names": [
-		"Lifecycle",
-		"Lifecycles",
-		"Log",
-		"Plugin",
-		"PluginSchema",
-		"Spawn",
+		"template",
+		"samConfig",
 		"resolveFile",
 		"resolveCloudFormationOutput",
 		"FileResolver",
+		"Lifecycle",
+		"Plugin",
+		"Lifecycles",
+		"PluginSchema",
+		"Log",
+		"Spawn",
 		"lifecycles",
 		"schema",
 		"metadataConfig",
@@ -23,10 +25,11 @@
 		"HookSchema"
 	],
 	"sources": [
+		"src/parse.d.ts",
+		"src/resolve.d.ts",
 		"src/expand.d.ts",
 		"src/log.d.ts",
 		"src/spawn.d.ts",
-		"src/resolve.d.ts",
 		"src/plugins/parameter-overrides.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
 		"src/plugins/esbuild-node.d.ts"
@@ -38,7 +41,8 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";;;aA4BYA,SAASA;aACTC,UAAUA;aC5BVC,GAAGA;aD8BHC,MAAMA;;;;;;;;;;;;;;;aAeNC,YAAYA;;ME7CZC,KAAKA;;;;iBCqBDC,WAAWA;;;;;;;;;;;;iBAeXC,2BAA2BA;;;;;;aAM/BC,YAAYA;;;;;;MHfZR,SAASA;;;;;aAGTG,MAAMA;aAFNF,UAAUA;aAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cEAJI,UAAUA;;;cASVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJC,MAAMA;;;;;MJMNZ,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cGDJM,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVI,IAAIA;aACJH,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJG,OAAOA;;;;;;;;aAQPC,UAAUA;;;;;MLIVf,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA;;;;;cIAJI,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MNuBVT,MAAMA;MAFNF,UAAUA;MAiBVG,YAAYA;MAlBZJ,SAASA;;;;;;;;;;;;;;;;;;MC3BTE,GAAGA;MCAHG,KAAKA"
+	"mappings": ";iBAGgBA,QAAQA;;iBAIRC,SAASA;;;;iBCeTC,WAAWA;;;;;;;;;;;;iBAeXC,2BAA2BA;;;;;;aAM/BC,YAAYA;;;;;;MCfZC,SAASA;;;;;aAGTC,MAAMA;aAFNC,UAAUA;aAiBVC,YAAYA;MAlBZH,SAASA;;;;;;;;;;;;;;;;;;MC3BTI,GAAGA;MCAHC,KAAKA;;;;;cCAJC,UAAUA;;;cASVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJC,MAAMA;;;;;MHMNX,MAAMA;MAFNC,UAAUA;MAiBVC,YAAYA;MAlBZH,SAASA;;;;;;;;;;;;;;;;;;MC3BTI,GAAGA;MCAHC,KAAKA;;;;;cEDJG,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVI,IAAIA;aACJH,cAAcA;;;;;;aAMdC,IAAIA;;;;;aAKJG,OAAOA;;;;;;;;aAQPC,UAAUA;;;;;MJIVd,MAAMA;MAFNC,UAAUA;MAiBVC,YAAYA;MAlBZH,SAASA;;;;;;;;;;;;;;;;;;MC3BTI,GAAGA;MCAHC,KAAKA;;;;;cGAJC,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MLuBVR,MAAMA;MAFNC,UAAUA;MAiBVC,YAAYA;MAlBZH,SAASA;;;;;;;;;;;;;;;;;;MC3BTI,GAAGA;MCAHC,KAAKA"
 }

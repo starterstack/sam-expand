@@ -18,9 +18,9 @@
     "index.d.ts"
   ],
   "exports": {
-    ".": {
-      "import": "./src/expand.js",
-      "types": "./src/expand.d.ts"
+    "./parse": {
+      "import": "./src/parse.js",
+      "types": "./src/parse.d.ts"
     },
     "./resolve": {
       "import": "./src/resolve.js",
