@@ -1,10 +1,11 @@
 // @ts-check
 
 import { resolveFile, resolveCloudFormationOutput } from '../resolve.js'
+import { parseArgs } from 'node:util'
 
 /**
  * @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
- * @typedef {{ stackRegion?: string, stackName: string, outputKey: string, defaultValue?: string }} CloudFormation
+ * @typedef {{ stackRegion?: string, stackName?: string, self?: boolean, outputKey: string, defaultValue?: string }} CloudFormation
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
  * @typedef {{ command: string, args: Array<{ value?: string, file?: File, cloudFormation?: CloudFormation}> }} Command
  **/
@@ -69,11 +70,12 @@ export const schema = {
                           type: 'object',
                           properties: {
                             stackRegion: { type: 'string', nullable: true },
-                            stackName: { type: 'string' },
+                            stackName: { type: 'string', nullable: true },
+                            self: { type: 'boolean', nullable: true },
                             outputKey: { type: 'string' },
                             defaultValue: { type: 'string', nullable: true }
                           },
-                          required: ['stackName', 'outputKey'],
+                          required: ['outputKey'],
                           additionalProperties: false,
                           nullable: true
                         },
@@ -119,7 +121,9 @@ export const lifecycle = async function runScriptHook({
   region,
   log,
   lifecycle,
+  argv,
   configEnv,
+  config,
   command
 }) {
   /** @type {HookSchema['Hooks']} */
@@ -165,15 +169,29 @@ export const lifecycle = async function runScriptHook({
                 }
               } else if (key === 'cloudFormation') {
                 if (arg.cloudFormation) {
-                  const { stackName, defaultValue, stackRegion, outputKey } =
-                    arg.cloudFormation
+                  const {
+                    self: isSelf,
+                    stackName,
+                    defaultValue,
+                    stackRegion,
+                    outputKey
+                  } = arg.cloudFormation
                   if (!region && !stackRegion) {
                     throw new Error(
                       `${stackName}.${outputKey} can't be resolved, missing region`
                     )
                   }
+                  const stackNameOrSelf = stackName
+                    ? String(stackName)
+                    : isSelf
+                      ? inferStackName({ argv, command, config, configEnv })
+                      : null
+
+                  if (!stackNameOrSelf) {
+                    throw new Error(`${outputKey} is missing stackName`)
+                  }
                   const value = await resolveCloudFormationOutput({
-                    stackName,
+                    stackName: stackNameOrSelf,
                     defaultValue,
                     stackRegion: String(stackRegion ?? region),
                     outputKey
@@ -182,7 +200,9 @@ export const lifecycle = async function runScriptHook({
                   if (typeof value === 'string') {
                     values.push(value)
                   } else {
-                    throw new Error(`${stackName}.${outputKey} is missing`)
+                    throw new Error(
+                      `${stackNameOrSelf}.${outputKey} is missing`
+                    )
                   }
                 }
               }
@@ -201,4 +221,30 @@ export const lifecycle = async function runScriptHook({
   } else {
     log('skipping script hook %O', { lifecycle })
   }
+}
+
+/**
+ * @param {{ argv: string[], command: string, config: any, configEnv: string }} options
+ * @returns {string}
+ **/
+
+function inferStackName({ argv, command, config, configEnv }) {
+  const { values } = parseArgs({
+    options: {
+      'stack-name': {
+        type: 'string'
+      }
+    },
+    allowPositionals: true,
+    strict: false,
+    args: argv
+  })
+  const stackName =
+    values['stack-name'] ??
+    config?.[configEnv ?? 'default']?.[command]?.parameters?.stackName ??
+    config?.[configEnv ?? 'default']?.global?.parameters?.stackName
+  if (!stackName) {
+    throw new TypeError('missing stackName')
+  }
+  return stackName
 }

@@ -121,7 +121,8 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
 	export type CloudFormation = {
 		stackRegion?: string;
-		stackName: string;
+		stackName?: string;
+		self?: boolean;
 		outputKey: string;
 		defaultValue?: string;
 	};
