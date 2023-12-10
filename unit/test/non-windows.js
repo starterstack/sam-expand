@@ -17,5 +17,5 @@ test('non windows', async (_t) => {
     })
     await expand()
   })
-  assert.deepEqual(spawnArgs, ['sam', []])
+  assert.deepEqual(spawnArgs, ['sam', ['--help']])
 })

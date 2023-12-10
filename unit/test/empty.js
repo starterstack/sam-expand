@@ -9,7 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 test('empty template with no metadata', async (t) => {
   for (const { expected, argv } of [
     {
-      expected: ['sam', []],
+      expected: ['sam', ['--help']],
       argv: [...process.argv]
     },
     {

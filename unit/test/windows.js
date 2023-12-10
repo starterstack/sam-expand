@@ -49,5 +49,5 @@ test('windows with git bash', async (_t) => {
     })
     await expand()
   })
-  assert.deepEqual(spawnArgs, ['sam', []])
+  assert.deepEqual(spawnArgs, ['sam', ['--help']])
 })

@@ -103,7 +103,7 @@ export default async function expand() {
   log('cli args %O', { args: { ...values } })
   const command = positionals?.[0] ?? ''
 
-  if (values.help) {
+  if (!command || values.help) {
     const helpArgs = command ? [command, '--help'] : ['--help']
     log('sam %O', helpArgs)
     await spawn('sam', helpArgs)
