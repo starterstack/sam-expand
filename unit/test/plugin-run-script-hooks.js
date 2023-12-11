@@ -232,6 +232,89 @@ test('run scripts hook plugin hooks with cloudformation resolver', async (t) => 
   }
 })
 
+test('run scripts hook plugin hooks with self cloudformation resolver', async (t) => {
+  const templateContents = await readFile(
+    path.join(__dirname, 'fixtures', 'script-hooks-with-self-resolvers.yaml'),
+    'utf-8'
+  )
+  const commands = ['build', 'package', 'deploy', 'delete']
+  cfMock.reset()
+  cfMock.on(DescribeStacksCommand).resolves({
+    Stacks: [
+      {
+        Outputs: commands.flatMap((command) => [
+          {
+            OutputKey: `pre${command}`,
+            OutputValue: `cf.pre:${command}`
+          },
+          {
+            OutputKey: `post${command}`,
+            OutputValue: `cf.post:${command}`
+          }
+        ])
+      }
+    ]
+  })
+  for (const command of commands) {
+    const writeMock = mock.fn()
+    const spawnMock = mock.fn()
+    await t.test(`${command}: hooks`, async (_t) => {
+      const expand = await esmock.p('../../src/expand.js', {
+        'node:fs/promises': {
+          async writeFile(...args) {
+            writeMock(...args)
+          },
+          async unlink() {}
+        },
+        'node:process': {
+          argv: [
+            null,
+            null,
+            command,
+            '--region',
+            'us-east-1',
+            '--stack-name',
+            'test',
+            '-t',
+            path.join(
+              __dirname,
+              'fixtures',
+              'script-hooks-with-self-resolvers.yaml'
+            )
+          ],
+          env: {
+            get INIT_CWD() {
+              return __dirname
+            }
+          }
+        },
+        async '../../src/spawn.js'(...args) {
+          spawnMock(...args)
+        }
+      })
+      await expand()
+      assert.equal(spawnMock.mock.calls.length, 3)
+      if (command === 'build') {
+        assert.equal(writeMock.mock.calls.length, 1)
+        assert.equal(writeMock.mock.calls[0].arguments[1], templateContents)
+      } else {
+        assert.equal(writeMock.mock.calls.length, 0)
+      }
+      assert.equal(spawnMock.mock.calls[1].arguments[0], 'sam')
+      assert.equal(spawnMock.mock.calls[1].arguments[1][0], command)
+      assert.deepEqual(spawnMock.mock.calls[0].arguments, [
+        'echo',
+        [`pre:${command}cf.pre:${command}file.pre:${command}`]
+      ])
+      assert.deepEqual(spawnMock.mock.calls[2].arguments, [
+        'echo',
+        [`post:${command}cf.post:${command}file.post:${command}`]
+      ])
+      mock.restoreAll()
+    })
+  }
+})
+
 test('run scripts hook plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
