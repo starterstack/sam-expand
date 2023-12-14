@@ -26,11 +26,6 @@ test('run scripts hook plugin noop', async (t) => {
   const writeMock = mock.fn()
   await t.test(`validate: noop`, async (_t) => {
     const expand = await esmock.p('../../src/expand.js', {
-      'node:fs/promises': {
-        async writeFile(...args) {
-          writeMock(...args)
-        }
-      },
       'node:process': {
         argv: [
           null,
@@ -38,12 +33,7 @@ test('run scripts hook plugin noop', async (t) => {
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'script-hooks.yaml')
-        ],
-        env: {
-          get INIT_CWD() {
-            return __dirname
-          }
-        }
+        ]
       },
       async '../../src/spawn.js'(...args) {
         templatePath = args[1][args[1].indexOf('-t') + 1]
@@ -81,12 +71,7 @@ test('run scripts hook plugin hooks', async (t) => {
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'script-hooks.yaml')
-          ],
-          env: {
-            get INIT_CWD() {
-              return __dirname
-            }
-          }
+          ]
         },
         async '../../src/spawn.js'(...args) {
           spawnMock(...args)
@@ -125,11 +110,6 @@ test('run scripts hook plugin noop', async (t) => {
   const writeMock = mock.fn()
   await t.test(`validate: noop`, async (_t) => {
     const expand = await esmock.p('../../src/expand.js', {
-      'node:fs/promises': {
-        async writeFile(...args) {
-          writeMock(...args)
-        }
-      },
       'node:process': {
         argv: [
           null,
@@ -137,12 +117,7 @@ test('run scripts hook plugin noop', async (t) => {
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'script-hooks.yaml')
-        ],
-        env: {
-          get INIT_CWD() {
-            return __dirname
-          }
-        }
+        ]
       },
       async '../../src/spawn.js'(...args) {
         templatePath = args[1][args[1].indexOf('-t') + 1]
@@ -198,12 +173,7 @@ test('run scripts hook plugin hooks with cloudformation resolver', async (t) => 
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'script-hooks-with-resolvers.yaml')
-          ],
-          env: {
-            get INIT_CWD() {
-              return __dirname
-            }
-          }
+          ]
         },
         async '../../src/spawn.js'(...args) {
           spawnMock(...args)
@@ -281,12 +251,7 @@ test('run scripts hook plugin hooks with self cloudformation resolver', async (t
               'fixtures',
               'script-hooks-with-self-resolvers.yaml'
             )
-          ],
-          env: {
-            get INIT_CWD() {
-              return __dirname
-            }
-          }
+          ]
         },
         async '../../src/spawn.js'(...args) {
           spawnMock(...args)
@@ -325,11 +290,6 @@ test('run scripts hook plugin noop', async (t) => {
   const writeMock = mock.fn()
   await t.test(`validate: noop`, async (_t) => {
     const expand = await esmock.p('../../src/expand.js', {
-      'node:fs/promises': {
-        async writeFile(...args) {
-          writeMock(...args)
-        }
-      },
       'node:process': {
         argv: [
           null,
@@ -337,12 +297,7 @@ test('run scripts hook plugin noop', async (t) => {
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'script-hooks.yaml')
-        ],
-        env: {
-          get INIT_CWD() {
-            return __dirname
-          }
-        }
+        ]
       },
       async '../../src/spawn.js'(...args) {
         templatePath = args[1][args[1].indexOf('-t') + 1]

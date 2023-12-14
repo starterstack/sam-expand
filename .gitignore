@@ -3,3 +3,4 @@ node_modules
 npm-debug.log
 .aws-sam
 src/**/*.ts
+coverage

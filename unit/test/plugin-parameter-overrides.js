@@ -30,11 +30,6 @@ test('parameter overrides plugin noop', async (t) => {
     const writeMock = mock.fn()
     await t.test(`${command}: noop`, async (_t) => {
       const expand = await esmock.p('../../src/expand.js', {
-        'node:fs/promises': {
-          async writeFile(...args) {
-            writeMock(...args)
-          }
-        },
         'node:process': {
           argv: [
             null,
@@ -42,12 +37,7 @@ test('parameter overrides plugin noop', async (t) => {
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'parameters.yml')
-          ],
-          env: {
-            get INIT_CWD() {
-              return __dirname
-            }
-          }
+          ]
         },
         async '../../src/spawn.js'(...args) {
           templatePath = args[1][args[1].indexOf('-t') + 1]
@@ -88,12 +78,7 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
 
   const expand = await esmock.p('../../src/expand.js', {
     'node:process': {
-      argv,
-      env: {
-        get INIT_CWD() {
-          return __dirname
-        }
-      }
+      argv
     },
     async '../../src/spawn.js'(...args) {
       spawnMock(...args)

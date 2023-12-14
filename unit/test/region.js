@@ -24,9 +24,6 @@ test('region resolution', async (t) => {
           path.join(__dirname, 'fixtures', 'region.yml')
         ],
         env: {
-          get INIT_CWD() {
-            return __dirname
-          },
           get AWS_REGION() {}
         }
       },

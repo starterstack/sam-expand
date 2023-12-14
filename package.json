@@ -8,7 +8,7 @@
     "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "build": "tsc",
     "postbuild": "npx dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
-    "test": "npm --prefix unit t",
+    "test": "npx c8 --check-coverage --85 -- npm --prefix unit t",
     "prepublish": "npm test && npm run build"
   },
   "types": "index.d.ts",
@@ -80,6 +80,7 @@
     "@types/json-schema": "7.0.15",
     "@types/node": "20.10.4",
     "aws-sdk-client-mock": "3.0.0",
+    "c8": "8.0.1",
     "commitizen": "4.3.0",
     "dts-buddy": "0.4.1",
     "esmock": "2.6.0",

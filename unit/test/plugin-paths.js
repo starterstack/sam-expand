@@ -22,12 +22,7 @@ test('plugin path resolution', async (t) => {
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'region.yml')
-        ],
-        env: {
-          get INIT_CWD() {
-            return __dirname
-          }
-        }
+        ]
       },
       async '../../src/spawn.js'() {}
     })
@@ -52,9 +47,6 @@ test('plugin path resolution', async (t) => {
           '-t',
           path.join(__dirname, 'fixtures', 'region.yml')
         ],
-        cwd() {
-          return __dirname
-        },
         env: {
           get INIT_CWD() {}
         }

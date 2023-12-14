@@ -240,12 +240,6 @@ async function expandAll({
   log,
   baseDirectory
 }) {
-  if (!templateFile) {
-    return {
-      expandedPath: '',
-      template: null
-    }
-  }
   log('reading template %O', templateFile)
   const template = await parse.template(templateFile)
   const templateDirectory = templateDirectoryFromFile(templateFile)
@@ -452,17 +446,13 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
     expand: template.Metadata.expand
   }
   if (!validate(metadata)) {
-    try {
-      const betterErrors = betterAjvErrors(
-        expandSchema,
-        metadata,
-        validate.errors,
-        { indent: 2 }
-      )
-      console.error(betterErrors)
-    } catch {
-      console.error(validate.errors)
-    }
+    const betterErrors = betterAjvErrors(
+      expandSchema,
+      metadata,
+      validate.errors,
+      { indent: 2 }
+    )
+    console.error(betterErrors)
     throw new TypeError('schema validation failed')
   }
 }

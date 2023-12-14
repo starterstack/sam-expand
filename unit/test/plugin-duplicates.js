@@ -7,7 +7,7 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('plugin lifecycles', async (t) => {
+test('plugin duplicates', async (t) => {
   for (const command of ['validate', 'build', 'package', 'deploy', 'delete']) {
     await t.test(command, async (_t) => {
       let getMetadataConfig
@@ -26,9 +26,6 @@ test('plugin lifecycles', async (t) => {
               additionalProperties: false
             }
             return getSchema
-          },
-          async lifecycle(plugin) {
-            return mockLifecycle(plugin)
           }
         },
         'node:process': {
@@ -37,31 +34,15 @@ test('plugin lifecycles', async (t) => {
             null,
             command,
             '-t',
-            path.join(__dirname, 'fixtures', 'region.yml')
+            path.join(__dirname, 'fixtures', 'plugin-duplicates.yml')
           ]
         },
         async '../../src/spawn.js'() {}
       })
-      await expand()
-      assert.equal(getMetadataConfig, 'do-nothing')
-      assert.deepEqual(getSchema, {
-        type: 'object',
-        nullable: true,
-        additionalProperties: false
-      })
-      if (command === 'validate') {
-        assert.equal(mockLifecycle.mock.calls.length, 1)
-        assert.equal(
-          mockLifecycle.mock.calls[0].arguments[0].lifecycle,
-          'expand'
-        )
-      } else {
-        assert.equal(mockLifecycle.mock.calls.length, 3)
-        assert.deepEqual(
-          mockLifecycle.mock.calls.map((c) => c.arguments[0].lifecycle),
-          ['expand', `pre:${command}`, `post:${command}`]
-        )
-      }
+      await assert.rejects(
+        expand(),
+        'Error: duplicate config do-nothing found in plugin'
+      )
       mock.restoreAll()
     })
   }
