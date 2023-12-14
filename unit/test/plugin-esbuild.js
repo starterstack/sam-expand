@@ -269,7 +269,8 @@ test('non node lambda', async (_t) => {
         null,
         'build',
         '-t',
-        path.join(__dirname, 'fixtures', 'esbuild-non-node-lambda.yaml')
+        path.join(__dirname, 'fixtures', 'esbuild-non-node-lambda.yaml'),
+        '--debug'
       ]
     },
     async '../../src/spawn.js'(...args) {
