@@ -71,10 +71,6 @@ export default async function expand() {
       'config-file': {
         type: 'string'
       },
-      'build-dir': {
-        type: 'string',
-        short: 'b'
-      },
       'stack-name': {
         type: 'string'
       },
@@ -121,12 +117,14 @@ export default async function expand() {
   const templatePath =
     values['template']?.toString() ?? values['template-file']?.toString() ?? ''
 
+  if (templatePath) {
+    log('use template path %O', templatePath)
+  }
+
   const templateFile = String(
     await findTemplateFile({
       filePath: templatePath,
-      command,
-      ...(command === 'build' &&
-        values['build-dir'] && { buildDirectory: values['build-dir'] })
+      command
     })
   )
 
@@ -155,8 +153,8 @@ export default async function expand() {
   /** @type {string | undefined } */
   const region =
     values.region ??
-    config?.[configEnv ?? 'default']?.[command]?.parameters?.region ??
-    config?.[configEnv ?? 'default']?.global?.parameters?.region ??
+    config?.[configEnv]?.[command]?.parameters?.region ??
+    config?.[configEnv]?.global?.parameters?.region ??
     process.env['AWS_REGION'] ??
     process.env['AWS_DEFAULT_REGION']
 
@@ -338,10 +336,10 @@ async function runPlugins({
   baseDirectory
 }) {
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
-    if (typeof plugin !== 'string') continue
-    const pluginPath = plugin?.startsWith('.')
-      ? path.join(templateDirectory, plugin)
-      : plugin
+    const pluginPath =
+      plugin?.startsWith('.') || !plugin?.startsWith('/')
+        ? path.join(templateDirectory, plugin)
+        : plugin
 
     /** @type {{ lifecycle: Plugin, lifecycles: Lifecycles }}*/
     const { lifecycle: pluginModule, lifecycles } = await import(pluginPath)
@@ -410,10 +408,10 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
   }
 
   for (const plugin of plugins) {
-    if (typeof plugin !== 'string') continue
-    const pluginPath = plugin?.startsWith('.')
-      ? path.join(templateDirectory, plugin)
-      : plugin
+    const pluginPath =
+      plugin?.startsWith('.') || !plugin?.startsWith('/')
+        ? path.join(templateDirectory, plugin)
+        : plugin
 
     log('import plugin %O', { pluginPath })
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
@@ -509,9 +507,10 @@ async function findTemplateFile({ filePath, command }) {
 async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
-      const fullPath = filePath.startsWith('.')
-        ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
-        : filePath
+      const fullPath =
+        filePath.startsWith('.') || !filePath.startsWith('/')
+          ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
+          : filePath
       await stat(fullPath)
       return fullPath
     } catch {}

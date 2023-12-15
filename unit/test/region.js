@@ -82,7 +82,9 @@ test('region resolution', async (t) => {
           null,
           'validate',
           '-t',
-          path.join(__dirname, 'fixtures', 'region.yml')
+          path.join(__dirname, 'fixtures', 'region.yml'),
+          '--config-env',
+          'qa'
         ],
         env: {
           get AWS_REGION() {},
@@ -147,6 +149,8 @@ test('region resolution', async (t) => {
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'region.yml'),
+          '--config-file',
+          path.join(__dirname, 'fixtures', 'samconfig-no-global-region.toml'),
           '--region',
           'eu-north-1'
         ]
@@ -154,6 +158,7 @@ test('region resolution', async (t) => {
       async '../../src/spawn.js'() {}
     })
     await expand()
+    assert.equal(mockLifecycle.mock.callCount(), 1)
     assert.equal(mockLifecycle.mock.calls[0].arguments[0].region, 'eu-north-1')
   })
 
@@ -256,6 +261,46 @@ test('region resolution', async (t) => {
       mockLifecycle.mock.calls[0].arguments[0].region,
       'eu-central-1'
     )
+  })
+
+  await t.test('no default region', async (_t) => {
+    for (const configEnv of ['global', 'default', 'dev', 'qa', 'prod']) {
+      for (const config of [
+        'samconfig-no-global-region.toml',
+        'samconfig-no-command-region.toml'
+      ]) {
+        /* c8 ignore start */
+        const mockLifecycle = mock.fn()
+        /* c8 ignore end */
+        const expand = await esmock.p('../../src/expand.js', {
+          './fixtures/do-nothing-plugin.mjs': {
+            async lifecycle(plugin) {
+              mockLifecycle(plugin)
+            }
+          },
+          'node:process': {
+            argv: [
+              null,
+              null,
+              'validate',
+              '-t',
+              path.join(__dirname, 'fixtures', 'region.yml'),
+              '--config-env',
+              configEnv,
+              '--config-file',
+              path.join(__dirname, 'fixtures', config)
+            ],
+            env: {
+              get AWS_REGION() {},
+              get AWS_DEFAULT_REGION() {}
+            }
+          },
+          async '../../src/spawn.js'() {}
+        })
+        await expand()
+        assert.equal(mockLifecycle.mock.calls[0].arguments[0].region, undefined)
+      }
+    }
   })
 
   await t.test('global region override toml (dev)', async (_t) => {
