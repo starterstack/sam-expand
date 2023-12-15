@@ -261,6 +261,57 @@ test('run scripts hook plugin hooks with cloudformation resolver missing output'
   }
 })
 
+test('run scripts hook plugin hooks with cloudformation resolver missing output (default)', async (t) => {
+  for (const missing of [
+    undefined,
+    null,
+    {
+      Stacks: [
+        {
+          Outputs: []
+        }
+      ]
+    },
+    { Stacks: [] },
+    { Stacks: [{}] }
+  ]) {
+    cfMock.reset()
+    cfMock.on(DescribeStacksCommand).resolves(missing)
+    /* c8 ignore start */
+    const writeMock = mock.fn()
+    const spawnMock = mock.fn()
+    /* c8 ignore end */
+    await t.test('pre:build', async (_t) => {
+      const expand = await esmock.p('../../src/expand.js', {
+        'node:fs/promises': {
+          async writeFile(...args) {
+            writeMock(...args)
+          },
+          async unlink() {}
+        },
+        'node:process': {
+          argv: [
+            null,
+            null,
+            'build',
+            '-t',
+            path.join(
+              __dirname,
+              'fixtures',
+              'script-hooks-with-resolvers-bad-cf-exports-default.yaml'
+            )
+          ]
+        },
+        async '../../src/spawn.js'(...args) {
+          spawnMock(...args)
+        }
+      })
+      await assert.doesNotReject(expand())
+      mock.restoreAll()
+    })
+  }
+})
+
 test('run scripts hook plugin hooks with cloudformation resolver (no region)', async (t) => {
   const templateContents = await readFile(
     path.join(

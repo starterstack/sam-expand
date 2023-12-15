@@ -112,8 +112,8 @@ export async function resolveCloudFormationOutput({
     cloudformationResults.set(`${stackRegion}.${stackName}`, result)
   }
   for (const output of result?.Stacks?.[0]?.Outputs ?? []) {
-    if (output.OutputKey === outputKey) {
-      return output.OutputValue ?? defaultValue
+    if (output.OutputKey === outputKey && output.OutputValue) {
+      return output.OutputValue
     }
   }
   return defaultValue
