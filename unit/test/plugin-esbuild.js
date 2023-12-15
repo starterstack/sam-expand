@@ -35,7 +35,7 @@ test('esbuild plugin noop', async (t) => {
         }
       })
       await expand()
-      assert.equal(writeMock.mock.calls.length, 0)
+      assert.equal(writeMock.mock.callCount(), 0)
       assert.ok(!templatePath.includes('expanded'))
       assert.equal(templateContents, template)
       mock.restoreAll()
@@ -70,8 +70,8 @@ test('single lambda', async (_t) => {
     }
   })
   await expand()
-  assert.equal(writeMock.mock.calls.length, 1)
-  assert.equal(unlinkMock.mock.calls.length, 1)
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(unlinkMock.mock.callCount(), 1)
   assert.ok(templatePath.includes('expanded'))
   assert.equal(
     writeMock.mock.calls[0].arguments[1],
@@ -173,8 +173,8 @@ test('two node lambda', async (_t) => {
     }
   })
   await expand()
-  assert.equal(writeMock.mock.calls.length, 1)
-  assert.equal(unlinkMock.mock.calls.length, 1)
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(unlinkMock.mock.callCount(), 1)
   assert.ok(templatePath.includes('expanded'))
   assert.equal(
     writeMock.mock.calls[0].arguments[1],
@@ -296,8 +296,8 @@ test('non node lambda', async (_t) => {
     }
   })
   await expand()
-  assert.equal(writeMock.mock.calls.length, 1)
-  assert.equal(unlinkMock.mock.calls.length, 1)
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(unlinkMock.mock.callCount(), 1)
   assert.ok(templatePath.includes('expanded'))
   assert.equal(
     writeMock.mock.calls[0].arguments[1],

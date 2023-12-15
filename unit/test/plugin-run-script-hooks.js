@@ -41,7 +41,7 @@ test('run scripts hook plugin noop', async (t) => {
       }
     })
     await expand()
-    assert.equal(writeMock.mock.calls.length, 0)
+    assert.equal(writeMock.mock.callCount(), 0)
     assert.ok(!templatePath.includes('expanded'))
     assert.equal(templateContents, template)
     mock.restoreAll()
@@ -78,12 +78,12 @@ test('run scripts hook plugin hooks', async (t) => {
         }
       })
       await expand()
-      assert.equal(spawnMock.mock.calls.length, 3)
+      assert.equal(spawnMock.mock.callCount(), 3)
       if (command === 'build') {
-        assert.equal(writeMock.mock.calls.length, 1)
+        assert.equal(writeMock.mock.callCount(), 1)
         assert.equal(writeMock.mock.calls[0].arguments[1], templateContents)
       } else {
-        assert.equal(writeMock.mock.calls.length, 0)
+        assert.equal(writeMock.mock.callCount(), 0)
       }
       assert.equal(spawnMock.mock.calls[1].arguments[0], 'sam')
       assert.equal(spawnMock.mock.calls[1].arguments[1][0], command)
@@ -125,7 +125,7 @@ test('run scripts hook plugin noop', async (t) => {
       }
     })
     await expand()
-    assert.equal(writeMock.mock.calls.length, 0)
+    assert.equal(writeMock.mock.callCount(), 0)
     assert.ok(!templatePath.includes('expanded'))
     assert.equal(templateContents, template)
     mock.restoreAll()
@@ -180,12 +180,12 @@ test('run scripts hook plugin hooks with cloudformation resolver', async (t) => 
         }
       })
       await expand()
-      assert.equal(spawnMock.mock.calls.length, 3)
+      assert.equal(spawnMock.mock.callCount(), 3)
       if (command === 'build') {
-        assert.equal(writeMock.mock.calls.length, 1)
+        assert.equal(writeMock.mock.callCount(), 1)
         assert.equal(writeMock.mock.calls[0].arguments[1], templateContents)
       } else {
-        assert.equal(writeMock.mock.calls.length, 0)
+        assert.equal(writeMock.mock.callCount(), 0)
       }
       assert.equal(spawnMock.mock.calls[1].arguments[0], 'sam')
       assert.equal(spawnMock.mock.calls[1].arguments[1][0], command)
@@ -258,12 +258,12 @@ test('run scripts hook plugin hooks with self cloudformation resolver', async (t
         }
       })
       await expand()
-      assert.equal(spawnMock.mock.calls.length, 3)
+      assert.equal(spawnMock.mock.callCount(), 3)
       if (command === 'build') {
-        assert.equal(writeMock.mock.calls.length, 1)
+        assert.equal(writeMock.mock.callCount(), 1)
         assert.equal(writeMock.mock.calls[0].arguments[1], templateContents)
       } else {
-        assert.equal(writeMock.mock.calls.length, 0)
+        assert.equal(writeMock.mock.callCount(), 0)
       }
       assert.equal(spawnMock.mock.calls[1].arguments[0], 'sam')
       assert.equal(spawnMock.mock.calls[1].arguments[1][0], command)
@@ -305,7 +305,7 @@ test('run scripts hook plugin noop', async (t) => {
       }
     })
     await expand()
-    assert.equal(writeMock.mock.calls.length, 0)
+    assert.equal(writeMock.mock.callCount(), 0)
     assert.ok(!templatePath.includes('expanded'))
     assert.equal(templateContents, template)
     mock.restoreAll()

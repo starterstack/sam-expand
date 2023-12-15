@@ -27,7 +27,7 @@ test('plugin path resolution', async (t) => {
       async '../../src/spawn.js'() {}
     })
     await expand()
-    assert.equal(mockLifecycle.mock.calls.length, 1)
+    assert.equal(mockLifecycle.mock.callCount(), 1)
     mock.restoreAll()
   })
 
@@ -54,7 +54,7 @@ test('plugin path resolution', async (t) => {
       async '../../src/spawn.js'() {}
     })
     await expand()
-    assert.equal(mockLifecycle.mock.calls.length, 1)
+    assert.equal(mockLifecycle.mock.callCount(), 1)
     mock.restoreAll()
   })
 })

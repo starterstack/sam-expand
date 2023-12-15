@@ -50,13 +50,13 @@ test('plugin lifecycles', async (t) => {
         additionalProperties: false
       })
       if (command === 'validate') {
-        assert.equal(mockLifecycle.mock.calls.length, 1)
+        assert.equal(mockLifecycle.mock.callCount(), 1)
         assert.equal(
           mockLifecycle.mock.calls[0].arguments[0].lifecycle,
           'expand'
         )
       } else {
-        assert.equal(mockLifecycle.mock.calls.length, 3)
+        assert.equal(mockLifecycle.mock.callCount(), 3)
         assert.deepEqual(
           mockLifecycle.mock.calls.map((c) => c.arguments[0].lifecycle),
           ['expand', `pre:${command}`, `post:${command}`]

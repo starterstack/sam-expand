@@ -26,7 +26,7 @@ test('use build config', async (t) => {
         async '../../src/spawn.js'() {}
       })
       await expand()
-      assert.equal(mockLifecycle.mock.calls.length, 3)
+      assert.equal(mockLifecycle.mock.callCount(), 3)
       assert.deepEqual(
         [
           ...new Set(

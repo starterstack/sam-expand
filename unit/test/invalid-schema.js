@@ -51,7 +51,7 @@ test('invalid schema metadata', async (t) => {
           assert.equal(err.message, 'schema validation failed')
           return true
         })
-        assert.equal(mockLog.mock.calls.length, 1)
+        assert.equal(mockLog.mock.callCount(), 1)
         assert.deepEqual(mockLog.mock.calls[0].arguments, [
           'ADDTIONAL PROPERTY must NOT have additional properties\n' +
             '\n' +

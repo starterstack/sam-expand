@@ -20,7 +20,7 @@ test('windows with no git bash', async (_t) => {
       }
     })
   )
-  assert.equal(mockLog.mock.calls.length, 1)
+  assert.equal(mockLog.mock.callCount(), 1)
   assert.deepEqual(mockLog.mock.calls[0].arguments, [
     '\x1B[91monly git bash supported in windows!\x1B[0m'
   ])

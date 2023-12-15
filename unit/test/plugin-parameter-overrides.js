@@ -45,7 +45,7 @@ test('parameter overrides plugin noop', async (t) => {
         }
       })
       await expand()
-      assert.equal(writeMock.mock.calls.length, 0)
+      assert.equal(writeMock.mock.callCount(), 0)
       assert.ok(!templatePath.includes('expanded'))
       assert.equal(templateContents, template)
       mock.restoreAll()
@@ -85,7 +85,7 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
     }
   })
   await expand()
-  assert.equal(spawnMock.mock.calls.length, 1)
+  assert.equal(spawnMock.mock.callCount(), 1)
   assert.deepEqual(spawnMock.mock.calls[0].arguments, [
     'sam',
     [
