@@ -49,9 +49,10 @@ export async function resolveFile({
   configEnv,
   region
 }) {
-  const fullPath = location?.startsWith('.')
-    ? path.join(templateDirectory, location)
-    : location
+  const fullPath =
+    location?.startsWith('.') || !location?.startsWith('/')
+      ? path.join(templateDirectory, location)
+      : location
   const extname = path.extname(fullPath)
   if (!['.mjs', '.json', '.yaml', '.yml'].includes(extname)) {
     throw new Error(
@@ -111,8 +112,8 @@ export async function resolveCloudFormationOutput({
     cloudformationResults.set(`${stackRegion}.${stackName}`, result)
   }
   for (const output of result?.Stacks?.[0]?.Outputs ?? []) {
-    if (output.OutputKey === outputKey) {
-      return output.OutputValue ?? defaultValue
+    if (output.OutputKey === outputKey && output.OutputValue) {
+      return output.OutputValue
     }
   }
   return defaultValue

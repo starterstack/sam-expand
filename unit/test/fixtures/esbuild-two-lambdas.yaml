@@ -7,7 +7,7 @@ Metadata:
       - '../../../src/plugins/esbuild-node.js'
     config:
       esbuild:
-        config: ./esbuild-config.yaml
+        config: esbuild-config.yaml
 
 Resources:
   HelloWorldFunction:

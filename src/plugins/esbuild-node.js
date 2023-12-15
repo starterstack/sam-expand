@@ -134,7 +134,7 @@ async function findHandlerEntry({ codeUri, baseDirectory, handler }) {
  **/
 
 function resolvePath(baseDirectory, filePath) {
-  if (filePath?.startsWith('.')) {
+  if (filePath?.startsWith('.') || !filePath?.startsWith('/')) {
     return path.join(baseDirectory, filePath)
   } else {
     return filePath

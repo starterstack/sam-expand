@@ -71,10 +71,6 @@ export default async function expand() {
       'config-file': {
         type: 'string'
       },
-      'build-dir': {
-        type: 'string',
-        short: 'b'
-      },
       'stack-name': {
         type: 'string'
       },
@@ -110,27 +106,6 @@ export default async function expand() {
     return
   }
 
-  const samConfigPath = await getSamConfigPath(
-    values['config-file']?.toString()
-  )
-
-  log('samConfig %O', samConfigPath)
-
-  const config = samConfigPath ? await parse.samConfig(samConfigPath) : null
-
-  const configEnv = String(values['config-env'] ?? 'default')
-  log('configEnv %O', configEnv)
-
-  /** @type {string | undefined } */
-  const region =
-    values.region ??
-    config?.[configEnv ?? 'default']?.[command]?.parameters?.region ??
-    config?.[configEnv ?? 'default']?.global?.parameters?.region ??
-    process.env['AWS_REGION'] ??
-    process.env['AWS_DEFAULT_REGION']
-
-  log('region %O', region)
-
   const baseDirectory = values?.['base-dir']?.toString()
 
   const argv = process.argv.slice(2)
@@ -142,20 +117,48 @@ export default async function expand() {
   const templatePath =
     values['template']?.toString() ?? values['template-file']?.toString() ?? ''
 
+  if (templatePath) {
+    log('use template path %O', templatePath)
+  }
+
   const templateFile = String(
     await findTemplateFile({
       filePath: templatePath,
-      command,
-      ...(command === 'build' &&
-        values['build-dir'] && { buildDirectory: values['build-dir'] })
+      command
     })
   )
+
+  if (!templateFile) {
+    throw new Error('no template file found')
+  }
 
   log('use template %O', templateFile)
 
   if (templateArgumentGiven && command === 'build') {
     argv.splice(argv.indexOf(templateArgumentGiven), 2)
   }
+
+  const samConfigPath = await getSamConfigPath({
+    filePath: values['config-file']?.toString(),
+    templateDirectory: templateDirectoryFromFile(templateFile)
+  })
+
+  log('samConfig %O', samConfigPath)
+
+  const config = samConfigPath ? await parse.samConfig(samConfigPath) : null
+
+  const configEnv = String(values['config-env'] ?? 'default')
+  log('configEnv %O', configEnv)
+
+  /** @type {string | undefined } */
+  const region =
+    values.region ??
+    config?.[configEnv]?.[command]?.parameters?.region ??
+    config?.[configEnv]?.global?.parameters?.region ??
+    process.env['AWS_REGION'] ??
+    process.env['AWS_DEFAULT_REGION']
+
+  log('region %O', region)
 
   /** @type {string[]} */
   const tempFiles = []
@@ -240,12 +243,6 @@ async function expandAll({
   log,
   baseDirectory
 }) {
-  if (!templateFile) {
-    return {
-      expandedPath: '',
-      template: null
-    }
-  }
   log('reading template %O', templateFile)
   const template = await parse.template(templateFile)
   const templateDirectory = templateDirectoryFromFile(templateFile)
@@ -279,7 +276,12 @@ async function expandAll({
   for (const [key, value] of Object.entries(template.Resources ?? {})) {
     if (value.Type === 'AWS::Serverless::Application') {
       if (typeof value.Properties.Location === 'string') {
-        const nestedLocation = await findFiles([value.Properties.Location])
+        const location = value.Properties.Location
+        const locationPath =
+          location.startsWith('.') || !location.startsWith('/')
+            ? path.join(templateDirectory, location)
+            : location
+        const nestedLocation = await findFiles([locationPath])
         if (!nestedLocation) {
           throw new Error(`${value.Properties.Location} not found for ${key}`)
         }
@@ -298,6 +300,7 @@ async function expandAll({
       }
     }
   }
+  debugger
   if (command === 'build') {
     const extname = path.extname(templateFile)
     const templateBaseName = path.basename(templateFile, extname)
@@ -333,10 +336,10 @@ async function runPlugins({
   baseDirectory
 }) {
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
-    if (typeof plugin !== 'string') continue
-    const pluginPath = plugin?.startsWith('.')
-      ? path.join(templateDirectory, plugin)
-      : plugin
+    const pluginPath =
+      plugin?.startsWith('.') || !plugin?.startsWith('/')
+        ? path.join(templateDirectory, plugin)
+        : plugin
 
     /** @type {{ lifecycle: Plugin, lifecycles: Lifecycles }}*/
     const { lifecycle: pluginModule, lifecycles } = await import(pluginPath)
@@ -405,10 +408,10 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
   }
 
   for (const plugin of plugins) {
-    if (typeof plugin !== 'string') continue
-    const pluginPath = plugin?.startsWith('.')
-      ? path.join(templateDirectory, plugin)
-      : plugin
+    const pluginPath =
+      plugin?.startsWith('.') || !plugin?.startsWith('/')
+        ? path.join(templateDirectory, plugin)
+        : plugin
 
     log('import plugin %O', { pluginPath })
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
@@ -452,31 +455,34 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
     expand: template.Metadata.expand
   }
   if (!validate(metadata)) {
-    try {
-      const betterErrors = betterAjvErrors(
-        expandSchema,
-        metadata,
-        validate.errors,
-        { indent: 2 }
-      )
-      console.error(betterErrors)
-    } catch {
-      console.error(validate.errors)
-    }
+    const betterErrors = betterAjvErrors(
+      expandSchema,
+      metadata,
+      validate.errors,
+      { indent: 2 }
+    )
+    console.error(betterErrors)
     throw new TypeError('schema validation failed')
   }
 }
 
-/** @param { string | undefined } filePath
+/** @param {{ filePath: string | undefined, templateDirectory: string }} options
  * @returns {Promise<null | string>}
  **/
-async function getSamConfigPath(filePath) {
-  filePath ||= await findFiles([
-    './samconfig.toml',
-    './samconfig.yaml',
-    './samconfig.yml'
-  ])
-  return filePath || null
+async function getSamConfigPath({ filePath, templateDirectory }) {
+  if (filePath) {
+    if (filePath.startsWith('.') || !filePath.startsWith('/')) {
+      return path.join(templateDirectory, filePath)
+    } else {
+      return filePath
+    }
+  } else {
+    return await findFiles(
+      ['./samconfig.toml', './samconfig.yaml', './samconfig.yml'].map((file) =>
+        path.join(templateDirectory, file)
+      )
+    )
+  }
 }
 
 /**
@@ -502,7 +508,7 @@ async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
       const fullPath =
-        !filePath.startsWith('.') && !filePath.startsWith('/')
+        filePath.startsWith('.') || !filePath.startsWith('/')
           ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
           : filePath
       await stat(fullPath)

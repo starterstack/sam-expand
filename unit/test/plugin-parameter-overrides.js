@@ -27,14 +27,11 @@ test('parameter overrides plugin noop', async (t) => {
   for (const command of ['validate', 'package', 'delete']) {
     let template
     let templatePath
+    /* c8 ignore start */
     const writeMock = mock.fn()
+    /* c8 ignore end */
     await t.test(`${command}: noop`, async (_t) => {
       const expand = await esmock.p('../../src/expand.js', {
-        'node:fs/promises': {
-          async writeFile(...args) {
-            writeMock(...args)
-          }
-        },
         'node:process': {
           argv: [
             null,
@@ -42,12 +39,7 @@ test('parameter overrides plugin noop', async (t) => {
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'parameters.yml')
-          ],
-          env: {
-            get INIT_CWD() {
-              return __dirname
-            }
-          }
+          ]
         },
         async '../../src/spawn.js'(...args) {
           templatePath = args[1][args[1].indexOf('-t') + 1]
@@ -55,7 +47,7 @@ test('parameter overrides plugin noop', async (t) => {
         }
       })
       await expand()
-      assert.equal(writeMock.mock.calls.length, 0)
+      assert.equal(writeMock.mock.callCount(), 0)
       assert.ok(!templatePath.includes('expanded'))
       assert.equal(templateContents, template)
       mock.restoreAll()
@@ -77,7 +69,9 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
       }
     ]
   })
+  /* c8 ignore start */
   const spawnMock = mock.fn()
+  /* c8 ignore end */
   const argv = [
     null,
     null,
@@ -88,19 +82,73 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
 
   const expand = await esmock.p('../../src/expand.js', {
     'node:process': {
-      argv,
-      env: {
-        get INIT_CWD() {
-          return __dirname
-        }
-      }
+      argv
     },
     async '../../src/spawn.js'(...args) {
       spawnMock(...args)
     }
   })
   await expand()
-  assert.equal(spawnMock.mock.calls.length, 1)
+  assert.equal(spawnMock.mock.callCount(), 1)
+  assert.deepEqual(spawnMock.mock.calls[0].arguments, [
+    'sam',
+    [
+      'deploy',
+      '-t',
+      path.join(__dirname, 'fixtures', 'parameters.yml'),
+      '--parameter-overrides',
+      'CFNameWithDefault=someValue',
+      'CFName=test',
+      'JSONNameWithDefault=someValue',
+      'JSONName=test',
+      'YAMLNameWithDefault=someValue',
+      'YAMLName=test',
+      'YMLNameWithDefault=someValue',
+      'YMLName=test',
+      'MJSNameWithDefault=someValue',
+      'MJSName=test'
+    ]
+  ])
+  mock.restoreAll()
+})
+
+test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async (_t) => {
+  cfMock.reset()
+  cfMock.on(DescribeStacksCommand).resolves({
+    Stacks: [
+      {
+        Outputs: [
+          {
+            OutputKey: 'an-output',
+            OutputValue: 'test'
+          }
+        ]
+      }
+    ]
+  })
+  /* c8 ignore start */
+  const spawnMock = mock.fn()
+  /* c8 ignore end */
+  const argv = [
+    null,
+    null,
+    'deploy',
+    '-t',
+    path.join(__dirname, 'fixtures', 'parameters.yml'),
+    '--parameter-overrides',
+    'MJSName=originalvalue'
+  ]
+
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:process': {
+      argv
+    },
+    async '../../src/spawn.js'(...args) {
+      spawnMock(...args)
+    }
+  })
+  await expand()
+  assert.equal(spawnMock.mock.callCount(), 1)
   assert.deepEqual(spawnMock.mock.calls[0].arguments, [
     'sam',
     [

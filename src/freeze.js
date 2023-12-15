@@ -4,8 +4,12 @@
  * @returns {T}
  **/
 
-export default function freeze(object) {
+export default function freezeNested(object) {
   const cloned = structuredClone(object)
+  return freeze(cloned)
+}
+
+function freeze(cloned) {
   const propNames = Object.getOwnPropertyNames(cloned)
 
   for (const name of propNames) {

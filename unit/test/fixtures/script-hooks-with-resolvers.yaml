@@ -28,7 +28,7 @@ Metadata:
                     stackRegion: us-east-1
                     outputKey: postbuild
                   file:
-                    location: ./script-hooks-file-resolver.mjs
+                    location: script-hooks-file-resolver.mjs
                     exportName: test
           pre:package:
             - command: echo

@@ -14,11 +14,7 @@ const windows = os.platform() === 'win32'
 export default async function spawn(cmd, args, options) {
   if (windows) {
     args = ['/C', cmd].concat(args).map((arg) => {
-      if (typeof arg === 'string') {
-        return arg.replace(/\^/g, '^^^^')
-      } else {
-        return arg
-      }
+      return String(arg).replace(/\^/g, '^^^^')
     })
     cmd = 'cmd'
   }

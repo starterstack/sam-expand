@@ -70,7 +70,7 @@ Rules:
   ValidateTimeout:
     Assertions:
       - Assert: !Not [!Equals [!Ref Timeout, 0]]
-        AssertDescription: "Timeout must not be 0."
+        AssertDescription: 'Timeout must not be 0.'
 
 Outputs:
   HelloWorldApi:

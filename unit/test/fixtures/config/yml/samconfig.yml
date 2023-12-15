@@ -1,0 +1,28 @@
+version: 0.1
+default:
+  global:
+    parameters:
+      resolve_s3: true
+  build:
+    parameters:
+      cached: true
+      parallel: true
+      parameter_overrides: 'Name=yml'
+  validate:
+    parameters:
+      lint: true
+  deploy:
+    parameters:
+      capabilities: CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+      confirm_changeset: true
+      resolve_s3: true
+  package:
+    parameters:
+      resolve_s3: true
+  sync:
+    parameters:
+      watch: true
+dev:
+  package:
+    parameters:
+      resolve_s3: true
