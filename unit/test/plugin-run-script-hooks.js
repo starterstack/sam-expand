@@ -1,8 +1,7 @@
 import { test, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
-import { readFile } from 'node:fs/promises'
-
+import { readFile, writeFile, unlink } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { mockClient } from 'aws-sdk-client-mock'
@@ -207,6 +206,84 @@ test('run scripts hook plugin hooks with cloudformation resolver', async (t) => 
     })
   }
 })
+
+test(
+  'run scripts hook plugin hooks with absolute file resolver',
+  { only: true },
+  async (_t) => {
+    /* c8 ignore start */
+    const writeMock = mock.fn()
+    const spawnMock = mock.fn()
+    /* c8 ignore end */
+    try {
+      await writeFile(
+        path.join(
+          __dirname,
+          'fixtures',
+          'script-hooks-with-absolute-file-resolver.yaml'
+        ),
+        `
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/run-script-hooks.js
+    config:
+      script:
+        hooks:
+          pre:build:
+            - command: echo
+              args:
+                - file:
+                    location: ${path.join(
+                      __dirname,
+                      'fixtures',
+                      'script-hooks-file-resolver.mjs'
+                    )}
+                    exportName: test
+Resources:
+  WaitConditionHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+`
+      )
+      const expand = await esmock.p('../../src/expand.js', {
+        'node:fs/promises': {
+          async writeFile(...args) {
+            writeMock(...args)
+          },
+          async unlink() {}
+        },
+        'node:process': {
+          argv: [
+            null,
+            null,
+            'build',
+            '-t',
+            path.join(
+              __dirname,
+              'fixtures',
+              'script-hooks-with-absolute-file-resolver.yaml'
+            )
+          ]
+        },
+        async '../../src/spawn.js'(...args) {
+          spawnMock(...args)
+        }
+      })
+      await assert.doesNotReject(expand())
+    } finally {
+      await unlink(
+        path.join(
+          __dirname,
+          'fixtures',
+          'script-hooks-with-absolute-file-resolver.yaml'
+        )
+      )
+    }
+  }
+)
 
 test('run scripts hook plugin hooks with cloudformation resolver missing output', async (t) => {
   for (const missing of [
