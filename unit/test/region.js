@@ -8,7 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 test('region resolution', async (t) => {
   await t.test('no region', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -35,7 +37,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('AWS_REGION us-east-1', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -63,7 +67,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('AWS_DEFAULT_REGION us-east-1 (no AWS_REGION)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -94,7 +100,9 @@ test('region resolution', async (t) => {
   await t.test(
     'AWS_DEFAULT_REGION eu-west-1 (AWS_REGION us-east-2)',
     async (_t) => {
+      /* c8 ignore start */
       const mockLifecycle = mock.fn()
+      /* c8 ignore end */
       const expand = await esmock.p('../../src/expand.js', {
         './fixtures/do-nothing-plugin.mjs': {
           async lifecycle(plugin) {
@@ -123,7 +131,9 @@ test('region resolution', async (t) => {
   )
 
   await t.test('--region', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -148,7 +158,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('command region override toml (default)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -180,7 +192,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('command region override toml (dev)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -211,7 +225,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('global region override toml (default)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -243,7 +259,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('global region override toml (dev)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -274,7 +292,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('command region override yaml (default)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -306,7 +326,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('command region override yaml (dev)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -337,7 +359,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('global region override yaml (default)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {
@@ -369,7 +393,9 @@ test('region resolution', async (t) => {
   })
 
   await t.test('global region override yaml (dev)', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       './fixtures/do-nothing-plugin.mjs': {
         async lifecycle(plugin) {

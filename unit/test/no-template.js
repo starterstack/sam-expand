@@ -1,4 +1,4 @@
-import { test, mock } from 'node:test'
+import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
 import { fileURLToPath } from 'node:url'
@@ -13,8 +13,7 @@ await test('no template', async (_t) => {
         INIT_CWD: path.join(__dirname, 'fixtures', 'empty')
       },
       argv: [null, null, 'build']
-    },
-    async '../../src/spawn.js'() {}
+    }
   })
   await assert.rejects(expand(), { message: 'no template file found' })
 })

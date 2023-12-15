@@ -9,7 +9,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 test('samconfig parsing', async (t) => {
   for (const config of ['toml', 'yaml', 'yml']) {
     await t.test(config, async (_t) => {
+      /* c8 ignore start */
       const mockLifecycle = mock.fn()
+      /* c8 ignore end */
       const expand = await esmock.p('../../src/expand.js', {
         [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
           async lifecycle(plugin) {
@@ -40,7 +42,9 @@ test('samconfig parsing', async (t) => {
         `samconfig.${config}`,
         `./samconfig.${config}`
       ]) {
+        /* c8 ignore start */
         const mockLifecycle = mock.fn()
+        /* c8 ignore end */
         const expand = await esmock.p('../../src/expand.js', {
           [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
             async lifecycle(plugin) {
@@ -76,7 +80,9 @@ test('samconfig parsing', async (t) => {
       }
     })
     await t.test(`--config-file absolute path ${config}`, async (_t) => {
+      /* c8 ignore start */
       const mockLifecycle = mock.fn()
+      /* c8 ignore end */
       const expand = await esmock.p('../../src/expand.js', {
         [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
           async lifecycle(plugin) {
@@ -112,7 +118,9 @@ test('samconfig parsing', async (t) => {
     })
   }
   await t.test('no config', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
         async lifecycle(plugin) {
@@ -150,6 +158,5 @@ test('samconfig parsing', async (t) => {
       async '../../src/spawn.js'() {}
     })
     await assert.rejects(expand(), '--config-file unsupported')
-    mock.restoreAll()
   })
 })

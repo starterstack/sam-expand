@@ -27,7 +27,9 @@ test('parameter overrides plugin noop', async (t) => {
   for (const command of ['validate', 'package', 'delete']) {
     let template
     let templatePath
+    /* c8 ignore start */
     const writeMock = mock.fn()
+    /* c8 ignore end */
     await t.test(`${command}: noop`, async (_t) => {
       const expand = await esmock.p('../../src/expand.js', {
         'node:process': {
@@ -67,7 +69,9 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
       }
     ]
   })
+  /* c8 ignore start */
   const spawnMock = mock.fn()
+  /* c8 ignore end */
   const argv = [
     null,
     null,

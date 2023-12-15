@@ -8,7 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 test('plugin path resolution', async (t) => {
   await t.test('INIT_CWD', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
         async lifecycle(plugin) {
@@ -32,7 +34,9 @@ test('plugin path resolution', async (t) => {
   })
 
   await t.test('cwd()', async (_t) => {
+    /* c8 ignore start */
     const mockLifecycle = mock.fn()
+    /* c8 ignore end */
     const expand = await esmock.p('../../src/expand.js', {
       [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
         async lifecycle(plugin) {

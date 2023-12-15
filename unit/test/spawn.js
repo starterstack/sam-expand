@@ -4,6 +4,7 @@ import esmock from 'esmock'
 import { PassThrough } from 'node:stream'
 
 test('windows arguments', async () => {
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -17,6 +18,7 @@ test('windows arguments', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -42,6 +44,7 @@ test('windows arguments', async () => {
 })
 
 test('non windows arguments', async () => {
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -55,6 +58,7 @@ test('non windows arguments', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -80,6 +84,7 @@ test('non windows arguments', async () => {
 })
 
 test('command failed', async () => {
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -93,6 +98,7 @@ test('command failed', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -109,6 +115,7 @@ test('command failed', async () => {
 })
 
 test('default options', async () => {
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -122,6 +129,7 @@ test('default options', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -143,6 +151,7 @@ test('default options', async () => {
 })
 
 test('non default options', async () => {
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -156,6 +165,7 @@ test('non default options', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -178,6 +188,7 @@ test('non default options', async () => {
 test('stdout', async () => {
   const pass = new PassThrough()
   pass.write('a.out')
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -193,6 +204,7 @@ test('stdout', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -212,6 +224,7 @@ test('stdout', async () => {
 test('stderr', async () => {
   const stderr = new PassThrough()
   stderr.write('Something went wrong')
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -227,6 +240,7 @@ test('stderr', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {
@@ -245,6 +259,7 @@ test('stderr', async () => {
 })
 
 test('default error', async () => {
+  /* c8 ignore start */
   const mockFn = test.mock.fn(() => {
     return {
       once(command, callback) {
@@ -259,6 +274,7 @@ test('default error', async () => {
       }
     }
   })
+  /* c8 ignore end */
   const spawn = await esmock.p('../../src/spawn.js', {
     'node:os': {
       platform() {

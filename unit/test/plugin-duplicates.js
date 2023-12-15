@@ -1,4 +1,4 @@
-import { test, mock } from 'node:test'
+import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
 
@@ -12,7 +12,6 @@ test('plugin duplicates', async (t) => {
     await t.test(command, async (_t) => {
       let getMetadataConfig
       let getSchema
-      const mockLifecycle = mock.fn()
       const expand = await esmock.p('../../src/expand.js', {
         [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
           get metadataConfig() {
@@ -36,14 +35,13 @@ test('plugin duplicates', async (t) => {
             '-t',
             path.join(__dirname, 'fixtures', 'plugin-duplicates.yml')
           ]
-        },
-        async '../../src/spawn.js'() {}
+        }
+        //async '../../src/spawn.js'() {}
       })
       await assert.rejects(
         expand(),
         'Error: duplicate config do-nothing found in plugin'
       )
-      mock.restoreAll()
     })
   }
 })

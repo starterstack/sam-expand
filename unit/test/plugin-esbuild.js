@@ -1,7 +1,7 @@
 import { test, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile, unlink } from 'node:fs/promises'
 
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -17,6 +17,7 @@ test('esbuild plugin noop', async (t) => {
   for (const command of ['validate', 'package', 'deploy', 'delete']) {
     let template
     let templatePath
+    /* c8 ignore next */
     const writeMock = mock.fn()
     await t.test(`${command}: noop`, async (_t) => {
       const expand = await esmock.p('../../src/expand.js', {
@@ -43,10 +44,29 @@ test('esbuild plugin noop', async (t) => {
   }
 })
 
+test("esbuild doesn't crash when template has no resources", async (_t) => {
+  /* c8 ignore next */
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:process': {
+      argv: [
+        null,
+        null,
+        'build',
+        '-t',
+        path.join(__dirname, 'fixtures', 'esbuild-no-resources.yaml')
+      ]
+    },
+    async '../../src/spawn.js'() {}
+  })
+  await expand()
+})
+
 test('single lambda', async (_t) => {
   let templatePath
+  /* c8 ignore start */
   const writeMock = mock.fn()
   const unlinkMock = mock.fn()
+  /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
       async writeFile(...args) {
@@ -128,6 +148,184 @@ Resources:
   mock.restoreAll()
 })
 
+test('single lambda (global runtime)', async (_t) => {
+  let templatePath
+  /* c8 ignore start */
+  const writeMock = mock.fn()
+  const unlinkMock = mock.fn()
+  /* c8 ignore end */
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:fs/promises': {
+      async writeFile(...args) {
+        writeMock(...args)
+      },
+      async unlink(...args) {
+        unlinkMock(...args)
+      }
+    },
+    'node:process': {
+      argv: [
+        null,
+        null,
+        'build',
+        '-t',
+        path.join(__dirname, 'fixtures', 'esbuild-single-lambda-global.yaml')
+      ]
+    },
+    async '../../src/spawn.js'(...args) {
+      templatePath = args[1][args[1].indexOf('-t') + 1]
+    }
+  })
+  await expand()
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(unlinkMock.mock.callCount(), 1)
+  assert.ok(templatePath.includes('expanded'))
+  assert.equal(
+    writeMock.mock.calls[0].arguments[1],
+    `AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/esbuild-node.js
+    config:
+      esbuild:
+        config: ./esbuild-config.yaml
+Globals:
+  Function:
+    Runtime: nodejs20.x
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello-world/
+      Handler: app.lambdaHandler
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Bundle: true
+        Format: esm
+        OutExtension:
+          - .js=.mjs
+        Sourcemap: true
+        Target: node18
+        External:
+          - '@aws-sdk/*'
+        Define:
+          - require.resolve=undefined
+        Banner:
+          - |
+            js=import { createRequire } from 'node:module'
+            import { dirname } from 'node:path'
+            import { fileURLToPath } from 'node:url'
+
+            const require = createRequire(import.meta.url)
+            const __filename = fileURLToPath(import.meta.url)
+            const __dirname = dirname(__filename)
+        Platform: node
+        EntryPoints:
+          - app.ts
+`
+  )
+  mock.restoreAll()
+})
+
+test('single lambda with base directory', async (_t) => {
+  let templatePath
+  /* c8 ignore start */
+  const writeMock = mock.fn()
+  const unlinkMock = mock.fn()
+  /* c8 ignore end */
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:fs/promises': {
+      async writeFile(...args) {
+        writeMock(...args)
+      },
+      async unlink(...args) {
+        unlinkMock(...args)
+      }
+    },
+    'node:process': {
+      argv: [
+        null,
+        null,
+        'build',
+        '--base-dir',
+        './hello-world',
+        '-t',
+        path.join(__dirname, 'fixtures', 'esbuild-single-lambda-base-dir.yaml')
+      ]
+    },
+    async '../../src/spawn.js'(...args) {
+      templatePath = args[1][args[1].indexOf('-t') + 1]
+    }
+  })
+  await expand()
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(unlinkMock.mock.callCount(), 1)
+  assert.ok(templatePath.includes('expanded'))
+  assert.equal(
+    writeMock.mock.calls[0].arguments[1],
+    `AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/esbuild-node.js
+    config:
+      esbuild:
+        config: ./esbuild-config.yaml
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs20.x
+      CodeUri: /
+      Handler: app.lambdaHandler
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Bundle: true
+        Format: esm
+        OutExtension:
+          - .js=.mjs
+        Sourcemap: true
+        Target: node18
+        External:
+          - '@aws-sdk/*'
+        Define:
+          - require.resolve=undefined
+        Banner:
+          - |
+            js=import { createRequire } from 'node:module'
+            import { dirname } from 'node:path'
+            import { fileURLToPath } from 'node:url'
+
+            const require = createRequire(import.meta.url)
+            const __filename = fileURLToPath(import.meta.url)
+            const __dirname = dirname(__filename)
+        Platform: node
+        EntryPoints:
+          - app.ts
+`
+  )
+  mock.restoreAll()
+})
+
 test('lambda missing entry point', async (_t) => {
   const expand = await esmock.p('../../src/expand.js', {
     'node:process': {
@@ -146,10 +344,50 @@ test('lambda missing entry point', async (_t) => {
   mock.restoreAll()
 })
 
+test('absolute config path', async (_t) => {
+  try {
+    const template = await readFile(
+      path.join(__dirname, 'fixtures', 'esbuild-no-entry-point.yaml'),
+      'utf-8'
+    )
+    await writeFile(
+      path.join(__dirname, 'fixtures', 'esbuild-no-entry-point-absolute.yaml'),
+      template.replace(
+        './esbuild-config.yaml',
+        path.join(__dirname, 'fixtures', 'esbuild-config.yaml')
+      )
+    )
+    const expand = await esmock.p('../../src/expand.js', {
+      'node:process': {
+        argv: [
+          null,
+          null,
+          'build',
+          '-t',
+          path.join(
+            __dirname,
+            'fixtures',
+            'esbuild-no-entry-point-absolute.yaml'
+          )
+        ]
+      }
+    })
+    await assert.rejects(expand(), {
+      message: 'no entry point found for missing.lambdaHandler'
+    })
+  } finally {
+    await unlink(
+      path.join(__dirname, 'fixtures', 'esbuild-no-entry-point-absolute.yaml')
+    )
+  }
+})
+
 test('two node lambda', async (_t) => {
   let templatePath
+  /* c8 ignore start */
   const writeMock = mock.fn()
   const unlinkMock = mock.fn()
+  /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
       async writeFile(...args) {
@@ -288,8 +526,10 @@ test('lambda missing entry point', async (_t) => {
 
 test('non node lambda', async (_t) => {
   let templatePath
+  /* c8 ignore start */
   const writeMock = mock.fn()
   const unlinkMock = mock.fn()
+  /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
       async writeFile(...args) {

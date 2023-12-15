@@ -1,5 +1,7 @@
 // @ts-check
 
+/* c8 ignore start */
+
 /** @type {import('../../../src/expand.js').Plugin} */
 export const lifecycle = async function doNothing() {}
 
@@ -15,3 +17,5 @@ export const lifecycles = [
   'pre:delete',
   'post:delete'
 ]
+
+/* c8 ignore end */
