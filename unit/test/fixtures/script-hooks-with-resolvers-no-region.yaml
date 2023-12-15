@@ -14,7 +14,6 @@ Metadata:
                 - value: pre:build
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: prebuild
                   file:
                     location: ./script-hooks-file-resolver.mjs
@@ -25,10 +24,9 @@ Metadata:
                 - value: post:build
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: postbuild
                   file:
-                    location: script-hooks-file-resolver.mjs
+                    location: ./script-hooks-file-resolver.mjs
                     exportName: test
           pre:package:
             - command: echo
@@ -36,7 +34,6 @@ Metadata:
                 - value: pre:package
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: prepackage
                   file:
                     location: ./script-hooks-file-resolver.mjs
@@ -47,7 +44,6 @@ Metadata:
                 - value: post:package
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: postpackage
                   file:
                     location: ./script-hooks-file-resolver.mjs
@@ -58,7 +54,6 @@ Metadata:
                 - value: pre:delete
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: predelete
                   file:
                     location: ./script-hooks-file-resolver.mjs
@@ -69,7 +64,6 @@ Metadata:
                 - value: post:delete
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: postdelete
                   file:
                     location: ./script-hooks-file-resolver.mjs
@@ -80,7 +74,6 @@ Metadata:
                 - value: pre:deploy
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: predeploy
                   file:
                     location: ./script-hooks-file-resolver.mjs
@@ -91,7 +84,6 @@ Metadata:
                 - value: post:deploy
                   cloudFormation:
                     stackName: test
-                    stackRegion: us-east-1
                     outputKey: postdeploy
                   file:
                     location: ./script-hooks-file-resolver.mjs

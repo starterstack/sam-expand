@@ -218,14 +218,12 @@ export const lifecycle = async function runScriptHook({
       })
       await spawn(spawnCommand, spawnArgs)
     }
-  } else {
-    log('skipping script hook %O', { lifecycle })
   }
 }
 
 /**
  * @param {{ argv: string[], command: string, config: any, configEnv: string }} options
- * @returns {string}
+ * @returns {string | undefined}
  **/
 
 function inferStackName({ argv, command, config, configEnv }) {
@@ -241,10 +239,7 @@ function inferStackName({ argv, command, config, configEnv }) {
   })
   const stackName =
     values['stack-name'] ??
-    config?.[configEnv ?? 'default']?.[command]?.parameters?.stackName ??
-    config?.[configEnv ?? 'default']?.global?.parameters?.stackName
-  if (!stackName) {
-    throw new TypeError('missing stackName')
-  }
+    config?.[configEnv]?.[command]?.parameters?.stack_name ??
+    config?.[configEnv]?.global?.parameters?.stack_name
   return stackName
 }
