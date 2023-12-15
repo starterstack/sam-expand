@@ -9,6 +9,7 @@ resolve_s3 = true
 [default.build.parameters]
 cached = true
 parallel = true
+parameter_overrides="Name=toml"
 
 [default.validate.parameters]
 lint = true

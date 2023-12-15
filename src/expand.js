@@ -110,27 +110,6 @@ export default async function expand() {
     return
   }
 
-  const samConfigPath = await getSamConfigPath(
-    values['config-file']?.toString()
-  )
-
-  log('samConfig %O', samConfigPath)
-
-  const config = samConfigPath ? await parse.samConfig(samConfigPath) : null
-
-  const configEnv = String(values['config-env'] ?? 'default')
-  log('configEnv %O', configEnv)
-
-  /** @type {string | undefined } */
-  const region =
-    values.region ??
-    config?.[configEnv ?? 'default']?.[command]?.parameters?.region ??
-    config?.[configEnv ?? 'default']?.global?.parameters?.region ??
-    process.env['AWS_REGION'] ??
-    process.env['AWS_DEFAULT_REGION']
-
-  log('region %O', region)
-
   const baseDirectory = values?.['base-dir']?.toString()
 
   const argv = process.argv.slice(2)
@@ -156,6 +135,33 @@ export default async function expand() {
   if (templateArgumentGiven && command === 'build') {
     argv.splice(argv.indexOf(templateArgumentGiven), 2)
   }
+
+  if (templateFile) {
+  }
+
+  const samConfigPath =
+    templateFile &&
+    (await getSamConfigPath({
+      filePath: values['config-file']?.toString(),
+      templateDirectory: templateDirectoryFromFile(templateFile)
+    }))
+
+  log('samConfig %O', samConfigPath)
+
+  const config = samConfigPath ? await parse.samConfig(samConfigPath) : null
+
+  const configEnv = String(values['config-env'] ?? 'default')
+  log('configEnv %O', configEnv)
+
+  /** @type {string | undefined } */
+  const region =
+    values.region ??
+    config?.[configEnv ?? 'default']?.[command]?.parameters?.region ??
+    config?.[configEnv ?? 'default']?.global?.parameters?.region ??
+    process.env['AWS_REGION'] ??
+    process.env['AWS_DEFAULT_REGION']
+
+  log('region %O', region)
 
   /** @type {string[]} */
   const tempFiles = []
@@ -273,7 +279,12 @@ async function expandAll({
   for (const [key, value] of Object.entries(template.Resources ?? {})) {
     if (value.Type === 'AWS::Serverless::Application') {
       if (typeof value.Properties.Location === 'string') {
-        const nestedLocation = await findFiles([value.Properties.Location])
+        const location = value.Properties.Location
+        const locationPath =
+          location.startsWith('.') || !location.startsWith('/')
+            ? path.join(templateDirectory, location)
+            : location
+        const nestedLocation = await findFiles([locationPath])
         if (!nestedLocation) {
           throw new Error(`${value.Properties.Location} not found for ${key}`)
         }
@@ -292,6 +303,7 @@ async function expandAll({
       }
     }
   }
+  debugger
   if (command === 'build') {
     const extname = path.extname(templateFile)
     const templateBaseName = path.basename(templateFile, extname)
@@ -457,16 +469,25 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
   }
 }
 
-/** @param { string | undefined } filePath
+/** @param {{ filePath: string | undefined, templateDirectory: string }} options
  * @returns {Promise<null | string>}
  **/
-async function getSamConfigPath(filePath) {
-  filePath ||= await findFiles([
-    './samconfig.toml',
-    './samconfig.yaml',
-    './samconfig.yml'
-  ])
-  return filePath || null
+async function getSamConfigPath({ filePath, templateDirectory }) {
+  if (filePath) {
+    if (filePath.startsWith('.') || !filePath.startsWith('/')) {
+      return path.join(templateDirectory, filePath)
+    } else {
+      return filePath
+    }
+  } else if (templateDirectory) {
+    return await findFiles(
+      ['./samconfig.toml', './samconfig.yaml', './samconfig.yml'].map((file) =>
+        path.join(templateDirectory, file)
+      )
+    )
+  } else {
+    return null
+  }
 }
 
 /**
@@ -491,10 +512,9 @@ async function findTemplateFile({ filePath, command }) {
 async function findFiles(filePaths) {
   for (const filePath of filePaths) {
     try {
-      const fullPath =
-        !filePath.startsWith('.') && !filePath.startsWith('/')
-          ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
-          : filePath
+      const fullPath = filePath.startsWith('.')
+        ? path.join(process.env['INIT_CWD'] ?? process.cwd(), filePath)
+        : filePath
       await stat(fullPath)
       return fullPath
     } catch {}

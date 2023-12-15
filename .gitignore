@@ -2,5 +2,6 @@ node_modules
 .DS_Store
 npm-debug.log
 .aws-sam
+!unit/test/fixtures/build/.aws-sam
 src/**/*.ts
 coverage

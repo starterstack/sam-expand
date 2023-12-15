@@ -128,6 +128,24 @@ Resources:
   mock.restoreAll()
 })
 
+test('lambda missing entry point', async (_t) => {
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:process': {
+      argv: [
+        null,
+        null,
+        'build',
+        '-t',
+        path.join(__dirname, 'fixtures', 'esbuild-no-entry-point.yaml')
+      ]
+    }
+  })
+  await assert.rejects(expand(), {
+    message: 'no entry point found for missing.lambdaHandler'
+  })
+  mock.restoreAll()
+})
+
 test('two node lambda', async (_t) => {
   let templatePath
   const writeMock = mock.fn()
