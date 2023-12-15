@@ -7,8 +7,7 @@ import path from 'node:path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 test('use build config', async (t) => {
-  //for (const command of ['package', 'deploy']) {
-  for (const command of ['package']) {
+  for (const command of ['package', 'deploy']) {
     await t.test('use .aws-sam/build template', async (_t) => {
       const mockLifecycle = mock.fn()
       const expand = await esmock.p('../../src/expand.js', {

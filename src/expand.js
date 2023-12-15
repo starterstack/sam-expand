@@ -130,21 +130,20 @@ export default async function expand() {
     })
   )
 
+  if (!templateFile) {
+    throw new Error('no template file found')
+  }
+
   log('use template %O', templateFile)
 
   if (templateArgumentGiven && command === 'build') {
     argv.splice(argv.indexOf(templateArgumentGiven), 2)
   }
 
-  if (templateFile) {
-  }
-
-  const samConfigPath =
-    templateFile &&
-    (await getSamConfigPath({
-      filePath: values['config-file']?.toString(),
-      templateDirectory: templateDirectoryFromFile(templateFile)
-    }))
+  const samConfigPath = await getSamConfigPath({
+    filePath: values['config-file']?.toString(),
+    templateDirectory: templateDirectoryFromFile(templateFile)
+  })
 
   log('samConfig %O', samConfigPath)
 
@@ -479,14 +478,12 @@ async function getSamConfigPath({ filePath, templateDirectory }) {
     } else {
       return filePath
     }
-  } else if (templateDirectory) {
+  } else {
     return await findFiles(
       ['./samconfig.toml', './samconfig.yaml', './samconfig.yml'].map((file) =>
         path.join(templateDirectory, file)
       )
     )
-  } else {
-    return null
   }
 }
 
