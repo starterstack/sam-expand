@@ -1,10 +1,12 @@
 # sam-expand
 
+[![Socket Badge](https://socket.dev/api/badge/npm/package/@starterstack/sam-expand)](https://socket.dev/npm/package/@starterstack/sam-expand)
+[![npm version](https://img.shields.io/npm/v/@starterstack/sam-expand.svg?style=flat)](https://www.npmjs.com/package/@starterstack/sam-expand)
 [![ci](https://github.com/starterstack/sam-expand/actions/workflows/ci.yml/badge.svg)](https://github.com/starterstack/sam-expand/actions/workflows/ci.yml)
 ![nycrc config on GitHub](https://img.shields.io/nycrc/starterstack/sam-expand?label=coverage)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](https://commitizen.github.io/cz-cli/)
 
-A tool to give sam templates more power.
+A tool to give [sam](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) templates more power.
 
 ### Example usage
 
