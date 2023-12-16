@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [assigned, opened, synchronize, reopened, labeled]
+  workflow_dispatch:
+
+jobs:
+  test:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.0
+        with:
+          node-version: 20
+          cache: npm
+      - name: npm install
+        run: |
+          npm install \
+            --no-save \
+            --audit false \
+            --fund false \
+            --loglevel=error \
+            --ignore-scripts
+      - name: run tests
+        run: |
+          npm t
