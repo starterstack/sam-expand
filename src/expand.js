@@ -336,10 +336,9 @@ async function runPlugins({
   baseDirectory
 }) {
   for (const plugin of template?.Metadata?.expand?.plugins ?? []) {
-    const pluginPath =
-      plugin?.startsWith('.') || !plugin?.startsWith('/')
-        ? path.join(templateDirectory, plugin)
-        : plugin
+    const pluginPath = plugin?.startsWith('.')
+      ? path.join(templateDirectory, plugin)
+      : plugin
 
     /** @type {{ lifecycle: Plugin, lifecycles: Lifecycles }}*/
     const { lifecycle: pluginModule, lifecycles } = await import(pluginPath)
@@ -408,10 +407,9 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
   }
 
   for (const plugin of plugins) {
-    const pluginPath =
-      plugin?.startsWith('.') || !plugin?.startsWith('/')
-        ? path.join(templateDirectory, plugin)
-        : plugin
+    const pluginPath = plugin?.startsWith('.')
+      ? path.join(templateDirectory, plugin)
+      : plugin
 
     log('import plugin %O', { pluginPath })
     /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
