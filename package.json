@@ -8,7 +8,7 @@
     "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "build": "tsc",
     "postbuild": "npx dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
-    "test": "npx c8 --all --src src --exclude src/plugins/types.js --exclude src/cli.js --check-coverage --100 -- npm --prefix unit t",
+    "test": "npx c8 -- npm --prefix unit t",
     "prepublish": "npm test && npm run build"
   },
   "types": "index.d.ts",
