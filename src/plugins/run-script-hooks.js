@@ -1,13 +1,11 @@
 // @ts-check
 
-import { resolveFile, resolveCloudFormationOutput } from '../resolve.js'
-import { parseArgs } from 'node:util'
+import { resolveFile } from '../resolve.js'
 
 /**
  * @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
- * @typedef {{ stackRegion?: string, stackName?: string, self?: boolean, outputKey: string, defaultValue?: string }} CloudFormation
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
- * @typedef {{ command: string, args: Array<{ value?: string, file?: File, cloudFormation?: CloudFormation}> }} Command
+ * @typedef {{ command: string, args: Array<{ value?: string, file?: File }>}} Command
  **/
 
 /** @typedef {import('./types.js').PluginSchema<{
@@ -66,19 +64,6 @@ export const schema = {
                         value: {
                           type: 'string'
                         },
-                        cloudFormation: {
-                          type: 'object',
-                          properties: {
-                            stackRegion: { type: 'string', nullable: true },
-                            stackName: { type: 'string', nullable: true },
-                            self: { type: 'boolean', nullable: true },
-                            outputKey: { type: 'string' },
-                            defaultValue: { type: 'string', nullable: true }
-                          },
-                          required: ['outputKey'],
-                          additionalProperties: false,
-                          nullable: true
-                        },
                         file: {
                           type: 'object',
                           properties: {
@@ -121,9 +106,7 @@ export const lifecycle = async function runScriptHook({
   region,
   log,
   lifecycle,
-  argv,
   configEnv,
-  config,
   command
 }) {
   /** @type {HookSchema['Hooks']} */
@@ -167,44 +150,6 @@ export const lifecycle = async function runScriptHook({
                     throw new Error(`${location}.${exportName} is missing`)
                   }
                 }
-              } else if (key === 'cloudFormation') {
-                if (arg.cloudFormation) {
-                  const {
-                    self: isSelf,
-                    stackName,
-                    defaultValue,
-                    stackRegion,
-                    outputKey
-                  } = arg.cloudFormation
-                  if (!region && !stackRegion) {
-                    throw new Error(
-                      `${stackName}.${outputKey} can't be resolved, missing region`
-                    )
-                  }
-                  const stackNameOrSelf = stackName
-                    ? String(stackName)
-                    : isSelf
-                      ? inferStackName({ argv, command, config, configEnv })
-                      : null
-
-                  if (!stackNameOrSelf) {
-                    throw new Error(`${outputKey} is missing stackName`)
-                  }
-                  const value = await resolveCloudFormationOutput({
-                    stackName: stackNameOrSelf,
-                    defaultValue,
-                    stackRegion: String(stackRegion ?? region),
-                    outputKey
-                  })
-
-                  if (typeof value === 'string') {
-                    values.push(value)
-                  } else {
-                    throw new Error(
-                      `${stackNameOrSelf}.${outputKey} is missing`
-                    )
-                  }
-                }
               }
             }
             return values.join('')
@@ -219,27 +164,4 @@ export const lifecycle = async function runScriptHook({
       await spawn(spawnCommand, spawnArgs)
     }
   }
-}
-
-/**
- * @param {{ argv: string[], command: string, config: any, configEnv: string }} options
- * @returns {string | undefined}
- **/
-
-function inferStackName({ argv, command, config, configEnv }) {
-  const { values } = parseArgs({
-    options: {
-      'stack-name': {
-        type: 'string'
-      }
-    },
-    allowPositionals: true,
-    strict: false,
-    args: argv
-  })
-  const stackName =
-    values['stack-name'] ??
-    config?.[configEnv]?.[command]?.parameters?.stack_name ??
-    config?.[configEnv]?.global?.parameters?.stack_name
-  return stackName
 }

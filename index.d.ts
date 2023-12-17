@@ -16,13 +16,6 @@ declare module '@starterstack/sam-expand/resolve' {
 		configEnv: string;
 		region?: string;
 	}): Promise<string | undefined>;
-
-	export function resolveCloudFormationOutput({ stackRegion, outputKey, stackName, defaultValue }: {
-		stackRegion: string;
-		outputKey: string;
-		stackName: string;
-		defaultValue?: string;
-	}): Promise<string | undefined>;
 	export type FileResolver = (options: {
 		command: string;
 		lifecycle: Lifecycle;
@@ -68,12 +61,6 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	export const metadataConfig: "parameterOverrides";
 
 	export const lifecycle: Plugin;
-	export type CloudFormation = {
-		stackRegion?: string;
-		stackName: string;
-		outputKey: string;
-		defaultValue?: string;
-	};
 	export type File = {
 		location: string;
 		exportName: string;
@@ -82,7 +69,6 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	export type Schema = Array<{
 		name: string;
 		file?: File;
-		cloudFormation?: CloudFormation;
 	}>;
 	type Plugin = Plugin_1;
 	type Lifecycles = Lifecycles_1;
@@ -119,13 +105,6 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 
 	export const lifecycle: Plugin;
 	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
-	export type CloudFormation = {
-		stackRegion?: string;
-		stackName?: string;
-		self?: boolean;
-		outputKey: string;
-		defaultValue?: string;
-	};
 	export type File = {
 		location: string;
 		exportName: string;
@@ -136,7 +115,6 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		args: Array<{
 			value?: string;
 			file?: File;
-			cloudFormation?: CloudFormation;
 		}>;
 	};
 	export type HookSchema = PluginSchema<{

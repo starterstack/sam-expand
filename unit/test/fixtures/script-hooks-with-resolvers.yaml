@@ -12,10 +12,6 @@ Metadata:
             - command: echo
               args:
                 - value: pre:build
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: prebuild
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test
@@ -23,10 +19,6 @@ Metadata:
             - command: echo
               args:
                 - value: post:build
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: postbuild
                   file:
                     location: script-hooks-file-resolver.mjs
                     exportName: test
@@ -34,10 +26,6 @@ Metadata:
             - command: echo
               args:
                 - value: pre:package
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: prepackage
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test
@@ -45,10 +33,6 @@ Metadata:
             - command: echo
               args:
                 - value: post:package
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: postpackage
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test
@@ -56,10 +40,6 @@ Metadata:
             - command: echo
               args:
                 - value: pre:delete
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: predelete
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test
@@ -67,10 +47,6 @@ Metadata:
             - command: echo
               args:
                 - value: post:delete
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: postdelete
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test
@@ -78,10 +54,6 @@ Metadata:
             - command: echo
               args:
                 - value: pre:deploy
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: predeploy
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test
@@ -89,10 +61,6 @@ Metadata:
             - command: echo
               args:
                 - value: post:deploy
-                  cloudFormation:
-                    stackName: test
-                    stackRegion: us-east-1
-                    outputKey: postdeploy
                   file:
                     location: ./script-hooks-file-resolver.mjs
                     exportName: test

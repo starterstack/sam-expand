@@ -6,16 +6,8 @@ import { yamlParse as parse } from 'yaml-cfn'
 
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { mockClient } from 'aws-sdk-client-mock'
-
-import {
-  CloudFormationClient,
-  DescribeStacksCommand
-} from '@aws-sdk/client-cloudformation'
 
 import { lifecycle as overridesPlugin } from '../../src/plugins/parameter-overrides.js'
-
-const cfMock = mockClient(CloudFormationClient)
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -56,19 +48,6 @@ test('parameter overrides plugin noop', async (t) => {
 })
 
 test('parameter overrides plugin resolve for deploy', async (_t) => {
-  cfMock.reset()
-  cfMock.on(DescribeStacksCommand).resolves({
-    Stacks: [
-      {
-        Outputs: [
-          {
-            OutputKey: 'an-output',
-            OutputValue: 'test'
-          }
-        ]
-      }
-    ]
-  })
   /* c8 ignore start */
   const spawnMock = mock.fn()
   /* c8 ignore end */
@@ -97,8 +76,6 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
       '-t',
       path.join(__dirname, 'fixtures', 'parameters.yml'),
       '--parameter-overrides',
-      'CFNameWithDefault=someValue',
-      'CFName=test',
       'JSONNameWithDefault=someValue',
       'JSONName=test',
       'YAMLNameWithDefault=someValue',
@@ -113,19 +90,6 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
 })
 
 test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async (_t) => {
-  cfMock.reset()
-  cfMock.on(DescribeStacksCommand).resolves({
-    Stacks: [
-      {
-        Outputs: [
-          {
-            OutputKey: 'an-output',
-            OutputValue: 'test'
-          }
-        ]
-      }
-    ]
-  })
   /* c8 ignore start */
   const spawnMock = mock.fn()
   /* c8 ignore end */
@@ -156,8 +120,6 @@ test('parameter overrides plugin resolve for deploy (overrite existing parameter
       '-t',
       path.join(__dirname, 'fixtures', 'parameters.yml'),
       '--parameter-overrides',
-      'CFNameWithDefault=someValue',
-      'CFName=test',
       'JSONNameWithDefault=someValue',
       'JSONName=test',
       'YAMLNameWithDefault=someValue',
@@ -260,193 +222,6 @@ test('error handling', async (t) => {
         return true
       }
     )
-  })
-
-  await t.test('no region', async (_t) => {
-    const template = structuredClone(baseTemplate)
-    template.Metadata.expand.config.parameterOverrides = [
-      {
-        name: 'Name',
-        cloudFormation: {
-          stackName: 'a-stack',
-          outputKey: 'name'
-        }
-      }
-    ]
-
-    template.Parameters = {
-      Name: {
-        Type: 'String'
-      }
-    }
-
-    const argv = []
-
-    await assert.rejects(
-      overridesPlugin({
-        template,
-        templateDirectory: path.join(__dirname, 'fixtures'),
-        command: 'deploy',
-        lifecycle: 'pre:deploy',
-        parse,
-        argv,
-        log() {}
-      }),
-      (err) => {
-        assert.equal(
-          err.message,
-          `a-stack.name can't be resolved, missing region`
-        )
-        return true
-      }
-    )
-  })
-
-  await t.test('default region', async (_t) => {
-    cfMock.reset()
-    cfMock.on(DescribeStacksCommand).resolves({
-      Stacks: [
-        {
-          Outputs: [
-            {
-              OutputKey: 'name',
-              OutputValue: 'test'
-            }
-          ]
-        }
-      ]
-    })
-    const template = structuredClone(baseTemplate)
-    template.Metadata.expand.config.parameterOverrides = [
-      {
-        name: 'Name',
-        cloudFormation: {
-          stackName: 'another-stack',
-          outputKey: 'name'
-        }
-      }
-    ]
-
-    template.Parameters = {
-      Name: {
-        Type: 'String'
-      }
-    }
-
-    const argv = []
-
-    await overridesPlugin({
-      template,
-      templateDirectory: path.join(__dirname, 'fixtures'),
-      command: 'deploy',
-      lifecycle: 'pre:deploy',
-      parse,
-      argv,
-      region: 'us-east-1',
-      log() {}
-    })
-    assert.deepEqual(argv, ['--parameter-overrides', 'Name=test'])
-  })
-
-  await t.test('missing cloudformation output', async (_t) => {
-    cfMock.reset()
-    cfMock.on(DescribeStacksCommand).resolves({
-      Stacks: [
-        {
-          Outputs: [
-            {
-              OutputKey: 'name',
-              OutputValue: 'test'
-            }
-          ]
-        }
-      ]
-    })
-    const template = structuredClone(baseTemplate)
-    template.Metadata.expand.config.parameterOverrides = [
-      {
-        name: 'Name',
-        cloudFormation: {
-          stackName: 'yet-another-stack',
-          outputKey: 'x'
-        }
-      }
-    ]
-
-    template.Parameters = {
-      Name: {
-        Type: 'String'
-      }
-    }
-
-    const argv = []
-
-    await assert.rejects(
-      overridesPlugin({
-        template,
-        templateDirectory: path.join(__dirname, 'fixtures'),
-        command: 'deploy',
-        lifecycle: 'pre:deploy',
-        parse,
-        argv,
-        region: 'us-east-1',
-        log() {}
-      }),
-      (err) => {
-        assert.equal(
-          err.message,
-          'parameter Name stack yet-another-stack missing output x'
-        )
-        return true
-      }
-    )
-  })
-
-  await t.test('missing cloudformation output with default', async (_t) => {
-    cfMock.reset()
-    cfMock.on(DescribeStacksCommand).resolves({
-      Stacks: [
-        {
-          Outputs: [
-            {
-              OutputKey: 'name',
-              OutputValue: 'test'
-            }
-          ]
-        }
-      ]
-    })
-    const template = structuredClone(baseTemplate)
-    template.Metadata.expand.config.parameterOverrides = [
-      {
-        name: 'Name',
-        cloudFormation: {
-          stackName: 'yet-another-stack2',
-          outputKey: 'x',
-          defaultValue: 'default2'
-        }
-      }
-    ]
-
-    template.Parameters = {
-      Name: {
-        Type: 'String'
-      }
-    }
-
-    const argv = []
-
-    await overridesPlugin({
-      template,
-      templateDirectory: path.join(__dirname, 'fixtures'),
-      command: 'deploy',
-      lifecycle: 'pre:deploy',
-      parse,
-      argv,
-      region: 'us-east-1',
-      log() {}
-    })
-    assert.deepEqual(argv, ['--parameter-overrides', 'Name=default2'])
   })
 
   for (const type of ['mjs', 'yaml', 'yml', 'json']) {

@@ -1,14 +1,13 @@
 // @ts-check
 
-import { resolveFile, resolveCloudFormationOutput } from '../resolve.js'
+import { resolveFile } from '../resolve.js'
 
 /** @type {import('./types.js').Lifecycles} */
 export const lifecycles = ['pre:deploy']
 
 /**
- * @typedef {{ stackRegion?: string, stackName: string, outputKey: string, defaultValue?: string }} CloudFormation
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
- * @typedef {Array<{ name: string, file?: File, cloudFormation?: CloudFormation }>} Schema
+ * @typedef {Array<{ name: string, file?: File }>} Schema
  **/
 
 /**
@@ -21,18 +20,6 @@ export const schema = {
     type: 'object',
     properties: {
       name: { type: 'string' },
-      cloudFormation: {
-        type: 'object',
-        properties: {
-          stackRegion: { type: 'string', nullable: true },
-          stackName: { type: 'string' },
-          outputKey: { type: 'string' },
-          defaultValue: { type: 'string', nullable: true }
-        },
-        required: ['stackName', 'outputKey'],
-        additionalProperties: false,
-        nullable: true
-      },
       file: {
         type: 'object',
         properties: {
@@ -88,27 +75,6 @@ export const lifecycle = async function expand({
       if (typeof value === 'undefined') {
         throw new Error(
           `parameter ${parameter.name} resolver ${parameter.file.location} missing ${exportName}`
-        )
-      }
-      addParameter({ argv, name: parameter.name, value })
-    } else if (parameter.cloudFormation) {
-      const { stackName, defaultValue, stackRegion, outputKey } =
-        parameter.cloudFormation
-
-      if (!region && !stackRegion) {
-        throw new Error(
-          `${stackName}.${outputKey} can't be resolved, missing region`
-        )
-      }
-      const value = await resolveCloudFormationOutput({
-        stackRegion: String(stackRegion ?? region),
-        stackName,
-        defaultValue,
-        outputKey
-      })
-      if (typeof value === 'undefined') {
-        throw new Error(
-          `parameter ${parameter.name} stack ${stackName} missing output ${outputKey}`
         )
       }
       addParameter({ argv, name: parameter.name, value })
