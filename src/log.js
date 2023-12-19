@@ -1,5 +1,21 @@
 // @ts-check
 
+/**
+ * @remarks
+ * Uses [node:util.formatWithOptions](https://nodejs.org/docs/latest/api/util.html#utilformatwithoptionsinspectoptions-format-args).
+ * Use --debug flag to see verbose log output.
+ *
+ * @summary
+ * Mimic same log output format as defined in [SAM cli](https://github.com/aws/aws-sam-cli).
+ *
+ * @example
+ *
+ * ```javascript
+ * log('some message %O', { command, lifecycle })
+ * ```
+ * @module
+ **/
+
 import { formatWithOptions } from 'node:util'
 
 /** @typedef {(format: string, ...args: any) => void} Log */

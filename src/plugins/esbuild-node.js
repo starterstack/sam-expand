@@ -1,4 +1,46 @@
 // @ts-check
+
+/**
+ * @remarks
+ *
+ * Build all Node.js lambdas with the same esbuild configuration.
+ *
+ * @example
+ *
+ * // esbuild-config.yaml for ESM
+ * ```yaml
+ * Bundle: true
+ * Format: esm
+ * OutExtension:
+ *   - .js=.mjs
+ * Sourcemap: true
+ * Target: node20
+ * External:
+ *   - '@aws-sdk/*'
+ * Define:
+ *   - require.resolve=undefined
+ * Banner:
+ *   - |
+ *     js=import { createRequire } from 'node:module'
+ *     import { dirname } from 'node:path'
+ *     import { fileURLToPath } from 'node:url'
+ *
+ *     const require = createRequire(import.meta.url)
+ *     const __filename = fileURLToPath(import.meta.url)
+ *     const __dirname = dirname(__filename)
+ * Platform: node```
+ *
+ * ```yaml
+ * Metadata:
+ *   expand:
+ *     plugins:
+ *       - '@starterstack/sam-expand/plugins/esbuild-node'
+ *   config:
+ *     esbuild:
+ *       config: ./esbuild-config.yaml
+ * ```
+ * @module
+ **/
 import { readFile, stat } from 'node:fs/promises'
 import assert from 'node:assert/strict'
 import path from 'node:path'

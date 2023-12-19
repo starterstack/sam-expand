@@ -1,5 +1,12 @@
 // @ts-check
 
+/**
+ * @summary
+ * Resolve mjs, yaml/json files.
+ *
+ * @module
+ **/
+
 import assert from 'node:assert/strict'
 import path from 'node:path'
 import { readFile } from 'node:fs/promises'

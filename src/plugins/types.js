@@ -1,6 +1,13 @@
 // @ts-check
 
 /**
+ * @summary
+ * Type definitions for plugins.
+ *
+ * @module
+ **/
+
+/**
  * @typedef {import('../expand.js').Plugin} Plugin
  **/
 

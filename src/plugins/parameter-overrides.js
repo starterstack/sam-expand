@@ -1,9 +1,43 @@
 // @ts-check
 
+/**
+ * @remarks
+ * Override values from json/yaml files, or custom .mjs files.
+ * with --parameter-overrides for sam build, and deploy.
+ *
+ * @summary
+ * Override parameter values.
+ *
+ * @example
+ *
+ * ```yaml
+ * Parameters:
+ *   GitHubRepoOwner:
+ *     Type: String
+ *   GitHubRepo:
+ *     Type: String
+ * Metadata:
+ *   expand:
+ *     plugins:
+ *       - '@starterstack/sam-expand/plugins/parameter-overrides'
+ *   config:
+ *     parameterOverrides:
+ *       - name: GitHubRepoOwner
+ *         file:
+ *           location: ../settings.json
+ *           exportName: owner
+ *       - name: GitHubRepo
+ *         file:
+ *           location: ../settings.json
+ *           exportName: repo
+ * ```
+ * @module
+ **/
+
 import { resolveFile } from '../resolve.js'
 
 /** @type {import('./types.js').Lifecycles} */
-export const lifecycles = ['pre:deploy']
+export const lifecycles = ['pre:build', 'pre:deploy']
 
 /**
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File

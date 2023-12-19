@@ -1,5 +1,35 @@
 // @ts-check
 
+/**
+ * @remarks
+ * Pre and Post Script hooks for build, package, deploy, and delete.
+ *
+ * @summary
+ * Run scripts with defined arguments.
+ *
+ * @example
+ *
+ * ```yaml
+ * Metadata:
+ *   expand:
+ *     plugins:
+ *       - '@starterstack/sam-expand/plugins/run-script-hooks'
+ *   config:
+ *     script:
+ *       hooks:
+ *         pre:delete
+ *           - command: ../empty-s3-bucket.mjs
+ *             args:
+ *               - file:
+ *                   location: ../settings.mjs
+ *                   exportName: region
+ *               - file:
+ *                   location: ../settings.mjs
+ *                   exportName: s3Bucket
+ * ```
+ * @module
+ **/
+
 import { resolveFile } from '../resolve.js'
 
 /**

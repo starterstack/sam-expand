@@ -1,5 +1,25 @@
 //@ts-check
 
+/**
+ * @summary
+ * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+ *
+ * @example
+ *
+ * pipe output to current process stdout.
+ *
+ * ```javascript
+ * await spawn('sam', '--help')
+ * ```
+ *
+ * capture output
+ *
+ * ```javascript
+ * const stdout = String(await spawn('git', ['rev-parse', 'HEAD'], { shell: true }))
+ * ```
+ * @module
+ **/
+
 import { spawn as nativeSpawn } from 'node:child_process'
 import os from 'node:os'
 import { once } from 'node:events'

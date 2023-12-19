@@ -1,5 +1,12 @@
 //@ts-check
 
+/**
+ * @summary
+ * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+ *
+ * @module
+ **/
+
 import { yamlParse } from 'yaml-cfn'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
