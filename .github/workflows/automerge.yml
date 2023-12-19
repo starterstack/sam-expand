@@ -1,0 +1,27 @@
+name: automerge
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: automerge-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: 'starterstack/sam-expand/.github/workflows/test.yml@main'
+    if: ${{ github.actor == 'dependabot[bot]' }}
+  automerge:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    needs: [test]
+    permissions:
+      pull-requests: write
+      contents: write
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3.9.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

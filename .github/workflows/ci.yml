@@ -10,22 +10,4 @@ on:
 
 jobs:
   test:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.0
-        with:
-          node-version: 20
-          cache: npm
-      - name: npm install
-        run: |
-          npm install \
-            --no-save \
-            --audit false \
-            --fund false \
-            --loglevel=error \
-            --ignore-scripts
-      - name: run tests
-        run: |
-          npm t
+    uses: 'starterstack/sam-expand/.github/workflows/test.yml@main'
