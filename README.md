@@ -3,8 +3,7 @@
 [![Socket Badge](https://socket.dev/api/badge/npm/package/@starterstack/sam-expand)](https://socket.dev/npm/package/@starterstack/sam-expand)
 [![npm version](https://img.shields.io/npm/v/@starterstack/sam-expand.svg?style=flat)](https://www.npmjs.com/package/@starterstack/sam-expand)
 [![ci](https://github.com/starterstack/sam-expand/actions/workflows/ci.yml/badge.svg)](https://github.com/starterstack/sam-expand/actions/workflows/ci.yml)
-[![typedoc](https://github.com/starterstack/sam-expand/actions/workflows/typedoc.yml/badge.svg)](https://github.com/starterstack/sam-expand/actions/workflows/typedoc.yml)
-[![automerge](https://github.com/starterstack/sam-expand/actions/workflows/automerge.yml/badge.svg)](https://github.com/starterstack/sam-expand/actions/workflows/automerge.yml)
+![npm](https://img.shields.io/npm/dm/@starterstack/sam-expand)
 ![nycrc config on GitHub](https://img.shields.io/nycrc/starterstack/sam-expand?label=coverage)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](https://commitizen.github.io/cz-cli/)
 
