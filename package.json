@@ -9,7 +9,7 @@
     "build": "tsc",
     "postbuild": "npx dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "test": "npx c8 -- npm --prefix unit t",
-    "prepublish": "npm test && npm run build",
+    "prepublishOnly": "npm test && npm run build && git diff-index --quiet HEAD --",
     "typedoc": "node ./node_modules/.bin/typedoc --tsconfig tsconfig.json 'src/**/*.js'"
   },
   "types": "index.d.ts",
