@@ -5,3 +5,4 @@ npm-debug.log
 !unit/test/fixtures/build/.aws-sam
 src/**/*.ts
 coverage
+docs

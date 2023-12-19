@@ -9,7 +9,8 @@
     "build": "tsc",
     "postbuild": "npx dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "test": "npx c8 -- npm --prefix unit t",
-    "prepublish": "npm test && npm run build"
+    "prepublish": "npm test && npm run build",
+    "typedoc": "node ./node_modules/.bin/typedoc --tsconfig tsconfig.json 'src/**/*.js'"
   },
   "types": "index.d.ts",
   "type": "module",
@@ -85,6 +86,7 @@
     "husky": "8.0.3",
     "lint-staged": "15.2.0",
     "prettier-config-standard": "7.0.0",
+    "typedoc": "0.25.4",
     "typescript": "5.3.3"
   },
   "dependencies": {

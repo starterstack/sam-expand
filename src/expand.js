@@ -1,5 +1,33 @@
 //@ts-check
 
+/**
+ * @summary
+ * Expands the template using metadata defined in [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html).
+ *
+ * @example
+ * ```yaml
+ * Metadata:
+ *   expand:
+ *     plugins:
+ *       - '@starterstack/sam-expand/plugins/esbuild-node'
+ *       - '@starterstack/sam-expand/plugins/run-script-hooks'
+ *     config:
+ *       esbuild:
+ *         config: ./esbuild-config.yaml
+ *       script:
+ *         hooks:
+ *           pre:build:
+ *             - command: 'echo'
+ *               args:
+ *                 - value: 'pre build!'
+ *           post:build:
+ *             - command: 'echo'
+ *               args:
+ *                 - value: 'post build!'
+ *   ```
+ * @module
+ **/
+
 import process from 'node:process'
 import { yamlParse, yamlDump } from 'yaml-cfn'
 import { stat, writeFile, unlink } from 'node:fs/promises'

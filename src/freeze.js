@@ -1,4 +1,10 @@
 /**
+ * @summary
+ * Recursive object freezer.
+ * @module
+ **/
+
+/**
  * @template T
  * @param {T} object
  * @returns {T}
