@@ -26,7 +26,7 @@ declare module '@starterstack/sam-expand/resolve' {
 }
 
 declare module '@starterstack/sam-expand/plugins' {
-	import type { yamlParse } from 'yaml-cfn';
+	import type { yamlParse, yamlDump } from 'yaml-cfn';
 	export type Plugin = Plugin_1;
 	export type Lifecycles = Lifecycles_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
@@ -40,11 +40,11 @@ declare module '@starterstack/sam-expand/plugins' {
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: (o: any) => string;
+		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string | undefined;
-		baseDirectory?: string | undefined;
+		region?: string;
+		baseDirectory?: string;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
@@ -53,7 +53,7 @@ declare module '@starterstack/sam-expand/plugins' {
 }
 
 declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
-	import type { yamlParse } from 'yaml-cfn';
+	import type { yamlParse, yamlDump } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
 
 
@@ -83,11 +83,11 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: (o: any) => string;
+		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string | undefined;
-		baseDirectory?: string | undefined;
+		region?: string;
+		baseDirectory?: string;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
@@ -96,7 +96,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 }
 
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
-	import type { yamlParse } from 'yaml-cfn';
+	import type { yamlParse, yamlDump } from 'yaml-cfn';
 	export const metadataConfig: "script";
 
 	export const lifecycles: Lifecycles;
@@ -135,11 +135,11 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: (o: any) => string;
+		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string | undefined;
-		baseDirectory?: string | undefined;
+		region?: string;
+		baseDirectory?: string;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
@@ -148,7 +148,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 }
 
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
-	import type { yamlParse } from 'yaml-cfn';
+	import type { yamlParse, yamlDump } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
 
 	export const schema: PluginSchema<{
@@ -170,11 +170,11 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		command: string;
 		argv: string[];
 		parse: typeof yamlParse;
-		dump: (o: any) => string;
+		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
-		region?: string | undefined;
-		baseDirectory?: string | undefined;
+		region?: string;
+		baseDirectory?: string;
 		lifecycle: Lifecycle;
 	}) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;

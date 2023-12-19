@@ -1,8 +1,7 @@
 //@ts-check
 
 import process from 'node:process'
-import { yamlParse, schema as yamlSchema } from 'yaml-cfn'
-import { dump } from 'js-yaml'
+import { yamlParse, yamlDump } from 'yaml-cfn'
 import { stat, writeFile, unlink } from 'node:fs/promises'
 import spawn from './spawn.js'
 import path from 'node:path'
@@ -36,7 +35,7 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
  *   command: string
  *   argv: string[]
  *   parse: import('yaml-cfn').yamlParse,
- *   dump: (o: any) => string,
+ *   dump: import('yaml-cfn').yamlDump,
  *   spawn: import('./spawn.js').Spawn,
  *   configEnv: string,
  *   region?: string,
@@ -300,7 +299,7 @@ async function expandAll({
       }
     }
   }
-  debugger
+
   if (command === 'build') {
     const extname = path.extname(templateFile)
     const templateBaseName = path.basename(templateFile, extname)
@@ -514,15 +513,6 @@ async function findFiles(filePaths) {
     } catch {}
   }
   return ''
-}
-
-/**
- * @param {any} template
- * @returns {string}
- **/
-
-function yamlDump(template) {
-  return dump(template, { schema: yamlSchema, noRefs: true })
 }
 
 /**

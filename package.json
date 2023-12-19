@@ -76,7 +76,6 @@
     "@commitlint/cli": "18.4.3",
     "@commitlint/config-conventional": "18.4.3",
     "@sindresorhus/tsconfig": "5.0.0",
-    "@types/js-yaml": "4.0.9",
     "@types/json-schema": "7.0.15",
     "@types/node": "20.10.4",
     "c8": "8.0.1",
@@ -92,7 +91,6 @@
     "@ltd/j-toml": "1.38.0",
     "ajv": "8.12.0",
     "better-ajv-errors": "1.2.0",
-    "js-yaml": "4.1.0",
     "yaml-cfn": "0.3.2"
   }
 }

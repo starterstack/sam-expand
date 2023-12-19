@@ -444,15 +444,15 @@ Resources:
       BuildProperties:
         Bundle: true
         Format: esm
-        OutExtension:
+        OutExtension: &ref_0
           - .js=.mjs
         Sourcemap: true
         Target: node18
-        External:
+        External: &ref_1
           - '@aws-sdk/*'
-        Define:
+        Define: &ref_2
           - require.resolve=undefined
-        Banner:
+        Banner: &ref_3
           - |
             js=import { createRequire } from 'node:module'
             import { dirname } from 'node:path'
@@ -481,23 +481,12 @@ Resources:
       BuildProperties:
         Bundle: true
         Format: esm
-        OutExtension:
-          - .js=.mjs
+        OutExtension: *ref_0
         Sourcemap: true
         Target: node18
-        External:
-          - '@aws-sdk/*'
-        Define:
-          - require.resolve=undefined
-        Banner:
-          - |
-            js=import { createRequire } from 'node:module'
-            import { dirname } from 'node:path'
-            import { fileURLToPath } from 'node:url'
-
-            const require = createRequire(import.meta.url)
-            const __filename = fileURLToPath(import.meta.url)
-            const __dirname = dirname(__filename)
+        External: *ref_1
+        Define: *ref_2
+        Banner: *ref_3
         Platform: node
         EntryPoints:
           - app.ts
