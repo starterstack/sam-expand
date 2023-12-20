@@ -1,6 +1,8 @@
 //@ts-check
 
 /**
+ * @typedef {(cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>} Spawn
+ *
  * @summary
  * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
  *
@@ -28,10 +30,24 @@ import { Buffer } from 'node:buffer'
 const windows = os.platform() === 'win32'
 
 /**
- * @typedef {(cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>} Spawn
+ * @summary
+ * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+ *
+ * @example
+ *
+ * pipe output to current process stdout.
+ *
+ * ```javascript
+ * await spawn('sam', '--help')
+ * ```
+ *
+ * capture output
+ *
+ * ```javascript
+ * const stdout = String(await spawn('git', ['rev-parse', 'HEAD'], { shell: true }))
+ * ```
+ * @type {Spawn}
  **/
-
-/** @type {Spawn} */
 export default async function spawn(cmd, args, options) {
   if (windows) {
     args = [
