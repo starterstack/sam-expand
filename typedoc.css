@@ -1,0 +1,15 @@
+#tsd-toolbar-links, #tsd-sidebar-links {
+  display: none;
+}
+
+@media only screen and (max-width: 699px) {
+  #tsd-sidebar-links {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 700px) {
+  #tsd-toolbar-links {
+    display: flex;
+  }
+}
