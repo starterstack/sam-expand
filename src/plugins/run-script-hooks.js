@@ -68,6 +68,7 @@ export const schema = {
     hooks: {
       type: 'object',
       properties: {
+        // eslint-disable-next-line unicorn/no-array-reduce
         ...hooks.reduce(
           /**
            * @param {HookSchema['hooks']} sum
@@ -148,44 +149,41 @@ export const lifecycle = async function runScriptHook({
   if (commands) {
     for (const { command: spawnCommand, args } of commands) {
       /** @type {string[]} */
-      const spawnArgs = (
-        await Promise.all(
-          args.map(async function map(arg) {
-            /** @type {string[]} */
-            const values = []
-            const keyOrder = Object.keys(arg)
+      const parseArgs = await Promise.all(
+        args.map(async function map(arg) {
+          /** @type {string[]} */
+          const values = []
+          const keyOrder = Object.keys(arg)
 
-            for (const key of keyOrder) {
-              if (key === 'value') {
-                if (arg.value) {
-                  values.push(arg.value)
-                }
-              } else if (key === 'file') {
-                if (arg.file) {
-                  const { location, defaultValue, exportName } = arg.file
-                  const value = await resolveFile({
-                    location,
-                    templateDirectory,
-                    defaultValue,
-                    exportName,
-                    parse,
-                    region,
-                    lifecycle,
-                    configEnv,
-                    command
-                  })
-                  if (typeof value === 'string') {
-                    values.push(value)
-                  } else {
-                    throw new Error(`${location}.${exportName} is missing`)
-                  }
-                }
+          for (const key of keyOrder) {
+            if (key === 'value') {
+              if (arg.value) {
+                values.push(arg.value)
+              }
+            } else if (key === 'file' && arg.file) {
+              const { location, defaultValue, exportName } = arg.file
+              const value = await resolveFile({
+                location,
+                templateDirectory,
+                defaultValue,
+                exportName,
+                parse,
+                region,
+                lifecycle,
+                configEnv,
+                command
+              })
+              if (typeof value === 'string') {
+                values.push(value)
+              } else {
+                throw new TypeError(`${location}.${exportName} is missing`)
               }
             }
-            return values.join('')
-          })
-        )
-      ).filter(Boolean)
+          }
+          return values.join('')
+        })
+      )
+      const spawnArgs = parseArgs.filter(Boolean)
       log('running script hook %O', {
         lifecycle,
         command: spawnCommand,

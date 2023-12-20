@@ -39,7 +39,7 @@ import Ajv from 'ajv'
 import freeze from './freeze.js'
 import * as parse from './parse.js'
 
-// @ts-ignore they got their type exports wrong so there are none :)
+// @ts-expect-error they got their type exports wrong so there are none :)
 import betterAjvErrors from 'better-ajv-errors'
 import assert from 'node:assert/strict'
 import debugLog from './log.js'
@@ -47,7 +47,8 @@ import debugLog from './log.js'
 const windows = os.platform() === 'win32'
 
 if (windows && !/bash/.test(String(process.env['SHELL']))) {
-  console.error('\x1B[91monly git bash supported in windows!\x1B[0m')
+  console.error('\u001B[91monly git bash supported in windows!\u001B[0m')
+  // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1)
 }
 
@@ -121,15 +122,15 @@ export default async function expand() {
   const log =
     values.debug ?? process.env['DEBUG']
       ? debugLog
-      : /** @type {Log} */ (_format, ..._args) => {}
+      : /** @type {Log} */ () => {}
 
   log('cli args %O', { args: { ...values } })
   const command = positionals?.[0] ?? ''
 
   if (!command || values.help) {
-    const helpArgs = command ? [command, '--help'] : ['--help']
-    log('sam %O', helpArgs)
-    await spawn('sam', helpArgs)
+    const helpArguments = command ? [command, '--help'] : ['--help']
+    log('sam %O', helpArguments)
+    await spawn('sam', helpArguments)
     return
   }
 
@@ -172,7 +173,9 @@ export default async function expand() {
 
   log('samConfig %O', samConfigPath)
 
-  const config = samConfigPath ? await parse.samConfig(samConfigPath) : null
+  const config = samConfigPath
+    ? await parse.samConfig(samConfigPath)
+    : undefined
 
   const configEnv = String(values['config-env'] ?? 'default')
   log('configEnv %O', configEnv)
@@ -188,14 +191,14 @@ export default async function expand() {
   log('region %O', region)
 
   /** @type {string[]} */
-  const tempFiles = []
+  const temporaryFiles = []
 
   const { template, expandedPath } = await expandAll({
     config,
     command,
     argv,
     templateFile,
-    tempFiles,
+    temporaryFiles,
     configEnv,
     region,
     log,
@@ -208,7 +211,7 @@ export default async function expand() {
     command === 'deploy' ||
     command === 'delete'
       ? command
-      : null
+      : undefined
 
   const templateDirectory = templateDirectoryFromFile(templateFile)
 
@@ -228,40 +231,38 @@ export default async function expand() {
       })
     }
     if (command === 'build') {
-      argv.push(...['-t', expandedPath])
+      argv.push('-t', expandedPath)
     }
   }
   log('sam %O', argv)
   await spawn('sam', argv)
-  if (command) {
-    if (hookCommand) {
-      await runPlugins({
-        template,
-        templateDirectory,
-        config,
-        lifecycle: `post:${hookCommand}`,
-        command,
-        argv,
-        region,
-        log,
-        configEnv,
-        baseDirectory
-      })
-    }
+  if (command && hookCommand) {
+    await runPlugins({
+      template,
+      templateDirectory,
+      config,
+      lifecycle: `post:${hookCommand}`,
+      command,
+      argv,
+      region,
+      log,
+      configEnv,
+      baseDirectory
+    })
   }
-  for (const tempFile of tempFiles) {
-    log('deleting %O', tempFile)
-    await unlink(tempFile)
+  for (const file of temporaryFiles) {
+    log('deleting %O', file)
+    await unlink(file)
   }
 }
 
 /**
- * @param {{ templateFile: string, tempFiles: string[], config: any, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
+ * @param {{ templateFile: string, temporaryFiles: string[], config: any, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
  * @return {Promise<{ expandedPath: string, template: any }>}
  **/
 async function expandAll({
   templateFile,
-  tempFiles,
+  temporaryFiles,
   config,
   command,
   argv,
@@ -301,30 +302,31 @@ async function expandAll({
   }
 
   for (const [key, value] of Object.entries(template.Resources ?? {})) {
-    if (value.Type === 'AWS::Serverless::Application') {
-      if (typeof value.Properties.Location === 'string') {
-        const location = value.Properties.Location
-        const locationPath =
-          location.startsWith('.') || !location.startsWith('/')
-            ? path.join(templateDirectory, location)
-            : location
-        const nestedLocation = await findFiles([locationPath])
-        if (!nestedLocation) {
-          throw new Error(`${value.Properties.Location} not found for ${key}`)
-        }
-        const { expandedPath } = await expandAll({
-          templateFile: nestedLocation,
-          tempFiles,
-          config,
-          command,
-          argv,
-          configEnv,
-          region,
-          log,
-          baseDirectory
-        })
-        value.Properties.Location = expandedPath
+    if (
+      value.Type === 'AWS::Serverless::Application' &&
+      typeof value.Properties.Location === 'string'
+    ) {
+      const location = String(value.Properties.Location)
+      const locationPath =
+        location.startsWith('.') || !location.startsWith('/')
+          ? path.join(templateDirectory, location)
+          : location
+      const nestedLocation = await findFiles([locationPath])
+      if (!nestedLocation) {
+        throw new Error(`${value.Properties.Location} not found for ${key}`)
       }
+      const { expandedPath } = await expandAll({
+        templateFile: nestedLocation,
+        temporaryFiles,
+        config,
+        command,
+        argv,
+        configEnv,
+        region,
+        log,
+        baseDirectory
+      })
+      value.Properties.Location = expandedPath
     }
   }
 
@@ -339,7 +341,7 @@ async function expandAll({
 
     log('writing expanded template %O', expandedPath)
     await writeFile(expandedPath, yamlDump(template))
-    tempFiles.push(expandedPath)
+    temporaryFiles.push(expandedPath)
     return { expandedPath, template: freeze(template) }
   } else {
     return { expandedPath: templateFile, template: freeze(template) }
@@ -411,7 +413,7 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
     required: [],
     properties: {
       expand: {
-        required: plugins.length ? ['plugins'] : [],
+        required: plugins.length > 0 ? ['plugins'] : [],
         type: 'object',
         properties: {
           plugins: {
@@ -464,12 +466,12 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
       /** @type {Record<string, any>} */
       const configProperties =
         expandSchema.properties.expand.properties.config.properties
-      if (!configProperties[metadataConfig]) {
-        configProperties[metadataConfig] = schema
-      } else {
+      if (configProperties[metadataConfig]) {
         throw new Error(
           `duplicate config ${metadataConfig} found in plugin: ${plugin}`
         )
+      } else {
+        configProperties[metadataConfig] = schema
       }
     }
   }
@@ -496,11 +498,9 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
  **/
 async function getSamConfigPath({ filePath, templateDirectory }) {
   if (filePath) {
-    if (filePath.startsWith('.') || !filePath.startsWith('/')) {
-      return path.join(templateDirectory, filePath)
-    } else {
-      return filePath
-    }
+    return filePath.startsWith('.') || !filePath.startsWith('/')
+      ? path.join(templateDirectory, filePath)
+      : filePath
   } else {
     return await findFiles(
       ['./samconfig.toml', './samconfig.yaml', './samconfig.yml'].map((file) =>
@@ -538,7 +538,9 @@ async function findFiles(filePaths) {
           : filePath
       await stat(fullPath)
       return fullPath
-    } catch {}
+    } catch {
+      continue
+    }
   }
   return ''
 }
@@ -549,9 +551,7 @@ async function findFiles(filePaths) {
  **/
 function templateDirectoryFromFile(templatePath) {
   const directory = path.dirname(templatePath)
-  if (directory.endsWith('build')) {
-    return path.resolve(path.join(directory, '..', '..'))
-  } else {
-    return path.resolve(directory)
-  }
+  return directory.endsWith('build')
+    ? path.resolve(path.join(directory, '..', '..'))
+    : path.resolve(directory)
 }

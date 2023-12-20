@@ -139,7 +139,7 @@ test('samconfig parsing', async (t) => {
       async '../../src/spawn.js'() {}
     })
     await expand()
-    assert.equal(mockLifecycle.mock.calls[0].arguments[0].config, null)
+    assert.equal(mockLifecycle.mock.calls[0].arguments[0].config, undefined)
     mock.restoreAll()
   })
   await t.test(`--config-file unsupported`, async (_t) => {

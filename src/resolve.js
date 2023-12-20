@@ -78,7 +78,7 @@ export async function resolveFile({
 
     return value ?? defaultValue
   } else {
-    const { [exportName]: value } = parse(await readFile(fullPath, 'utf-8'))
-    return value ?? defaultValue
+    const { [exportName]: value } = parse(await readFile(fullPath, 'utf8'))
+    return value ?? defaultValue ?? undefined
   }
 }

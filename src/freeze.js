@@ -15,14 +15,22 @@ export default function freezeNested(object) {
   return freeze(cloned)
 }
 
-function freeze(cloned) {
-  const propNames = Object.getOwnPropertyNames(cloned)
+/**
+ * @template T
+ * @param {T} object
+ * @returns {T}
+ **/
 
-  for (const name of propNames) {
+function freeze(cloned) {
+  const propertyNames = Object.getOwnPropertyNames(cloned)
+
+  for (const name of propertyNames) {
     const value = cloned[name]
     if (value && typeof value === 'object') {
       freeze(value)
     }
   }
-  return Object.freeze(cloned)
+  /** @type {T} */
+  const frozen = Object.freeze(cloned)
+  return frozen
 }

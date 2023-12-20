@@ -14,7 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 test('parameter overrides plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'parameters.yml'),
-    'utf-8'
+    'utf8'
   )
   for (const command of ['validate', 'package', 'delete']) {
     let template
@@ -35,7 +35,7 @@ test('parameter overrides plugin noop', async (t) => {
         },
         async '../../src/spawn.js'(...args) {
           templatePath = args[1][args[1].indexOf('-t') + 1]
-          template = await readFile(templatePath, 'utf-8')
+          template = await readFile(templatePath, 'utf8')
         }
       })
       await expand()

@@ -106,9 +106,13 @@ export const lifecycle = async function expand({
         configEnv,
         region
       })
-      if (typeof value === 'undefined') {
-        throw new Error(
-          `parameter ${parameter.name} resolver ${parameter.file.location} missing ${exportName}`
+      if (value === undefined) {
+        const {
+          name,
+          file: { location }
+        } = parameter
+        throw new TypeError(
+          `parameter ${name} resolver ${location} missing ${exportName}`
         )
       }
       addParameter({ argv, name: parameter.name, value })

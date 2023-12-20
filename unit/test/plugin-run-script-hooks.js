@@ -7,10 +7,10 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('run scripts hook plugin noop', async (t) => {
+await test('run scripts hook plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
-    'utf-8'
+    'utf8'
   )
   let template
   let templatePath
@@ -29,7 +29,7 @@ test('run scripts hook plugin noop', async (t) => {
       },
       async '../../src/spawn.js'(...args) {
         templatePath = args[1][args[1].indexOf('-t') + 1]
-        template = await readFile(templatePath, 'utf-8')
+        template = await readFile(templatePath, 'utf8')
       }
     })
     await expand()
@@ -43,7 +43,7 @@ test('run scripts hook plugin noop', async (t) => {
 test('run scripts hook plugin hooks', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
-    'utf-8'
+    'utf8'
   )
   for (const command of ['build', 'package', 'deploy', 'delete']) {
     /* c8 ignore start */
@@ -97,7 +97,7 @@ test('run scripts hook plugin hooks', async (t) => {
 test('run scripts hook plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
-    'utf-8'
+    'utf8'
   )
   let template
   let templatePath
@@ -116,7 +116,7 @@ test('run scripts hook plugin noop', async (t) => {
       },
       async '../../src/spawn.js'(...args) {
         templatePath = args[1][args[1].indexOf('-t') + 1]
-        template = await readFile(templatePath, 'utf-8')
+        template = await readFile(templatePath, 'utf8')
       }
     })
     await expand()
@@ -130,7 +130,7 @@ test('run scripts hook plugin noop', async (t) => {
 test('run scripts hook plugin hooks with file resolver', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks-with-resolvers.yaml'),
-    'utf-8'
+    'utf8'
   )
   const commands = ['build', 'package', 'deploy', 'delete']
   for (const command of commands) {
@@ -289,7 +289,7 @@ test('run scripts hook plugin hooks with bad exports (file)', async (_t) => {
 test('run scripts hook plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
-    'utf-8'
+    'utf8'
   )
   let template
   let templatePath
@@ -308,7 +308,7 @@ test('run scripts hook plugin noop', async (t) => {
       },
       async '../../src/spawn.js'(...args) {
         templatePath = args[1][args[1].indexOf('-t') + 1]
-        template = await readFile(templatePath, 'utf-8')
+        template = await readFile(templatePath, 'utf8')
       }
     })
     await expand()

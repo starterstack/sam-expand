@@ -37,17 +37,17 @@ export default function log(format, ...args) {
   const milliseconds = pad3(now.getMilliseconds())
 
   const datePrefix = [
-    `\x1B[1;36m${year}`,
-    `\x1B[0m-\x1B[1;36m${month}`,
-    `\x1B[0m-\x1B[1;36m${day}`
+    `\u001B[1;36m${year}`,
+    `\u001B[0m-\u001B[1;36m${month}`,
+    `\u001B[0m-\u001B[1;36m${day}`
   ].join('')
   const timePrefix = [
-    `\x1B[0m \x1B[1;92m${hours}`,
+    `\u001B[0m \u001B[1;92m${hours}`,
     `:${minutes}`,
     `:${seconds}`,
-    `\x1B[0m,\x1B[1;36m${milliseconds}`
+    `\u001B[0m,\u001B[1;36m${milliseconds}`
   ].join('')
-  const message = `\x1B[0m | ${formatWithOptions(
+  const message = `\u001B[0m | ${formatWithOptions(
     { colors: true },
     format,
     ...args

@@ -17,7 +17,7 @@ import freeze from './freeze.js'
  * @returns {Promise<any>}
  **/
 export async function template(templatePath) {
-  const templateData = await readFile(templatePath, 'utf-8')
+  const templateData = await readFile(templatePath, 'utf8')
   return yamlParse(templateData)
 }
 
@@ -28,9 +28,9 @@ export async function template(templatePath) {
 export async function samConfig(configPath) {
   const extname = path.extname(configPath)
   if (extname === '.toml') {
-    return freeze(tomlParse(await readFile(configPath, 'utf-8')))
+    return freeze(tomlParse(await readFile(configPath, 'utf8')))
   } else if (extname === '.yaml' || extname === '.yml') {
-    return freeze(yamlParse(await readFile(configPath, 'utf-8')))
+    return freeze(yamlParse(await readFile(configPath, 'utf8')))
   } else {
     throw new TypeError(
       `unsupported samconfig ${configPath}, must be toml or yaml`

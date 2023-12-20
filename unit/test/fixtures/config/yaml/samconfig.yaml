@@ -7,7 +7,7 @@ default:
     parameters:
       cached: true
       parallel: true
-      parameter_overrides: "Name=yaml"
+      parameter_overrides: 'Name=yaml'
   validate:
     parameters:
       lint: true

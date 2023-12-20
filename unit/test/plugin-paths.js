@@ -47,7 +47,7 @@ test('plugin path resolution', async (t) => {
         argv: [null, null, 'validate', '-t', './region.yml', '--debug'],
         env: {
           get INIT_CWD() {
-            return undefined
+            return
           }
         },
         cwd() {
@@ -64,7 +64,7 @@ test('plugin path resolution', async (t) => {
     try {
       const template = await readFile(
         path.join(__dirname, 'fixtures', 'relative-plugin.yml'),
-        'utf-8'
+        'utf8'
       )
       await writeFile(
         path.join(__dirname, 'fixtures', 'absolute-plugin.yml'),

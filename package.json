@@ -7,8 +7,9 @@
     "cz": "cz",
     "prebuild": "rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "build": "tsc",
-    "postbuild": "npx dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
-    "test": "npx c8 -r lcov -- npm --prefix unit t || (npx c8 report; exit 1)",
+    "lint": "eslint --no-error-on-unmatched-pattern",
+    "postbuild": "dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
+    "test": "c8 -r lcov -- npm --prefix unit t || (c8 report; exit 1)",
     "prepublishOnly": "npm test && npm run build && git diff-index --quiet HEAD --",
     "typedoc": "node ./node_modules/.bin/typedoc --tsconfig tsconfig.json 'src/**/*.js'"
   },
@@ -65,8 +66,17 @@
     "node": ">= 20 < 21",
     "npm": ">= 10"
   },
+  "eslintIgnore": [
+    "unit",
+    "examples",
+    "src/plugins/types.js"
+  ],
   "lint-staged": {
-    "*.{md,yml,md,ts,js}": "prettier --write"
+    "*.{ts,js,mjs,mts,cjs,mts}": [
+      "npm run lint --fix",
+      "prettier --write"
+    ],
+    "*.{md,yaml,json,yml,md}": "prettier --write"
   },
   "config": {
     "commitizen": {
@@ -79,9 +89,13 @@
     "@sindresorhus/tsconfig": "5.0.0",
     "@types/json-schema": "7.0.15",
     "@types/node": "20.10.5",
+    "@typescript-eslint/eslint-plugin": "6.15.0",
+    "@typescript-eslint/parser": "6.15.0",
     "c8": "8.0.1",
     "commitizen": "4.3.0",
     "dts-buddy": "0.4.3",
+    "eslint-plugin": "1.0.1",
+    "eslint-plugin-unicorn": "49.0.0",
     "esmock": "2.6.0",
     "husky": "8.0.3",
     "lint-staged": "15.2.0",

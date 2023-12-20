@@ -91,7 +91,7 @@ test('relative path with no dot', async (_t) => {
   try {
     const template = await readFile(
       path.join(__dirname, 'fixtures', 'nested.yml'),
-      'utf-8'
+      'utf8'
     )
     await writeFile(
       path.join(__dirname, 'fixtures', 'nested-relative.yml'),
@@ -119,7 +119,7 @@ test('absolute path with no dot', async (_t) => {
   try {
     const template = await readFile(
       path.join(__dirname, 'fixtures', 'nested.yml'),
-      'utf-8'
+      'utf8'
     )
     await writeFile(
       path.join(__dirname, 'fixtures', 'nested-absolute.yml'),

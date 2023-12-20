@@ -23,6 +23,7 @@
 import { spawn as nativeSpawn } from 'node:child_process'
 import os from 'node:os'
 import { once } from 'node:events'
+import { Buffer } from 'node:buffer'
 
 const windows = os.platform() === 'win32'
 
@@ -33,9 +34,13 @@ const windows = os.platform() === 'win32'
 /** @type {Spawn} */
 export default async function spawn(cmd, args, options) {
   if (windows) {
-    args = ['/C', cmd].concat(args).map((arg) => {
-      return String(arg).replace(/\^/g, '^^^^')
-    })
+    args = [
+      '/C',
+      cmd,
+      ...args.map((arg) => {
+        return String(arg).replaceAll('^', '^^^^')
+      })
+    ]
     cmd = 'cmd'
   }
 
@@ -60,26 +65,26 @@ export default async function spawn(cmd, args, options) {
     once(ps, 'close')
   ])
 
-  /**
-   * @param {import('node:stream').Readable | null} stream
-   * @returns {Promise<string>}
-   **/
-  async function concat(stream) {
-    if (!stream) {
-      return ''
-    }
-    /** @type {Buffer[]} */
-    const data = []
-
-    for await (const chunk of stream) {
-      data.push(chunk)
-    }
-    return Buffer.concat(data).toString('utf-8')
-  }
-
   if (ps.exitCode === 0) {
     return stdout
   } else {
     throw new Error(stderr || 'command failed')
   }
+}
+
+/**
+ * @param {import('node:stream').Readable | null} stream
+ * @returns {Promise<string>}
+ **/
+async function concat(stream) {
+  if (!stream) {
+    return ''
+  }
+  /** @type {Buffer[]} */
+  const data = []
+
+  for await (const chunk of stream) {
+    data.push(chunk)
+  }
+  return Buffer.concat(data).toString('utf8')
 }

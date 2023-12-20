@@ -76,11 +76,11 @@ export const lifecycle = async function expand({
     log('esbuild lifecycle %O', { command, expand })
     const esbuildConfigPath = resolvePath(
       templateDirectory,
-      template.Metadata.expand.config.esbuild.config
+      String(template.Metadata.expand.config.esbuild.config)
     )
 
     log('esbuild config %O', esbuildConfigPath)
-    const esbuildConfig = parse(await readFile(esbuildConfigPath, 'utf-8'))
+    const esbuildConfig = parse(await readFile(esbuildConfigPath, 'utf8'))
     for (const [key, value] of Object.entries(template.Resources ?? {})) {
       if (value?.Type !== 'AWS::Serverless::Function') {
         continue
@@ -164,7 +164,9 @@ async function findHandlerEntry({ codeUri, baseDirectory, handler }) {
     try {
       await stat(path.join(codeUri, entry))
       return entry
-    } catch {}
+    } catch {
+      continue
+    }
   }
   throw new Error(`no entry point found for ${handler}`)
 }
@@ -176,9 +178,7 @@ async function findHandlerEntry({ codeUri, baseDirectory, handler }) {
  **/
 
 function resolvePath(baseDirectory, filePath) {
-  if (filePath?.startsWith('.') || !filePath?.startsWith('/')) {
-    return path.join(baseDirectory, filePath)
-  } else {
-    return filePath
-  }
+  return filePath?.startsWith('.') || !filePath?.startsWith('/')
+    ? path.join(baseDirectory, filePath)
+    : filePath
 }
