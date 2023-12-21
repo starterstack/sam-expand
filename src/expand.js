@@ -99,9 +99,6 @@ export default async function expand() {
       'config-file': {
         type: 'string'
       },
-      'stack-name': {
-        type: 'string'
-      },
       template: {
         type: 'string',
         short: 't'
