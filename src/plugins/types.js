@@ -12,10 +12,14 @@
  **/
 
 /**
- * @typedef {import('../expand.js').Lifecycles} Lifecycles
+ * @typedef {import('../expand.js').PluginOptions} PluginOptions
  **/
 
 /**
  * @template T
  * @typedef {import('../expand.js').PluginSchema<T>} PluginSchema
+ **/
+
+/**
+ * @typedef {import('../expand.js').Lifecycles} Lifecycles
  **/
