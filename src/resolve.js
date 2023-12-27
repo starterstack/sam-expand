@@ -12,40 +12,21 @@ import path from 'node:path'
 import { readFile } from 'node:fs/promises'
 
 /**
- * @typedef {(options: {
- *   command: string,
- *   lifecycle: import('./expand.js').Lifecycle,
- *   configEnv: string,
- *   region?: string,
- * }) => Promise<Record<string, string | undefined>>} FileResolver
+ * @typedef {(options: import('./expand.js').PluginOptions
+ * ) => Promise<Record<string, string | undefined>>} FileResolver
  **/
 
 /**
- * @param {{
- *   location: string,
- *   templateDirectory: string,
- *   parse: import('yaml-cfn').yamlParse,
+ * @param {import('./expand.js').PluginOptions & {
+ *   location: string
  *   exportName: string,
- *   defaultValue?: string,
- *   command: string,
- *   lifecycle: import('./expand.js').Lifecycle,
- *   configEnv: string,
- *   region?: string,
+ *   defaultValue?: string
  * }} options
  * @returns {Promise<string | undefined>}
  **/
-
-export async function resolveFile({
-  location,
-  templateDirectory,
-  parse,
-  exportName,
-  defaultValue,
-  command,
-  lifecycle,
-  configEnv,
-  region
-}) {
+export async function resolveFile(options) {
+  const { location, templateDirectory, parse, exportName, defaultValue } =
+    options
   const fullPath =
     location?.startsWith('.') || !location?.startsWith('/')
       ? path.join(templateDirectory, location)
@@ -69,12 +50,7 @@ export async function resolveFile({
       `resolver: ${location} does not export default async function resolve({ command: string, lifecycle: Lifecycle, region?: string, configEnv: string) {}`
     )
 
-    const { [exportName]: value } = await resolverModule({
-      command,
-      lifecycle,
-      configEnv,
-      region
-    })
+    const { [exportName]: value } = await resolverModule(options)
 
     return value ?? defaultValue
   } else {

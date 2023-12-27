@@ -75,16 +75,8 @@ export const schema = {
 export const metadataConfig = 'parameterOverrides'
 
 /** @type {import('./types.js').Plugin} */
-export const lifecycle = async function expand({
-  template,
-  command,
-  lifecycle,
-  configEnv,
-  parse,
-  templateDirectory,
-  region,
-  argv
-}) {
+export const lifecycle = async function expand(options) {
+  const { template, argv } = options
   /** @type {Schema} */
   const parameterOverrides =
     template.Metadata.expand.config?.['parameterOverrides']
@@ -94,22 +86,14 @@ export const lifecycle = async function expand({
       throw new Error(`parameter ${parameter.name} not found in template`)
     }
     if (parameter.file) {
-      const { exportName, defaultValue, location } = parameter.file
       const value = await resolveFile({
-        location,
-        templateDirectory,
-        exportName,
-        defaultValue,
-        parse,
-        command,
-        lifecycle,
-        configEnv,
-        region
+        ...parameter.file,
+        ...options
       })
       if (value === undefined) {
         const {
           name,
-          file: { location }
+          file: { location, exportName }
         } = parameter
         throw new TypeError(
           `parameter ${name} resolver ${location} missing ${exportName}`

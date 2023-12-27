@@ -129,17 +129,8 @@ export const schema = {
 }
 
 /** @type {import('./types.js').Plugin} */
-export const lifecycle = async function runScriptHook({
-  template,
-  templateDirectory,
-  spawn,
-  parse,
-  region,
-  log,
-  lifecycle,
-  configEnv,
-  command
-}) {
+export const lifecycle = async function runScriptHook(options) {
+  const { template, spawn, log, lifecycle } = options
   /** @type {HookSchema['Hooks']} */
   const hooks = template.Metadata.expand.config.script.hooks
 
@@ -161,21 +152,14 @@ export const lifecycle = async function runScriptHook({
                 values.push(arg.value)
               }
             } else if (key === 'file' && arg.file) {
-              const { location, defaultValue, exportName } = arg.file
               const value = await resolveFile({
-                location,
-                templateDirectory,
-                defaultValue,
-                exportName,
-                parse,
-                region,
-                lifecycle,
-                configEnv,
-                command
+                ...options,
+                ...arg.file
               })
               if (typeof value === 'string') {
                 values.push(value)
               } else {
+                const { location, exportName } = arg.file
                 throw new TypeError(`${location}.${exportName} is missing`)
               }
             }
