@@ -10,7 +10,7 @@
     "lint": "eslint --no-error-on-unmatched-pattern",
     "postbuild": "dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "test": "c8 -r lcov -- npm --prefix unit t || (c8 report; exit 1)",
-    "prepublishOnly": "npm test && npm run build && git diff-index --quiet HEAD --",
+    "prepublishOnly": "npm test && npm run build && git diff --exit-code --quiet",
     "typedoc": "node ./node_modules/.bin/typedoc --tsconfig tsconfig.json 'src/**/*.js'"
   },
   "types": "index.d.ts",
@@ -69,6 +69,7 @@
   "eslintIgnore": [
     "unit",
     "examples",
+    "index.d.ts",
     "src/plugins/types.js"
   ],
   "lint-staged": {

@@ -5,34 +5,15 @@ declare module '@starterstack/sam-expand/parse' {
 }
 
 declare module '@starterstack/sam-expand/resolve' {
-	export function resolveFile({ location, templateDirectory, parse, exportName, defaultValue, command, lifecycle, configEnv, region }: {
-		location: string;
-		templateDirectory: string;
-		parse: typeof import("yaml-cfn").yamlParse;
-		exportName: string;
-		defaultValue?: string;
-		command: string;
-		lifecycle: Lifecycle;
-		configEnv: string;
-		region?: string;
-	}): Promise<string | undefined>;
-	export type FileResolver = (options: {
-		command: string;
-		lifecycle: Lifecycle;
-		configEnv: string;
-		region?: string;
-	}) => Promise<Record<string, string | undefined>>;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
-}
-
-declare module '@starterstack/sam-expand/plugins' {
 	import type { yamlParse, yamlDump } from 'yaml-cfn';
-	export type Plugin = Plugin_1;
-	export type Lifecycles = Lifecycles_1;
-	export type PluginSchema<T> = PluginSchema_1<T>;
+	export function resolveFile(options: PluginOptions & {
+		location: string;
+		exportName: string;
+		defaultValue?: string | undefined;
+	}): Promise<string | undefined>;
+	export type FileResolver = (options: PluginOptions) => Promise<Record<string, string | undefined>>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
-	type Lifecycles_1 = Array<Lifecycle>;
-	type Plugin_1 = (options: {
+	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
 		config: any;
@@ -46,7 +27,34 @@ declare module '@starterstack/sam-expand/plugins' {
 		region?: string;
 		baseDirectory?: string;
 		lifecycle: Lifecycle;
-	}) => Promise<void>;
+	};
+	type Log = (format: string, ...args: any) => void;
+	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+}
+
+declare module '@starterstack/sam-expand/plugins' {
+	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	export type Plugin = Plugin_1;
+	export type Lifecycles = Lifecycles_1;
+	export type PluginSchema<T> = PluginSchema_1<T>;
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycles_1 = Array<Lifecycle>;
+	type PluginOptions = {
+		template: any;
+		templateDirectory: string;
+		config: any;
+		log: Log;
+		command: string;
+		argv: string[];
+		parse: typeof yamlParse;
+		dump: typeof yamlDump;
+		spawn: Spawn;
+		configEnv: string;
+		region?: string;
+		baseDirectory?: string;
+		lifecycle: Lifecycle;
+	};
+	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
@@ -75,7 +83,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
-	type Plugin_1 = (options: {
+	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
 		config: any;
@@ -89,7 +97,8 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		region?: string;
 		baseDirectory?: string;
 		lifecycle: Lifecycle;
-	}) => Promise<void>;
+	};
+	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
@@ -127,7 +136,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
-	type Plugin_1 = (options: {
+	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
 		config: any;
@@ -141,7 +150,8 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		region?: string;
 		baseDirectory?: string;
 		lifecycle: Lifecycle;
-	}) => Promise<void>;
+	};
+	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
@@ -162,7 +172,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
-	type Plugin_1 = (options: {
+	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
 		config: any;
@@ -176,7 +186,8 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		region?: string;
 		baseDirectory?: string;
 		lifecycle: Lifecycle;
-	}) => Promise<void>;
+	};
+	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;

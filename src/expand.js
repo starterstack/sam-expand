@@ -56,7 +56,7 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
  * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
- * @typedef {(options: {
+ * @typedef {{
  *   template: any,
  *   templateDirectory: string
  *   config: any,
@@ -70,7 +70,8 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
  *   region?: string,
  *   baseDirectory?: string
  *   lifecycle: Lifecycle
- * }) => Promise<void>} Plugin
+ * }} PluginOptions
+ * @typedef {(options: PluginOptions) => Promise<void>} Plugin
  **/
 
 /**
