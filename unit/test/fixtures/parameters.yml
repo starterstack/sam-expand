@@ -4,6 +4,8 @@ Transform:
 Parameters:
   MJSASyncName:
     Type: String
+  MJSASyncNoName:
+    Type: String
   MJSName:
     Type: String
   MJSNameWithDefault:
@@ -30,6 +32,11 @@ Metadata:
           file:
             location: ./parameter-name.mjs
             exportName: asyncName
+        - name: MJSASyncNoName
+          file:
+            location: ./parameter-name.mjs
+            exportName: asyncNoName
+            defaultValue: someValue
         - name: MJSName
           file:
             location: ./parameter-name.mjs

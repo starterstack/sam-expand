@@ -5,6 +5,9 @@ export default async function resolver() {
     },
     get asyncName() {
       return Promise.resolve('async name')
+    },
+    get asyncNoName() {
+      return Promise.resolve(undefined)
     }
   }
 }

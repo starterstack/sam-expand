@@ -84,6 +84,7 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
       'YMLName=test',
       'MJSNameWithDefault=someValue',
       'MJSName=test',
+      'MJSASyncNoName=someValue',
       'MJSASyncName=async name'
     ]
   ])
@@ -128,6 +129,7 @@ test('parameter overrides plugin resolve for deploy (overrite existing parameter
       'YMLNameWithDefault=someValue',
       'YMLName=test',
       'MJSNameWithDefault=someValue',
+      'MJSASyncNoName=someValue',
       'MJSASyncName=async name',
       'MJSName=test'
     ]
