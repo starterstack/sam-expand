@@ -11,7 +11,7 @@ declare module '@starterstack/sam-expand/resolve' {
 		exportName: string;
 		defaultValue?: string | undefined;
 	}): Promise<string | undefined>;
-	export type FileResolver = (options: PluginOptions) => Promise<Record<string, string | undefined>>;
+	export type FileResolver = (options: PluginOptions) => Promise<Record<string, string | undefined | Promise<string | undefined>>>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type PluginOptions = {
 		template: any;

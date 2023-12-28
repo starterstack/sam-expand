@@ -13,7 +13,7 @@ import { readFile } from 'node:fs/promises'
 
 /**
  * @typedef {(options: import('./expand.js').PluginOptions
- * ) => Promise<Record<string, string | undefined>>} FileResolver
+ * ) => Promise<Record<string, string | undefined | Promise<string | undefined>>>} FileResolver
  **/
 
 /**

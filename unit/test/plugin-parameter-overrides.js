@@ -83,7 +83,8 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
       'YMLNameWithDefault=someValue',
       'YMLName=test',
       'MJSNameWithDefault=someValue',
-      'MJSName=test'
+      'MJSName=test',
+      'MJSASyncName=async name'
     ]
   ])
   mock.restoreAll()
@@ -127,6 +128,7 @@ test('parameter overrides plugin resolve for deploy (overrite existing parameter
       'YMLNameWithDefault=someValue',
       'YMLName=test',
       'MJSNameWithDefault=someValue',
+      'MJSASyncName=async name',
       'MJSName=test'
     ]
   ])
