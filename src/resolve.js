@@ -52,7 +52,7 @@ export async function resolveFile(options) {
 
     const { [exportName]: value } = await resolverModule(options)
 
-    return value ?? defaultValue
+    return (await value) ?? defaultValue
   } else {
     const { [exportName]: value } = parse(await readFile(fullPath, 'utf8'))
     return value ?? defaultValue ?? undefined
