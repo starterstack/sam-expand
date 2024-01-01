@@ -28,6 +28,10 @@
       "import": "./src/log.js",
       "types": "./src/log.d.ts"
     },
+    "./spawn": {
+      "import": "./src/spawn.js",
+      "types": "./src/spawn.d.ts"
+    },
     "./resolve": {
       "import": "./src/resolve.js",
       "types": "./src/resolve.d.ts"

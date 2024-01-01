@@ -9,6 +9,11 @@ declare module '@starterstack/sam-expand/log' {
 	export type Log = (format: string, ...args: any) => void;
 }
 
+declare module '@starterstack/sam-expand/spawn' {
+	export default function spawn(cmd: string, args: string[], options?: import('node:child_process').SpawnOptions): Promise<void | string>;
+	export type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+}
+
 declare module '@starterstack/sam-expand/resolve' {
 	import type { yamlParse, yamlDump } from 'yaml-cfn';
 	export function resolveFile(options: PluginOptions & {
