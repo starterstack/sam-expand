@@ -21,6 +21,12 @@ jobs:
             --fund false \
             --loglevel=error \
             --ignore-scripts
+      - name: build
+        run: |
+          npm run build
+      - name: typedoc
+        run: |
+          npm run typedoc
       - name: run tests
         run: |
           npm t

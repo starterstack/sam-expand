@@ -11,7 +11,7 @@
     "postbuild": "dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
     "test": "c8 -r lcov -- npm --prefix unit t || (c8 report; exit 1)",
     "prepublishOnly": "npm test && npm run build && git diff --exit-code --quiet",
-    "typedoc": "node ./node_modules/.bin/typedoc --tsconfig tsconfig.json 'src/**/*.js'"
+    "typedoc": "typedoc --tsconfig tsconfig.json 'src/**/*.js' --logLevel Verbose"
   },
   "types": "index.d.ts",
   "type": "module",
@@ -105,7 +105,7 @@
     "husky": "8.0.3",
     "lint-staged": "15.2.0",
     "prettier-config-standard": "7.0.0",
-    "typedoc": "0.25.5",
+    "typedoc": "0.25.4",
     "typescript": "5.3.3"
   },
   "dependencies": {
