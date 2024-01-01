@@ -24,6 +24,10 @@
       "import": "./src/parse.js",
       "types": "./src/parse.d.ts"
     },
+    "./log": {
+      "import": "./src/log.js",
+      "types": "./src/log.d.ts"
+    },
     "./resolve": {
       "import": "./src/resolve.js",
       "types": "./src/resolve.d.ts"

@@ -4,6 +4,11 @@ declare module '@starterstack/sam-expand/parse' {
 	export function samConfig(configPath: string): Promise<any>;
 }
 
+declare module '@starterstack/sam-expand/log' {
+	export default function log(format: string, ...args: any): void;
+	export type Log = (format: string, ...args: any) => void;
+}
+
 declare module '@starterstack/sam-expand/resolve' {
 	import type { yamlParse, yamlDump } from 'yaml-cfn';
 	export function resolveFile(options: PluginOptions & {

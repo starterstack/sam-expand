@@ -4,11 +4,11 @@
 	"names": [
 		"template",
 		"samConfig",
+		"Log",
 		"resolveFile",
 		"FileResolver",
 		"Lifecycle",
 		"PluginOptions",
-		"Log",
 		"Spawn",
 		"Plugin",
 		"PluginSchema",
@@ -25,9 +25,9 @@
 	],
 	"sources": [
 		"src/parse.d.ts",
+		"src/log.d.ts",
 		"src/resolve.d.ts",
 		"src/expand.d.ts",
-		"src/log.d.ts",
 		"src/spawn.d.ts",
 		"src/plugins/parameter-overrides.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
@@ -43,5 +43,5 @@
 		null,
 		null
 	],
-	"mappings": ";iBAGgBA,QAAQA;;iBAIRC,SAASA;;;;;iBCKTC,WAAWA;;;;;aAKfC,YAAYA;MCYZC,SAASA;MAGTC,aAAaA;;;;;;;;;;;;;;;MC/BbC,GAAGA;MCAHC,KAAKA;;;;;aF8CLC,MAAMA;aAfNH,aAAaA;aAgBbI,YAAYA;aAlBZC,UAAUA;MADVN,SAASA;;;;;;;;;;;;;;;;;;;MC5BTE,GAAGA;MCAHC,KAAKA;;;;;cCAJI,UAAUA;;;cAQVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,IAAIA;;;;;aAKJC,MAAMA;;;;MH6BNR,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVN,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MC/BbC,GAAGA;MCAHC,KAAKA;;;;;cEDJM,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVG,IAAIA;aACJF,IAAIA;;;;;aAKJG,OAAOA;;;;;;;aAOPC,UAAUA;;;;;MJ2BVX,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVN,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MC/BbC,GAAGA;MCAHC,KAAKA;;;;;cGAJI,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MLuCVN,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVN,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MC/BbC,GAAGA;MCAHC,KAAKA"
+	"mappings": ";iBAGgBA,QAAQA;;iBAIRC,SAASA;;;;;aCNbC,GAAGA;;;;;iBCWCC,WAAWA;;;;;aAKfC,YAAYA;MCYZC,SAASA;MAGTC,aAAaA;;;;;;;;;;;;;;;MF/BbJ,GAAGA;MGAHK,KAAKA;;;;;aD8CLC,MAAMA;aAfNF,aAAaA;aAgBbG,YAAYA;aAlBZC,UAAUA;MADVL,SAASA;;;;;;;;;;;;;;;;;;;MF5BTH,GAAGA;MGAHK,KAAKA;;;;;cCAJI,UAAUA;;;cAQVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,IAAIA;;;;;aAKJC,MAAMA;;;;MF6BNR,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVL,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MF/BbJ,GAAGA;MGAHK,KAAKA;;;;;cEDJM,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVG,IAAIA;aACJF,IAAIA;;;;;aAKJG,OAAOA;;;;;;;aAOPC,UAAUA;;;;;MH2BVX,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVL,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MF/BbJ,GAAGA;MGAHK,KAAKA;;;;;cGAJI,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MJuCVN,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVL,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MF/BbJ,GAAGA;MGAHK,KAAKA"
 }
