@@ -58,13 +58,13 @@ jobs:
             const { owner, repo } = context.repo
             return await Promise.all([
               github.rest.issues.addLabels({
-                issue_number
+                issue_number,
                 owner,
                 repo,
                 labels: ['release:next']
               }),
               github.rest.issues.createComment({
-                issue_number
+                issue_number,
                 owner,
                 repo,
                 body: `⚡ These are the changes that will be released when this pull request is merged. ⚡${diff}`
