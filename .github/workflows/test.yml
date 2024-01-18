@@ -14,19 +14,10 @@ jobs:
           node-version: 20
           cache: npm
       - name: npm install
-        run: |
-          npm install \
-            --no-save \
-            --audit false \
-            --fund false \
-            --loglevel=error \
-            --ignore-scripts
+        run: npm ci --ignore-scripts
       - name: build
-        run: |
-          npm run build
+        run: npm run build
       - name: typedoc
-        run: |
-          npm run typedoc
+        run: npm run typedoc
       - name: run tests
-        run: |
-          npm t
+        run: npm t

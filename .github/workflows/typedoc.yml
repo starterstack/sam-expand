@@ -30,16 +30,9 @@ jobs:
           node-version: 20
           cache: npm
       - name: npm install
-        run: |
-          npm install \
-            --no-save \
-            --audit false \
-            --fund false \
-            --loglevel=error \
-            --ignore-scripts
+        run: npm ci --ignore-scripts
       - name: Generate typedocs
         run: npm run typedoc
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
