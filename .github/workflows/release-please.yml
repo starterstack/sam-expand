@@ -1,0 +1,72 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    branches:
+      - main
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+    steps:
+      - id: release
+        name: release
+        uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: node
+          labels: 'release please'
+          package-name: release-please-action
+      - uses: actions/checkout@v4
+      - name: get previous version
+        id: previous-version
+        if: ${{ steps.release.outputs.pr && !contains(fromJSON(steps.release.outputs.pr).labels, 'release:next') }}
+        run: |
+          declare -r version=$(
+          git ls-remote --tags \
+            origin |
+            awk '{print $2}' |
+            sed 's|refs/tags/||g' |
+            sort -V |
+            tail -1
+          )
+          if [[ -n "${version:-}" ]]; then
+            echo "result=${version:?}" >> "${GITHUB_OUTPUT:?}"
+          fi
+      - uses: actions/github-script@v7
+        name: prepare pull request
+        if: ${{ steps.release.outputs.pr && !contains(fromJSON(steps.release.outputs.pr).labels, 'release:next') }}
+        with:
+          script: |
+            const previousVersion='${{ steps.previous-version.outputs.result }}'
+            const diff = previousVersion
+            ? `\n\nSee full diff in [compare view](https://github.com/starterstack/starterstack/compare/${previousVersion}...main)`
+            : ''
+            const issueNumber = Number('${{ fromJSON(steps.release.outputs.pr).number }}') || context.payload.pull_request.number
+            const { owner, repo } = context.repo
+            return await Promise.all([
+              github.rest.issues.addLabels({
+                issue_number: issueNumber,
+                owner,
+                repo,
+                labels: ['release:next']
+              }),
+              github.rest.issues.createComment({
+                issue_number: issueNumber,
+                owner,
+                repo,
+                body: `⚡ These are the changes that will be released when this pull request is merged. ⚡${diff}`
+              })
+            ])
