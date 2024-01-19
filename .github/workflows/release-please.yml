@@ -27,8 +27,7 @@ jobs:
         uses: google-github-actions/release-please-action@v4
         with:
           release-type: node
-          labels: 'release please'
-          package-name: release-please-action
+          label: 'release please'
       - uses: actions/checkout@v4
       - name: get previous version
         id: previous-version
