@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.31](https://github.com/starterstack/sam-expand/compare/v0.0.30...v0.0.31) (2024-01-19)
+
+
+### Bug Fixes
+
+* **release-please:** new inputs ([34b254c](https://github.com/starterstack/sam-expand/commit/34b254c477f97684edfc22dc2a1f146ae3c801c1))
+* **release-please:** remove label imput ([10a7792](https://github.com/starterstack/sam-expand/commit/10a7792f09f864347666060272fa29d1bf38b369))
+
 ## [0.0.30](https://github.com/starterstack/sam-expand/compare/v0.0.29...v0.0.30) (2024-01-18)
 
 
