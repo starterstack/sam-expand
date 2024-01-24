@@ -105,7 +105,7 @@
     "dts-buddy": "0.4.4",
     "eslint-plugin": "1.0.1",
     "eslint-plugin-unicorn": "50.0.1",
-    "esmock": "2.6.2",
+    "esmock": "2.6.3",
     "husky": "8.0.3",
     "lint-staged": "15.2.0",
     "prettier-config-standard": "7.0.0",
