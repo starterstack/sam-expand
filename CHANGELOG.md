@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/starterstack/sam-expand/compare/v0.0.31...v0.1.0) (2024-01-26)
+
+
+### Features
+
+* delegate --version to sam ([#58](https://github.com/starterstack/sam-expand/issues/58)) ([894b390](https://github.com/starterstack/sam-expand/commit/894b3905578fdd35eaca34911c7115367ee889b3))
+
 ## [0.0.31](https://github.com/starterstack/sam-expand/compare/v0.0.30...v0.0.31) (2024-01-19)
 
 
