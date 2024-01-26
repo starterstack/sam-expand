@@ -88,6 +88,9 @@ export default async function expand() {
       help: {
         type: 'boolean'
       },
+      version: {
+        type: 'boolean'
+      },
       debug: {
         type: 'boolean'
       },
@@ -123,6 +126,14 @@ export default async function expand() {
       : /** @type {Log} */ () => {}
 
   log('cli args %O', { args: { ...values } })
+
+  if (values.version) {
+    const versionArguments = ['--version']
+    log('sam %O', versionArguments)
+    await spawn('sam', versionArguments)
+    return
+  }
+
   const command = positionals?.[0] ?? ''
 
   if (!command || values.help) {
