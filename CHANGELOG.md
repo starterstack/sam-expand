@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/starterstack/sam-expand/compare/v0.2.1...v0.2.2) (2024-01-30)
+
+
+### Bug Fixes
+
+* parameter overrides (only build & deploy) ([b7c6046](https://github.com/starterstack/sam-expand/commit/b7c6046e9323a1239b31807d558fe5099271440e))
+
 ## [0.2.1](https://github.com/starterstack/sam-expand/compare/v0.2.0...v0.2.1) (2024-01-30)
 
 
