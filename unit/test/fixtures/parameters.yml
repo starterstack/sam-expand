@@ -28,51 +28,33 @@ Metadata:
       - '../../../src/plugins/parameter-overrides.js'
     config:
       parameterOverrides:
-        - name: MJSASyncName
-          file:
-            location: ./parameter-name.mjs
-            exportName: asyncName
-        - name: MJSASyncNoName
-          file:
-            location: ./parameter-name.mjs
-            exportName: asyncNoName
-            defaultValue: someValue
-        - name: MJSName
-          file:
-            location: ./parameter-name.mjs
-            exportName: name
-        - name: MJSNameWithDefault
-          file:
-            location: ./parameter-name.mjs
-            exportName: sjdhfjsdhf
-            defaultValue: someValue
-        - name: YMLName
-          file:
-            location: ./parameter-name.yml
-            exportName: name
-        - name: YMLNameWithDefault
-          file:
-            location: ./parameter-name.yml
-            exportName: sjdhfjsdhf
-            defaultValue: someValue
-        - name: YAMLName
-          file:
-            location: ./parameter-name.yaml
-            exportName: name
-        - name: YAMLNameWithDefault
-          file:
-            location: ./parameter-name.yaml
-            exportName: sjdhfjsdhf
-            defaultValue: someValue
-        - name: JSONName
-          file:
-            location: ./parameter-name.json
-            exportName: name
-        - name: JSONNameWithDefault
-          file:
-            location: ./parameter-name.json
-            exportName: sjdhfjsdhf
-            defaultValue: someValue
+        - location: ./parameter-name.mjs
+          overrides:
+            - name: MJSASyncName
+              exportName: asyncName
+            - name: MJSASyncNoName
+              exportName: asyncNoName
+              defaultValue: someValue
+            - name: MJSName
+              exportName: name
+            - name: MJSNameWithDefault
+              exportName: sjdhfjsdhf
+              defaultValue: someValue
+            - name: YMLName
+              exportName: name
+            - name: YMLNameWithDefault
+              exportName: sjdhfjsdhf
+              defaultValue: someValue
+            - name: YAMLName
+              exportName: name
+            - name: YAMLNameWithDefault
+              exportName: sjdhfjsdhf
+              defaultValue: someValue
+            - name: JSONName
+              exportName: name
+            - name: JSONNameWithDefault
+              exportName: sjdhfjsdhf
+              defaultValue: someValue
 Resources:
   WaitConditionHandle:
     Type: AWS::CloudFormation::WaitConditionHandle
