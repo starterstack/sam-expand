@@ -91,6 +91,104 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
   mock.restoreAll()
 })
 
+test('parameter overrides inline resolve for build', async (_t) => {
+  /* c8 ignore start */
+  const spawnMock = mock.fn()
+  const writeMock = mock.fn()
+  /* c8 ignore end */
+  const argv = [
+    null,
+    null,
+    'build',
+    '-t',
+    path.join(__dirname, 'fixtures', 'parameters-inline.yml')
+  ]
+
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:process': {
+      argv
+    },
+    'node:fs/promises': {
+      async writeFile(...args) {
+        writeMock(...args)
+      },
+      async unlink() {}
+    },
+    async '../../src/spawn.js'(...args) {
+      spawnMock(...args)
+    }
+  })
+  await expand()
+  assert.equal(spawnMock.mock.callCount(), 1)
+  assert.deepEqual(spawnMock.mock.calls[0].arguments, [
+    'sam',
+    [
+      'build',
+      '--parameter-overrides',
+      'Name3=value for name3',
+      '-t',
+      path.join(__dirname, 'fixtures', 'parameters-inline.expanded.yml')
+    ]
+  ])
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(
+    writeMock.mock.calls[0].arguments[1],
+    `AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Name1:
+    Type: String
+  Name2:
+    Type: String
+  Name3:
+    Type: String
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/parameter-overrides.js
+    config:
+      parameterOverrides:
+        - location: ./parameter-name.mjs
+          overrides:
+            - name: Name1
+              exportName: name1
+              inlineRef: true
+            - name: Name2
+              exportName: name2
+              inlineRef: true
+            - name: Name3
+              exportName: name3
+Resources:
+  Thing:
+    Type: AWS::Nested::Thingy
+    Properties:
+      Name: value for name1
+      Comment: !Ref Name3
+      Nested:
+        - A:
+            - B:
+                - C:
+                    - D:
+                        E: |-
+                          value for name 2
+                          multiline :)
+Outputs:
+  HelloWorldApi:
+    Value: |-
+      value for name 2
+      multiline :)
+Conditions:
+  Name2: !Equals 
+    - |-
+      value for name 2
+      multiline :)
+    - value
+`
+  )
+  mock.restoreAll()
+})
+
 test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async (_t) => {
   /* c8 ignore start */
   const spawnMock = mock.fn()
@@ -161,11 +259,13 @@ test('error handling', async (t) => {
     const template = structuredClone(baseTemplate)
     template.Metadata.expand.config.parameterOverrides = [
       {
-        name: 'Name',
-        file: {
-          location: './parameter-name.toml',
-          exportName: 'name'
-        }
+        location: './parameter-name.toml',
+        overrides: [
+          {
+            name: 'Name',
+            exportName: 'name'
+          }
+        ]
       }
     ]
 
@@ -201,11 +301,13 @@ test('error handling', async (t) => {
     const template = structuredClone(baseTemplate)
     template.Metadata.expand.config.parameterOverrides = [
       {
-        name: 'Name',
-        file: {
-          location: './parameter-name.toml',
-          exportName: 'name'
-        }
+        location: './parameter-name.toml',
+        overrides: [
+          {
+            name: 'Name',
+            exportName: 'name'
+          }
+        ]
       }
     ]
 
@@ -233,11 +335,13 @@ test('error handling', async (t) => {
       const template = structuredClone(baseTemplate)
       template.Metadata.expand.config.parameterOverrides = [
         {
-          name: 'Name',
-          file: {
-            location: `./parameter-name.${type}`,
-            exportName: 'name'
-          }
+          location: `./parameter-name.${type}`,
+          overrides: [
+            {
+              name: 'Name',
+              exportName: 'name'
+            }
+          ]
         }
       ]
 
@@ -266,11 +370,13 @@ test('error handling', async (t) => {
       const template = structuredClone(baseTemplate)
       template.Metadata.expand.config.parameterOverrides = [
         {
-          name: 'Name',
-          file: {
-            location: `./parameter-name.${type}`,
-            exportName: 'missing'
-          }
+          location: `./parameter-name.${type}`,
+          overrides: [
+            {
+              name: 'Name',
+              exportName: 'missing'
+            }
+          ]
         }
       ]
 
@@ -308,12 +414,14 @@ test('error handling', async (t) => {
         const template = structuredClone(baseTemplate)
         template.Metadata.expand.config.parameterOverrides = [
           {
-            name: 'Name',
-            file: {
-              location: `./parameter-name.${type}`,
-              exportName: 'missing',
-              defaultValue: 'default'
-            }
+            location: `./parameter-name.${type}`,
+            overrides: [
+              {
+                name: 'Name',
+                exportName: 'missing',
+                defaultValue: 'default'
+              }
+            ]
           }
         ]
 

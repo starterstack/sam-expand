@@ -76,7 +76,6 @@
   },
   "eslintIgnore": [
     "unit",
-    "examples",
     "index.d.ts",
     "src/plugins/types.js"
   ],

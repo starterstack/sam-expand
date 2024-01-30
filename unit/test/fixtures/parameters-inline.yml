@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Name1:
+    Type: String
+  Name2:
+    Type: String
+  Name3:
+    Type: String
+Metadata:
+  expand:
+    plugins:
+      - '../../../src/plugins/parameter-overrides.js'
+    config:
+      parameterOverrides:
+        - location: ./parameter-name.mjs
+          overrides:
+            - name: Name1
+              exportName: name1
+              inlineRef: true
+            - name: Name2
+              exportName: name2
+              inlineRef: true
+            - name: Name3
+              exportName: name3
+Resources:
+  Thing:
+    Type: AWS::Nested::Thingy
+    Properties:
+      Name: !Ref Name1
+      Comment: !Ref Name3
+      Nested:
+        - A:
+            - B:
+                - C:
+                    - D:
+                        E: !Ref Name2
+Outputs:
+  HelloWorldApi:
+    Value: !Ref Name2
+
+Conditions:
+  Name2: !Equals
+    - !Ref Name2
+    - value

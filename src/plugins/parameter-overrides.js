@@ -22,14 +22,12 @@
  *       - '@starterstack/sam-expand/plugins/parameter-overrides'
  *   config:
  *     parameterOverrides:
- *       - name: GitHubRepoOwner
- *         file:
- *           location: ../settings.json
- *           exportName: owner
- *       - name: GitHubRepo
- *         file:
- *           location: ../settings.json
- *           exportName: repo
+ *       - location: ../settings.json
+ *         overrides:
+ *           - name: GitHubRepoOwner
+ *             exportName: owner
+ *           - name: GitHubRepo
+ *             exportName: repo
  * ```
  * @module
  **/
@@ -37,11 +35,11 @@
 import { resolveFile } from '../resolve.js'
 
 /** @type {import('./types.js').Lifecycles} */
-export const lifecycles = ['pre:build', 'pre:deploy']
+export const lifecycles = ['expand', 'pre:build', 'pre:deploy']
 
 /**
- * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
- * @typedef {Array<{ name: string, file?: File }>} Schema
+ * @typedef {{ name: string, exportName: string, defaultValue?: string, inlineRef?: boolean }} Override
+ * @typedef {Array<{ location: string, overrides: Array<Override> }>} Schema
  **/
 
 /**
@@ -53,21 +51,24 @@ export const schema = {
   items: {
     type: 'object',
     properties: {
-      name: { type: 'string' },
-      file: {
-        type: 'object',
-        properties: {
-          location: { type: 'string' },
-          exportName: { type: 'string' },
-          defaultValue: { type: 'string', nullable: true }
-        },
-        required: ['location', 'exportName'],
-        additionalProperties: false,
-        nullable: true
-      },
-      additionalProperties: false
+      location: { type: 'string' },
+      overrides: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            exportName: { type: 'string' },
+            defaultValue: { type: 'string', nullable: true },
+            inlineRef: { type: 'boolean', nullable: true }
+          },
+          required: ['name', 'exportName'],
+          additionalProperties: false,
+          nullable: true
+        }
+      }
     },
-    required: ['name'],
+    required: ['location', 'overrides'],
     additionalProperties: false
   }
 }
@@ -81,25 +82,29 @@ export const lifecycle = async function expand(options) {
   const parameterOverrides =
     template.Metadata.expand.config?.['parameterOverrides']
 
-  for (const parameter of parameterOverrides) {
-    if (!template.Parameters?.[parameter.name]) {
-      throw new Error(`parameter ${parameter.name} not found in template`)
-    }
-    if (parameter.file) {
+  for (const { location, overrides } of parameterOverrides) {
+    for (const override of overrides) {
+      if (!template.Parameters?.[override.name]) {
+        throw new Error(`parameter ${override.name} not found in template`)
+      }
       const value = await resolveFile({
-        ...parameter.file,
+        location,
+        exportName: override.exportName,
+        defaultValue: override.defaultValue,
         ...options
       })
       if (value === undefined) {
-        const {
-          name,
-          file: { location, exportName }
-        } = parameter
         throw new TypeError(
-          `parameter ${name} resolver ${location} missing ${exportName}`
+          `parameter ${override.name} resolver ${location} missing ${override.exportName}`
         )
       }
-      addParameter({ argv, name: parameter.name, value })
+      if (override.inlineRef) {
+        if (options.lifecycle === 'expand') {
+          inlineParameterRefs({ name: override.name, value, template })
+        }
+      } else {
+        addParameterArgument({ argv, name: override.name, value })
+      }
     }
   }
 }
@@ -109,7 +114,7 @@ export const lifecycle = async function expand(options) {
  * @returns {void}
  **/
 
-function addParameter({ argv, name, value }) {
+function addParameterArgument({ argv, name, value }) {
   if (!argv.includes('--parameter-overrides')) {
     argv.push('--parameter-overrides')
   }
@@ -121,4 +126,33 @@ function addParameter({ argv, name, value }) {
   } else {
     argv.splice(parameterIndex, 1, `${name}=${value}`)
   }
+}
+
+/**
+ * @param {{ name: string, value: string, template: any }} options
+ * @returns {void}
+ **/
+
+function inlineParameterRefs({ name, value, template }) {
+  /**
+   * @param {any} node
+   * @return {void}
+   */
+  function walk(node) {
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        walk(item)
+      }
+    }
+    if (typeof node === 'object') {
+      for (const [key, item] of Object.entries(node)) {
+        if (item?.Ref === name) {
+          node[key] = value
+        } else {
+          walk(item)
+        }
+      }
+    }
+  }
+  walk(template)
 }
