@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/starterstack/sam-expand/compare/v0.2.0...v0.2.1) (2024-01-30)
+
+
+### Bug Fixes
+
+* parameter inline types ([f93e101](https://github.com/starterstack/sam-expand/commit/f93e101cb20d3de68896b3088abc2b66a5a95b26))
+
 ## [0.2.0](https://github.com/starterstack/sam-expand/compare/v0.1.0...v0.2.0) (2024-01-30)
 
 
