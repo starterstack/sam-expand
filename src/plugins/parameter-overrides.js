@@ -77,7 +77,10 @@ export const metadataConfig = 'parameterOverrides'
 
 /** @type {import('./types.js').Plugin} */
 export const lifecycle = async function expand(options) {
-  const { template, argv } = options
+  const { template, argv, command } = options
+  if (command !== 'build' && command !== 'deploy') {
+    return
+  }
   /** @type {Schema} */
   const parameterOverrides =
     template.Metadata.expand.config?.['parameterOverrides']
