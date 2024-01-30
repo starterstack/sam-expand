@@ -80,14 +80,15 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	export const metadataConfig: "parameterOverrides";
 
 	export const lifecycle: Plugin;
-	export type File = {
-		location: string;
+	export type Override = {
+		name: string;
 		exportName: string;
 		defaultValue?: string;
+		inlineRef?: boolean;
 	};
 	export type Schema = Array<{
-		name: string;
-		file?: File;
+		location: string;
+		overrides: Array<Override>;
 	}>;
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
