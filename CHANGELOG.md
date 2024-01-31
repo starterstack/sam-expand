@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/starterstack/sam-expand/compare/v0.2.3...v0.2.4) (2024-01-31)
+
+
+### Bug Fixes
+
+* **parameter overrides plugin:** linting - remove inlined parameters ([93accaa](https://github.com/starterstack/sam-expand/commit/93accaa23449c4add4e0a7c7864243798e0f553a))
+
 ## [0.2.3](https://github.com/starterstack/sam-expand/compare/v0.2.2...v0.2.3) (2024-01-31)
 
 
