@@ -103,6 +103,11 @@ export const lifecycle = async function expand(options) {
       if (shouldInline(value)) {
         if (options.lifecycle === 'expand') {
           inlineParameters({ name: override.name, value, template })
+          delete template.Parameters[override.name]
+          overrides.splice(
+            overrides.findIndex((x) => x.name === override.name),
+            1
+          )
         }
       } else {
         addParameterArgument({ argv, name: override.name, value })

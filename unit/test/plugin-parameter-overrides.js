@@ -140,8 +140,6 @@ Transform:
 Parameters:
   Name1:
     Type: String
-  Name2:
-    Type: String
   Name3:
     Type: String
 Metadata:
@@ -154,8 +152,6 @@ Metadata:
           overrides:
             - name: Name1
               exportName: name1
-            - name: Name2
-              exportName: name2
             - name: Name3
               exportName: name3
 Resources:
