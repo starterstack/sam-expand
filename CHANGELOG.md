@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/starterstack/sam-expand/compare/v0.2.2...v0.2.3) (2024-01-31)
+
+
+### Bug Fixes
+
+* **parameter overrides plugin:** handle implicit parameter value inlining ([95245c6](https://github.com/starterstack/sam-expand/commit/95245c6b112bf3964c27895bf5c575c9c56f9c72))
+
 ## [0.2.2](https://github.com/starterstack/sam-expand/compare/v0.2.1...v0.2.2) (2024-01-30)
 
 
