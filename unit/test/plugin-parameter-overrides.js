@@ -76,16 +76,16 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
       '-t',
       path.join(__dirname, 'fixtures', 'parameters.yml'),
       '--parameter-overrides',
-      'JSONNameWithDefault=someValue',
-      'JSONName=test',
-      'YAMLNameWithDefault=someValue',
-      'YAMLName=test',
-      'YMLNameWithDefault=someValue',
-      'YMLName=test',
-      'MJSNameWithDefault=someValue',
-      'MJSName=test',
-      'MJSASyncNoName=someValue',
-      'MJSASyncName=async name'
+      "JSONNameWithDefault='someValue'",
+      "JSONName='test'",
+      "YAMLNameWithDefault='someValue'",
+      "YAMLName='test'",
+      "YMLNameWithDefault='someValue'",
+      "YMLName='test'",
+      "MJSNameWithDefault='someValue'",
+      "MJSName='test'",
+      "MJSASyncNoName='someValue'",
+      "MJSASyncName='async name'"
     ]
   ])
   mock.restoreAll()
@@ -125,7 +125,8 @@ test('parameter overrides inline resolve for build', async (_t) => {
     [
       'build',
       '--parameter-overrides',
-      'Name3=value for name3',
+      "Name3='value for name3'",
+      "Name1='value for name1'",
       '-t',
       path.join(__dirname, 'fixtures', 'parameters-inline.expanded.yml')
     ]
@@ -153,18 +154,20 @@ Metadata:
           overrides:
             - name: Name1
               exportName: name1
-              inlineRef: true
             - name: Name2
               exportName: name2
-              inlineRef: true
             - name: Name3
               exportName: name3
 Resources:
   Thing:
-    Type: AWS::Nested::Thingy
+    Type: Custom::Thingy
     Properties:
-      Name: value for name1
+      ServiceToken: !Ref Name1
+      Name: !Ref Name1
       Comment: !Ref Name3
+      SubCommand: !Sub |-
+        Some line with value for name 2
+        multiline :)
       Nested:
         - A:
             - B:
@@ -220,16 +223,16 @@ test('parameter overrides plugin resolve for deploy (overrite existing parameter
       '-t',
       path.join(__dirname, 'fixtures', 'parameters.yml'),
       '--parameter-overrides',
-      'JSONNameWithDefault=someValue',
-      'JSONName=test',
-      'YAMLNameWithDefault=someValue',
-      'YAMLName=test',
-      'YMLNameWithDefault=someValue',
-      'YMLName=test',
-      'MJSNameWithDefault=someValue',
-      'MJSASyncNoName=someValue',
-      'MJSASyncName=async name',
-      'MJSName=test'
+      "JSONNameWithDefault='someValue'",
+      "JSONName='test'",
+      "YAMLNameWithDefault='someValue'",
+      "YAMLName='test'",
+      "YMLNameWithDefault='someValue'",
+      "YMLName='test'",
+      "MJSNameWithDefault='someValue'",
+      "MJSASyncNoName='someValue'",
+      "MJSASyncName='async name'",
+      "MJSName='test'"
     ]
   ])
   mock.restoreAll()
@@ -363,7 +366,7 @@ test('error handling', async (t) => {
         log() {}
       })
 
-      assert.deepEqual(argv, ['--parameter-overrides', 'Name=test'])
+      assert.deepEqual(argv, ['--parameter-overrides', "Name='test'"])
     })
 
     await t.test(`missing value in ${type} file resolver`, async (_t) => {
@@ -443,7 +446,7 @@ test('error handling', async (t) => {
           log() {}
         })
 
-        assert.deepEqual(argv, ['--parameter-overrides', 'Name=default'])
+        assert.deepEqual(argv, ['--parameter-overrides', "Name='default'"])
       }
     )
   }

@@ -38,7 +38,7 @@ import { resolveFile } from '../resolve.js'
 export const lifecycles = ['expand', 'pre:build', 'pre:deploy']
 
 /**
- * @typedef {{ name: string, exportName: string, defaultValue?: string, inlineRef?: boolean }} Override
+ * @typedef {{ name: string, exportName: string, defaultValue?: string }} Override
  * @typedef {Array<{ location: string, overrides: Array<Override> }>} Schema
  **/
 
@@ -59,8 +59,7 @@ export const schema = {
           properties: {
             name: { type: 'string' },
             exportName: { type: 'string' },
-            defaultValue: { type: 'string', nullable: true },
-            inlineRef: { type: 'boolean', nullable: true }
+            defaultValue: { type: 'string', nullable: true }
           },
           required: ['name', 'exportName'],
           additionalProperties: false,
@@ -101,9 +100,9 @@ export const lifecycle = async function expand(options) {
           `parameter ${override.name} resolver ${location} missing ${override.exportName}`
         )
       }
-      if (override.inlineRef) {
+      if (shouldInline(value)) {
         if (options.lifecycle === 'expand') {
-          inlineParameterRefs({ name: override.name, value, template })
+          inlineParameters({ name: override.name, value, template })
         }
       } else {
         addParameterArgument({ argv, name: override.name, value })
@@ -125,9 +124,9 @@ function addParameterArgument({ argv, name, value }) {
 
   if (parameterIndex === -1) {
     const parameterOverridesIndex = argv.indexOf('--parameter-overrides')
-    argv.splice(parameterOverridesIndex + 1, 0, `${name}=${value}`)
+    argv.splice(parameterOverridesIndex + 1, 0, `${name}='${value}'`)
   } else {
-    argv.splice(parameterIndex, 1, `${name}=${value}`)
+    argv.splice(parameterIndex, 1, `${name}='${value}'`)
   }
 }
 
@@ -136,7 +135,7 @@ function addParameterArgument({ argv, name, value }) {
  * @returns {void}
  **/
 
-function inlineParameterRefs({ name, value, template }) {
+function inlineParameters({ name, value, template }) {
   /**
    * @param {any} node
    * @return {void}
@@ -151,6 +150,8 @@ function inlineParameterRefs({ name, value, template }) {
       for (const [key, item] of Object.entries(node)) {
         if (item?.Ref === name) {
           node[key] = value
+        } else if (item?.['Fn::Sub']?.includes(`\${${name}}`)) {
+          item['Fn::Sub'] = item['Fn::Sub'].replaceAll(`\${${name}}`, value)
         } else {
           walk(item)
         }
@@ -158,4 +159,12 @@ function inlineParameterRefs({ name, value, template }) {
     }
   }
   walk(template)
+}
+
+/**
+ * @param {string} value
+ * @returns {Boolean}
+ */
+function shouldInline(value) {
+  return String(value).length > 4096 || /[\n\r"']/.test(String(value))
 }

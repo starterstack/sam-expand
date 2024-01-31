@@ -18,18 +18,18 @@ Metadata:
           overrides:
             - name: Name1
               exportName: name1
-              inlineRef: true
             - name: Name2
               exportName: name2
-              inlineRef: true
             - name: Name3
               exportName: name3
 Resources:
   Thing:
-    Type: AWS::Nested::Thingy
+    Type: Custom::Thingy
     Properties:
+      ServiceToken: !Ref Name1
       Name: !Ref Name1
       Comment: !Ref Name3
+      SubCommand: !Sub 'Some line with ${Name2}'
       Nested:
         - A:
             - B:

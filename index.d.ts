@@ -84,7 +84,6 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		name: string;
 		exportName: string;
 		defaultValue?: string;
-		inlineRef?: boolean;
 	};
 	export type Schema = Array<{
 		location: string;
