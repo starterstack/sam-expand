@@ -33,6 +33,7 @@
  **/
 
 import { resolveFile } from '../resolve.js'
+import shouldInline from './should-inline-parameter-value.js'
 
 /** @type {import('./types.js').Lifecycles} */
 export const lifecycles = ['expand', 'pre:build', 'pre:deploy']
@@ -164,12 +165,4 @@ function inlineParameters({ name, value, template }) {
     }
   }
   walk(template)
-}
-
-/**
- * @param {string} value
- * @returns {Boolean}
- */
-function shouldInline(value) {
-  return String(value).length > 4096 || /[\n\r"']/.test(String(value))
 }

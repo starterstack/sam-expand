@@ -9,6 +9,7 @@
 		"resolveFile",
 		"FileResolver",
 		"Lifecycle",
+		"ArgvReader",
 		"PluginOptions",
 		"Plugin",
 		"PluginSchema",
@@ -30,6 +31,7 @@
 		"src/spawn.d.ts",
 		"src/resolve.d.ts",
 		"src/expand.d.ts",
+		"src/read-argv.d.ts",
 		"src/plugins/parameter-overrides.d.ts",
 		"src/plugins/run-script-hooks.d.ts",
 		"src/plugins/esbuild-node.d.ts"
@@ -42,7 +44,8 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";iBAGgBA,QAAQA;;iBAIRC,SAASA;;;;;aCNbC,GAAGA;;;;;aCAHC,KAAKA;;;;;iBCWDC,WAAWA;;;;;aAKfC,YAAYA;MCYZC,SAASA;MAGTC,aAAaA;;;;;;;;;;;;;;;MH/BbL,GAAGA;MCAHC,KAAKA;;;;;aE8CLK,MAAMA;aAfND,aAAaA;aAgBbE,YAAYA;aAlBZC,UAAUA;MADVJ,SAASA;;;;;;;;;;;;;;;;;;;MH5BTJ,GAAGA;MCAHC,KAAKA;;;;;cGAJQ,UAAUA;;;cAQVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,QAAQA;;;;;aAKRC,MAAMA;;;;MD6BNR,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVJ,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MH/BbL,GAAGA;MCAHC,KAAKA;;;;;cIDJU,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVG,IAAIA;aACJC,IAAIA;;;;;aAKJC,OAAOA;;;;;;;aAOPC,UAAUA;;;;;MF2BVZ,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVJ,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MH/BbL,GAAGA;MCAHC,KAAKA;;;;;cKAJQ,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MHuCVN,MAAMA;MACNC,YAAYA;MAlBZC,UAAUA;MADVJ,SAASA;;MAGTC,aAAaA;;;;;;;;;;;;;;;;;MH/BbL,GAAGA;MCAHC,KAAKA"
+	"mappings": ";iBAGgBA,QAAQA;;iBAIRC,SAASA;;;;;aCNbC,GAAGA;;;;;aCAHC,KAAKA;;;;;iBCWDC,WAAWA;;;;;aAKfC,YAAYA;MCcZC,SAASA;MCzBTC,UAAUA;MD6BVC,aAAaA;;;;;;;;;;;;;;;;MHlCbN,GAAGA;;;;MCAHC,KAAKA;;;;;aEkDLM,MAAMA;aAhBND,aAAaA;aAiBbE,YAAYA;aApBZC,UAAUA;MADVL,SAASA;;MCzBTC,UAAUA;;;;;;;;;;;;;;;;;;;MJLVL,GAAGA;;;;MCAHC,KAAKA;;;;;cIAJS,UAAUA;;;cAQVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,QAAQA;;;;;aAKRC,MAAMA;;;;MFiCNR,MAAMA;MACNC,YAAYA;MApBZC,UAAUA;MADVL,SAASA;;MCzBTC,UAAUA;MD6BVC,aAAaA;;;;;;;;;;;;;;;;;;MHlCbN,GAAGA;;;;MCAHC,KAAKA;;;;;cKDJW,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVG,IAAIA;aACJC,IAAIA;;;;;aAKJC,OAAOA;;;;;;;aAOPC,UAAUA;;;;;MH+BVZ,MAAMA;MACNC,YAAYA;MApBZC,UAAUA;MADVL,SAASA;;MCzBTC,UAAUA;MD6BVC,aAAaA;;;;;;;;;;;;;;;;;;MHlCbN,GAAGA;;;;MCAHC,KAAKA;;;;;cMAJS,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MJ2CVN,MAAMA;MACNC,YAAYA;MApBZC,UAAUA;MADVL,SAASA;;MCzBTC,UAAUA;MD6BVC,aAAaA;;;;;;;;;;;;;;;;;;MHlCbN,GAAGA;;;;MCAHC,KAAKA"
 }

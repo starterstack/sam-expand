@@ -32,6 +32,7 @@ import process from 'node:process'
 import { yamlParse, yamlDump } from 'yaml-cfn'
 import { stat, writeFile, unlink } from 'node:fs/promises'
 import spawn from './spawn.js'
+import createArgvReader from './read-argv.js'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import os from 'node:os'
@@ -56,13 +57,15 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
  * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
+ * @typedef {import('./read-argv.js').ArgvReader} ArgvReader
  * @typedef {{
  *   template: any,
  *   templateDirectory: string
  *   config: any,
  *   log: import('./log.js').Log,
- *   command: string
- *   argv: string[]
+ *   command: string,
+ *   argv: string[],
+ *   argvReader: ArgvReader,
  *   parse: import('yaml-cfn').yamlParse,
  *   dump: import('yaml-cfn').yamlDump,
  *   spawn: import('./spawn.js').Spawn,
@@ -202,10 +205,13 @@ export default async function expand() {
   /** @type {string[]} */
   const temporaryFiles = []
 
+  const argvReader = createArgvReader(argv)
+
   const { template, expandedPath } = await expandAll({
     config,
     command,
     argv,
+    argvReader,
     templateFile,
     temporaryFiles,
     configEnv,
@@ -233,6 +239,7 @@ export default async function expand() {
         lifecycle: `pre:${hookCommand}`,
         command,
         argv,
+        argvReader,
         region,
         log,
         configEnv,
@@ -253,6 +260,7 @@ export default async function expand() {
       lifecycle: `post:${hookCommand}`,
       command,
       argv,
+      argvReader,
       region,
       log,
       configEnv,
@@ -266,7 +274,7 @@ export default async function expand() {
 }
 
 /**
- * @param {{ templateFile: string, temporaryFiles: string[], config: any, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
+ * @param {{ templateFile: string, temporaryFiles: string[], config: any, command: string, argv: string[], argvReader: ArgvReader, region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
  * @return {Promise<{ expandedPath: string, template: any }>}
  **/
 async function expandAll({
@@ -275,6 +283,7 @@ async function expandAll({
   config,
   command,
   argv,
+  argvReader,
   configEnv,
   region,
   log,
@@ -303,6 +312,7 @@ async function expandAll({
       lifecycle,
       command,
       argv,
+      argvReader,
       region,
       log,
       configEnv,
@@ -330,6 +340,7 @@ async function expandAll({
         config,
         command,
         argv,
+        argvReader,
         configEnv,
         region,
         log,
@@ -358,7 +369,7 @@ async function expandAll({
 }
 
 /**
- * @param {{ template: any, templateDirectory: string, config: any, lifecycle: Lifecycle, command: string, argv: string[], region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
+ * @param {{ template: any, templateDirectory: string, config: any, lifecycle: Lifecycle, command: string, argv: string[], argvReader: ArgvReader, region?: string, log: Log, configEnv: string, baseDirectory?: string }} options
  * @returns {Promise<void>}
  **/
 async function runPlugins({
@@ -368,6 +379,7 @@ async function runPlugins({
   lifecycle,
   command,
   argv,
+  argvReader,
   region,
   log,
   configEnv,
@@ -401,6 +413,7 @@ async function runPlugins({
         command,
         config,
         argv,
+        argvReader,
         region,
         log,
         configEnv,

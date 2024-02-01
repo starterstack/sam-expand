@@ -23,6 +23,7 @@ declare module '@starterstack/sam-expand/resolve' {
 	}): Promise<string | undefined>;
 	export type FileResolver = (options: PluginOptions) => Promise<Record<string, string | undefined | Promise<string | undefined>>>;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
@@ -30,6 +31,7 @@ declare module '@starterstack/sam-expand/resolve' {
 		log: Log;
 		command: string;
 		argv: string[];
+		argvReader: ArgvReader;
 		parse: typeof yamlParse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
@@ -39,6 +41,9 @@ declare module '@starterstack/sam-expand/resolve' {
 		lifecycle: Lifecycle;
 	};
 	type Log = (format: string, ...args: any) => void;
+	type ArgvReader_1 = (name: string, options?: {
+		parameter: boolean;
+	}) => string | undefined;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -50,6 +55,7 @@ declare module '@starterstack/sam-expand/plugins' {
 	export type Lifecycles = Lifecycles_1;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
+	type ArgvReader = ArgvReader_1;
 	type PluginOptions_1 = {
 		template: any;
 		templateDirectory: string;
@@ -57,6 +63,7 @@ declare module '@starterstack/sam-expand/plugins' {
 		log: Log;
 		command: string;
 		argv: string[];
+		argvReader: ArgvReader;
 		parse: typeof yamlParse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
@@ -68,6 +75,9 @@ declare module '@starterstack/sam-expand/plugins' {
 	type Plugin_1 = (options: PluginOptions_1) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
+	type ArgvReader_1 = (name: string, options?: {
+		parameter: boolean;
+	}) => string | undefined;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -94,6 +104,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type Lifecycles = Lifecycles_1;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
+	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
@@ -101,6 +112,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		log: Log;
 		command: string;
 		argv: string[];
+		argvReader: ArgvReader;
 		parse: typeof yamlParse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
@@ -112,6 +124,9 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
+	type ArgvReader_1 = (name: string, options?: {
+		parameter: boolean;
+	}) => string | undefined;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -147,6 +162,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type Lifecycles = Lifecycles_1;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
+	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
@@ -154,6 +170,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		log: Log;
 		command: string;
 		argv: string[];
+		argvReader: ArgvReader;
 		parse: typeof yamlParse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
@@ -165,6 +182,9 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
+	type ArgvReader_1 = (name: string, options?: {
+		parameter: boolean;
+	}) => string | undefined;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -183,6 +203,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type Lifecycles = Lifecycles_1;
 	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
+	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
 		template: any;
 		templateDirectory: string;
@@ -190,6 +211,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		log: Log;
 		command: string;
 		argv: string[];
+		argvReader: ArgvReader;
 		parse: typeof yamlParse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
@@ -201,6 +223,9 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type Plugin_1 = (options: PluginOptions) => Promise<void>;
 	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
+	type ArgvReader_1 = (name: string, options?: {
+		parameter: boolean;
+	}) => string | undefined;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
