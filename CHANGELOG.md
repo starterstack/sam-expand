@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/starterstack/sam-expand/compare/v0.2.4...v0.2.5) (2024-02-01)
+
+
+### Bug Fixes
+
+* argv reader ([1679fbc](https://github.com/starterstack/sam-expand/commit/1679fbce5edefc46d75c966c2d07553ba6587b53))
+
 ## [0.2.4](https://github.com/starterstack/sam-expand/compare/v0.2.3...v0.2.4) (2024-01-31)
 
 
