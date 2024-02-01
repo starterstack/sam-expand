@@ -161,7 +161,7 @@ Resources:
       ServiceToken: !Ref Name1
       Name: !Ref Name1
       Comment: !Ref Name3
-      SubCommand: !Sub |-
+      SubCommand: |-
         Some line with value for name 2
         multiline :)
       Nested:

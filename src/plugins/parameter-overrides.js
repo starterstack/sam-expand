@@ -34,6 +34,7 @@
 
 import { resolveFile } from '../resolve.js'
 import shouldInline from './should-inline-parameter-value.js'
+import inlineParameters from './inline-parameters.js'
 
 /** @type {import('./types.js').Lifecycles} */
 export const lifecycles = ['expand', 'pre:build', 'pre:deploy']
@@ -134,35 +135,4 @@ function addParameterArgument({ argv, name, value }) {
   } else {
     argv.splice(parameterIndex, 1, `${name}='${value}'`)
   }
-}
-
-/**
- * @param {{ name: string, value: string, template: any }} options
- * @returns {void}
- **/
-
-function inlineParameters({ name, value, template }) {
-  /**
-   * @param {any} node
-   * @return {void}
-   */
-  function walk(node) {
-    if (Array.isArray(node)) {
-      for (const item of node) {
-        walk(item)
-      }
-    }
-    if (typeof node === 'object') {
-      for (const [key, item] of Object.entries(node)) {
-        if (item?.Ref === name) {
-          node[key] = value
-        } else if (item?.['Fn::Sub']?.includes(`\${${name}}`)) {
-          item['Fn::Sub'] = item['Fn::Sub'].replaceAll(`\${${name}}`, value)
-        } else {
-          walk(item)
-        }
-      }
-    }
-  }
-  walk(template)
 }
