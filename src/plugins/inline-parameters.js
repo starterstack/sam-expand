@@ -23,6 +23,7 @@ export default function inlineParameters({ name, value, template }) {
           const sub = item['Fn::Sub']
           const [format, map] = Array.isArray(sub) ? sub : [sub]
           if (map) {
+            item['Fn::Sub'][0] = format.replaceAll(`\${${name}}`, value)
             if (map[name]) {
               map[name] = value
             }

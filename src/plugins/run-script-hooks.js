@@ -106,7 +106,8 @@ export const schema = {
                           additionalProperties: false,
                           nullable: true
                         }
-                      }
+                      },
+                      additionalProperties: false
                     },
                     minItems: 0
                   }

@@ -188,6 +188,120 @@ Conditions:
   mock.restoreAll()
 })
 
+test('parameter overrides inline resolve for build (two parameters)', async (_t) => {
+  /* c8 ignore start */
+  const spawnMock = mock.fn()
+  const writeMock = mock.fn()
+  /* c8 ignore end */
+  const argv = [
+    null,
+    null,
+    'build',
+    '-t',
+    path.join(__dirname, 'fixtures', 'parameters-inline-two.yml')
+  ]
+
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:process': {
+      argv
+    },
+    'node:fs/promises': {
+      async writeFile(...args) {
+        writeMock(...args)
+      },
+      async unlink() {}
+    },
+    async '../../src/spawn.js'(...args) {
+      spawnMock(...args)
+    }
+  })
+  await expand()
+  assert.equal(spawnMock.mock.callCount(), 1)
+  assert.deepEqual(spawnMock.mock.calls[0].arguments, [
+    'sam',
+    [
+      'build',
+      '--parameter-overrides',
+      "Name3='value for name3'",
+      "Name1='value for name1'",
+      '-t',
+      path.join(__dirname, 'fixtures', 'parameters-inline-two.expanded.yml')
+    ]
+  ])
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(
+    writeMock.mock.calls[0].arguments[1],
+    `AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Name1:
+    Type: String
+  Name3:
+    Type: String
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/parameter-overrides.js
+    config:
+      parameterOverrides:
+        - location: ./parameter-name.mjs
+          overrides:
+            - name: Name1
+              exportName: name1
+            - name: Name3
+              exportName: name3
+Resources:
+  Some:
+    Type: Custom::Some
+    Properties:
+      ServiceToken: !Ref Name1
+      Name: !Ref Name1
+      Comment: !Ref Name3
+      SubCommand: |-
+        Some line with value for name 2
+        multiline :)
+      Nested:
+        - A:
+            - B:
+                - C:
+                    - D:
+                        E: |-
+                          value for name 2
+                          multiline :)
+  Thing:
+    Type: Custom::Thingy
+    Properties:
+      ServiceToken: !Ref Name1
+      Name: !Ref Name1
+      Comment: !Ref Name3
+      SubCommand: |-
+        Some line with value for name 4
+        multiline :)
+      Nested:
+        - A:
+            - B:
+                - C:
+                    - D:
+                        E: |-
+                          value for name 4
+                          multiline :)
+Outputs:
+  HelloWorldApi:
+    Value: |-
+      value for name 2
+      multiline :)
+Conditions:
+  Name2: !Equals 
+    - |-
+      value for name 2
+      multiline :)
+    - value
+`
+  )
+  mock.restoreAll()
+})
+
 test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async (_t) => {
   /* c8 ignore start */
   const spawnMock = mock.fn()

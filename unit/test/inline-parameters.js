@@ -182,8 +182,64 @@ test('inline parameters', async (t) => {
     }
     const expected = structuredClone(template)
     expected.Resources.Name.ServiceToken['Fn::Sub'] = [
-      'Hello the name is ${Name}',
+      `Hello the name is ${value}`,
       { Name: value }
+    ]
+
+    inlineParameters({ name: 'Name', value, template })
+
+    assert.deepEqual(template, expected)
+  })
+
+  await t.test('Fn::Sub with self & map', () => {
+    const value = 'this is the value ${Stage}'
+    const template = {
+      Parameters: {
+        Name: {
+          Type: 'String'
+        },
+        Stage: {
+          Type: 'String'
+        }
+      },
+      Metadata: {
+        expand: {
+          plugins: ['@starterstack/sam-expand/plugins/parameter-overrides'],
+          config: {
+            parameterOverrides: [
+              {
+                location: './overrides.mjs',
+                overrides: [
+                  {
+                    name: 'Name',
+                    exportName: 'name'
+                  },
+                  {
+                    name: 'Stage',
+                    exportName: 'stage'
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      Resources: {
+        Name: {
+          Type: 'Customer::Thing',
+          ServiceToken: {
+            'Fn::Sub': [
+              'Hello the name is ${Name}',
+              { Stage: { Ref: 'Stage' } }
+            ]
+          }
+        }
+      }
+    }
+    const expected = structuredClone(template)
+    expected.Resources.Name.ServiceToken['Fn::Sub'] = [
+      `Hello the name is ${value}`,
+      { Stage: { Ref: 'Stage' } }
     ]
 
     inlineParameters({ name: 'Name', value, template })
@@ -238,7 +294,7 @@ test('inline parameters', async (t) => {
     }
     const expected = structuredClone(template)
     expected.Resources.Name.ServiceToken['Fn::Sub'] = [
-      'Hello the name is ${Name} on ${Stage}',
+      `Hello the name is ${value} on \${Stage}`,
       { Name: value, Stage: { Ref: 'Stage' } }
     ]
 

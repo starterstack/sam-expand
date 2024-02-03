@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Name1:
+    Type: String
+  Name2:
+    Type: String
+  Name3:
+    Type: String
+  Name4:
+    Type: String
+Metadata:
+  expand:
+    plugins:
+      - '../../../src/plugins/parameter-overrides.js'
+    config:
+      parameterOverrides:
+        - location: ./parameter-name.mjs
+          overrides:
+            - name: Name1
+              exportName: name1
+            - name: Name2
+              exportName: name2
+            - name: Name3
+              exportName: name3
+            - name: Name4
+              exportName: name4
+Resources:
+  Some:
+    Type: Custom::Some
+    Properties:
+      ServiceToken: !Ref Name1
+      Name: !Ref Name1
+      Comment: !Ref Name3
+      SubCommand: !Sub 'Some line with ${Name2}'
+      Nested:
+        - A:
+            - B:
+                - C:
+                    - D:
+                        E: !Ref Name2
+  Thing:
+    Type: Custom::Thingy
+    Properties:
+      ServiceToken: !Ref Name1
+      Name: !Ref Name1
+      Comment: !Ref Name3
+      SubCommand: !Sub 'Some line with ${Name4}'
+      Nested:
+        - A:
+            - B:
+                - C:
+                    - D:
+                        E: !Ref Name4
+Outputs:
+  HelloWorldApi:
+    Value: !Ref Name2
+
+Conditions:
+  Name2: !Equals
+    - !Ref Name2
+    - value

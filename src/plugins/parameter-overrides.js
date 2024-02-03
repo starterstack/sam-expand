@@ -86,6 +86,9 @@ export const lifecycle = async function expand(options) {
   const parameterOverrides =
     template.Metadata.expand.config?.['parameterOverrides']
 
+  /** @type {Array<{ location: string, override: Override }>} */
+  const inlinedParameters = []
+
   for (const { location, overrides } of parameterOverrides) {
     for (const override of overrides) {
       if (!template.Parameters?.[override.name]) {
@@ -102,18 +105,39 @@ export const lifecycle = async function expand(options) {
           `parameter ${override.name} resolver ${location} missing ${override.exportName}`
         )
       }
+
       if (shouldInline(value)) {
         if (options.lifecycle === 'expand') {
           inlineParameters({ name: override.name, value, template })
-          delete template.Parameters[override.name]
-          overrides.splice(
-            overrides.findIndex((x) => x.name === override.name),
-            1
-          )
+          inlinedParameters.push({ location, override })
         }
       } else {
         addParameterArgument({ argv, name: override.name, value })
       }
+    }
+  }
+
+  cleanedupInlinedParametersForLint({
+    inlinedParameters,
+    parameterOverrides,
+    template
+  })
+}
+
+/**
+ * @param {{ inlinedParameters: Array<{ location: string, override: Override }>, parameterOverrides: Schema, template: any }} options
+ * @returns {void}
+ **/
+function cleanedupInlinedParametersForLint({
+  inlinedParameters,
+  parameterOverrides,
+  template
+}) {
+  for (const { location, override } of inlinedParameters) {
+    const parameter = parameterOverrides.find((x) => x.location === location)
+    if (parameter) {
+      delete template.Parameters[override.name]
+      parameter.overrides.splice(parameter.overrides.indexOf(override), 1)
     }
   }
 }
