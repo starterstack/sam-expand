@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/starterstack/sam-expand/compare/v0.2.6...v0.2.7) (2024-02-03)
+
+
+### Bug Fixes
+
+* more inline parsing with tests ([4957206](https://github.com/starterstack/sam-expand/commit/4957206c61d2b2ffc59b2a2e969c137e93e6acf5))
+
 ## [0.2.6](https://github.com/starterstack/sam-expand/compare/v0.2.5...v0.2.6) (2024-02-01)
 
 
