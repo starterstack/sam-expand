@@ -48,13 +48,13 @@ const windows = os.platform() === 'win32'
  * ```
  * @type {Spawn}
  **/
-export default async function spawn(cmd, args, options) {
+export default async function spawn(cmd, arguments_, options) {
   if (windows) {
-    args = [
+    arguments_ = [
       '/C',
       cmd,
-      ...args.map((arg) => {
-        return String(arg).replaceAll('^', '^^^^')
+      ...arguments_.map((argument) => {
+        return String(argument).replaceAll('^', '^^^^')
       })
     ]
     cmd = 'cmd'
@@ -65,7 +65,7 @@ export default async function spawn(cmd, args, options) {
     shell: true
   }
 
-  const ps = nativeSpawn(cmd, args, options)
+  const ps = nativeSpawn(cmd, arguments_, options)
 
   if (options.stdio) {
     await once(ps, 'close')

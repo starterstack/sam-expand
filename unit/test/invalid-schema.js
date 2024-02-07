@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 process.env.FORCE_COLOR = '0'
 
-test('invalid schema metadata', async (t) => {
+await test('invalid schema metadata', async (t) => {
   for (const { argv } of [
     {
       argv: [
@@ -38,7 +38,7 @@ test('invalid schema metadata', async (t) => {
   ]) {
     await t.test(
       `sam ${argv.slice(2).join(' ').replace(__dirname, '.')}`,
-      async (_t) => {
+      async () => {
         const log = console.error
         const mockLog = mock.fn()
         console.error = mockLog
@@ -47,8 +47,8 @@ test('invalid schema metadata', async (t) => {
             argv
           }
         })
-        await assert.rejects(expand, (err) => {
-          assert.equal(err.message, 'schema validation failed')
+        await assert.rejects(expand, (error) => {
+          assert.equal(error.message, 'schema validation failed')
           return true
         })
         assert.equal(mockLog.mock.callCount(), 1)

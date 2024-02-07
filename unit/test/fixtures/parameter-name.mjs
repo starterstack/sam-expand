@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/require-await
 export default async function resolver() {
   return {
     get name() {
@@ -7,7 +8,7 @@ export default async function resolver() {
       return Promise.resolve('async name')
     },
     get asyncNoName() {
-      return Promise.resolve(undefined)
+      return Promise.resolve()
     },
     get name1() {
       return 'value for name1'

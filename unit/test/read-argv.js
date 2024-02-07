@@ -2,11 +2,11 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import readArgv from '../../src/read-argv.js'
 
-test('read argv', async (t) => {
+await test('read argv', async (t) => {
   await t.test('default args', () => {
-    process.argv = [null, null, '--name', "'Jack'"]
+    process.argv = [undefined, undefined, '--name', "'Jack'"]
     assert.equal(readArgv()('name'), 'Jack')
-    process.argv = [null, null, '--name', "'Jill'"]
+    process.argv = [undefined, undefined, '--name', "'Jill'"]
     assert.equal(readArgv(['--name', 'Jack'])('name'), 'Jack')
   })
   await t.test('missing', () => {

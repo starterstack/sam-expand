@@ -2,16 +2,17 @@ import { test, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
 
-test('version', async (t) => {
-  await t.test('sam --version', async (_t) => {
+await test('version', async (t) => {
+  await t.test('sam --version', async () => {
     /* c8 ignore next */
     const spawnMock = mock.fn()
     const expand = await esmock.p('../../src/expand.js', {
       'node:process': {
-        argv: [null, null, '--version']
+        argv: [undefined, undefined, '--version']
       },
-      async '../../src/spawn.js'(...args) {
-        spawnMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async '../../src/spawn.js'(...arguments_) {
+        spawnMock(...arguments_)
       }
     })
     await expand()

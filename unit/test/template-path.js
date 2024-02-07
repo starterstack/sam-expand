@@ -7,22 +7,23 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('template path', async (t) => {
-  for (const arg of ['--template-file', '-t', '--template']) {
-    await t.test(arg, async (_t) => {
+await test('template path', async (t) => {
+  for (const argument of ['--template-file', '-t', '--template']) {
+    await t.test(argument, async () => {
       let templatePath
       const expand = await esmock.p('../../src/expand.js', {
         'node:process': {
           argv: [
-            null,
-            null,
+            undefined,
+            undefined,
             'validate',
-            arg,
+            argument,
             path.join(__dirname, 'fixtures', 'empty.yml')
           ]
         },
-        async '../../src/spawn.js'(...args) {
-          templatePath = args[1][args[1].indexOf(arg) + 1]
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async '../../src/spawn.js'(...arguments_) {
+          templatePath = arguments_[1][arguments_[1].indexOf(argument) + 1]
         }
       })
       await expand()

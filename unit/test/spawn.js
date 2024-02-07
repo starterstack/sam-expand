@@ -3,9 +3,9 @@ import assert from 'node:assert/strict'
 import esmock from 'esmock'
 import { PassThrough } from 'node:stream'
 
-test('windows arguments', async () => {
+await test('windows arguments', async () => {
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -26,14 +26,14 @@ test('windows arguments', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
   await spawn('ls', ['-lh'])
-  assert.equal(mockFn.mock.callCount(), 1)
-  assert.deepEqual(mockFn.mock.calls[0].arguments, [
+  assert.equal(mockFunction.mock.callCount(), 1)
+  assert.deepEqual(mockFunction.mock.calls[0].arguments, [
     'cmd',
     ['/C', 'ls', '-lh'],
     {
@@ -43,9 +43,9 @@ test('windows arguments', async () => {
   ])
 })
 
-test('non windows arguments', async () => {
+await test('non windows arguments', async () => {
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -66,14 +66,14 @@ test('non windows arguments', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
   await spawn('ls', ['-lh'])
-  assert.equal(mockFn.mock.callCount(), 1)
-  assert.deepEqual(mockFn.mock.calls[0].arguments, [
+  assert.equal(mockFunction.mock.callCount(), 1)
+  assert.deepEqual(mockFunction.mock.calls[0].arguments, [
     'ls',
     ['-lh'],
     {
@@ -83,9 +83,9 @@ test('non windows arguments', async () => {
   ])
 })
 
-test('command failed', async () => {
+await test('command failed', async () => {
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -106,17 +106,17 @@ test('command failed', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
   await assert.rejects(spawn(), { message: 'command failed' })
 })
 
-test('default options', async () => {
+await test('default options', async () => {
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -137,22 +137,22 @@ test('default options', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
   await spawn('ls', ['-lh'])
-  assert.equal(mockFn.mock.callCount(), 1)
-  assert.deepEqual(mockFn.mock.calls[0].arguments[2], {
+  assert.equal(mockFunction.mock.callCount(), 1)
+  assert.deepEqual(mockFunction.mock.calls[0].arguments[2], {
     shell: true,
     stdio: 'inherit'
   })
 })
 
-test('non default options', async () => {
+await test('non default options', async () => {
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -173,23 +173,23 @@ test('non default options', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
   await spawn('ls', ['-lh'], { stdio: 'pipe' })
-  assert.equal(mockFn.mock.callCount(), 1)
-  assert.deepEqual(mockFn.mock.calls[0].arguments[2], {
+  assert.equal(mockFunction.mock.callCount(), 1)
+  assert.deepEqual(mockFunction.mock.calls[0].arguments[2], {
     stdio: 'pipe'
   })
 })
 
-test('stdout', async () => {
+await test('stdout', async () => {
   const pass = new PassThrough()
   pass.write('a.out')
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -212,8 +212,8 @@ test('stdout', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
@@ -221,11 +221,11 @@ test('stdout', async () => {
   assert.equal(stdout, 'a.out')
 })
 
-test('stderr', async () => {
+await test('stderr', async () => {
   const stderr = new PassThrough()
   stderr.write('Something went wrong')
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
@@ -248,8 +248,8 @@ test('stderr', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })
@@ -258,14 +258,13 @@ test('stderr', async () => {
   })
 })
 
-test('default error', async () => {
+await test('default error', async () => {
   /* c8 ignore start */
-  const mockFn = test.mock.fn(() => {
+  const mockFunction = test.mock.fn(() => {
     return {
       once(command, callback) {
         if (command === 'close') {
           callback()
-          stderr.end()
         }
       },
       on() {},
@@ -282,8 +281,8 @@ test('default error', async () => {
       }
     },
     'node:child_process': {
-      spawn(...args) {
-        return mockFn(...args)
+      spawn(...arguments_) {
+        return mockFunction(...arguments_)
       }
     }
   })

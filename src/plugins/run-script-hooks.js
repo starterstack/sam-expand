@@ -141,26 +141,26 @@ export const lifecycle = async function runScriptHook(options) {
   if (commands) {
     for (const { command: spawnCommand, args } of commands) {
       /** @type {string[]} */
-      const parseArgs = await Promise.all(
-        args.map(async function map(arg) {
+      const parseArguments = await Promise.all(
+        args.map(async function map(argument) {
           /** @type {string[]} */
           const values = []
-          const keyOrder = Object.keys(arg)
+          const keyOrder = Object.keys(argument)
 
           for (const key of keyOrder) {
             if (key === 'value') {
-              if (arg.value) {
-                values.push(arg.value)
+              if (argument.value) {
+                values.push(argument.value)
               }
-            } else if (key === 'file' && arg.file) {
+            } else if (key === 'file' && argument.file) {
               const value = await resolveFile({
                 ...options,
-                ...arg.file
+                ...argument.file
               })
               if (typeof value === 'string') {
                 values.push(value)
               } else {
-                const { location, exportName } = arg.file
+                const { location, exportName } = argument.file
                 throw new TypeError(`${location}.${exportName} is missing`)
               }
             }
@@ -168,13 +168,13 @@ export const lifecycle = async function runScriptHook(options) {
           return values.join('')
         })
       )
-      const spawnArgs = parseArgs.filter(Boolean)
+      const spawnArguments = parseArguments.filter(Boolean)
       log('running script hook %O', {
         lifecycle,
         command: spawnCommand,
-        args: spawnArgs
+        args: spawnArguments
       })
-      await spawn(spawnCommand, spawnArgs)
+      await spawn(spawnCommand, spawnArguments)
     }
   }
 }

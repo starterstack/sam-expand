@@ -7,9 +7,9 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('plugin lifecycles', async (t) => {
+await test('plugin lifecycles', async (t) => {
   for (const command of ['validate', 'build', 'package', 'deploy', 'delete']) {
-    await t.test(command, async (_t) => {
+    await t.test(command, async () => {
       let getMetadataConfig
       let getSchema
       const mockLifecycle = mock.fn()
@@ -27,19 +27,21 @@ test('plugin lifecycles', async (t) => {
             }
             return getSchema
           },
+          // eslint-disable-next-line @typescript-eslint/require-await
           async lifecycle(plugin) {
             return mockLifecycle(plugin)
           }
         },
         'node:process': {
           argv: [
-            null,
-            null,
+            undefined,
+            undefined,
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'region.yml')
           ]
         },
+        // eslint-disable-next-line @typescript-eslint/require-await
         async '../../src/spawn.js'() {}
       })
       await expand()

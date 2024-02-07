@@ -1,9 +1,9 @@
-import { test, mock } from 'node:test'
+import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
 
-test('non windows', async (_t) => {
-  let spawnArgs
+await test('non windows', async () => {
+  let spawnArguments
   await assert.doesNotReject(async function ok() {
     const expand = await esmock('../../src/expand.js', {
       'node:os': {
@@ -11,11 +11,12 @@ test('non windows', async (_t) => {
           return 'not win32'
         }
       },
-      async '../../src/spawn.js'(...args) {
-        spawnArgs = args
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async '../../src/spawn.js'(...arguments_) {
+        spawnArguments = arguments_
       }
     })
     await expand()
   })
-  assert.deepEqual(spawnArgs, ['sam', ['--help']])
+  assert.deepEqual(spawnArguments, ['sam', ['--help']])
 })

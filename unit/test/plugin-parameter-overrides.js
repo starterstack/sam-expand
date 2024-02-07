@@ -11,7 +11,7 @@ import { lifecycle as overridesPlugin } from '../../src/plugins/parameter-overri
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('parameter overrides plugin noop', async (t) => {
+await test('parameter overrides plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'parameters.yml'),
     'utf8'
@@ -22,19 +22,19 @@ test('parameter overrides plugin noop', async (t) => {
     /* c8 ignore start */
     const writeMock = mock.fn()
     /* c8 ignore end */
-    await t.test(`${command}: noop`, async (_t) => {
+    await t.test(`${command}: noop`, async () => {
       const expand = await esmock.p('../../src/expand.js', {
         'node:process': {
           argv: [
-            null,
-            null,
+            undefined,
+            undefined,
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'parameters.yml')
           ]
         },
-        async '../../src/spawn.js'(...args) {
-          templatePath = args[1][args[1].indexOf('-t') + 1]
+        async '../../src/spawn.js'(...arguments_) {
+          templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
           template = await readFile(templatePath, 'utf8')
         }
       })
@@ -47,13 +47,13 @@ test('parameter overrides plugin noop', async (t) => {
   }
 })
 
-test('parameter overrides plugin resolve for deploy', async (_t) => {
+await test('parameter overrides plugin resolve for deploy', async () => {
   /* c8 ignore start */
   const spawnMock = mock.fn()
   /* c8 ignore end */
   const argv = [
-    null,
-    null,
+    undefined,
+    undefined,
     'deploy',
     '-t',
     path.join(__dirname, 'fixtures', 'parameters.yml')
@@ -63,8 +63,9 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
     'node:process': {
       argv
     },
-    async '../../src/spawn.js'(...args) {
-      spawnMock(...args)
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      spawnMock(...arguments_)
     }
   })
   await expand()
@@ -91,14 +92,14 @@ test('parameter overrides plugin resolve for deploy', async (_t) => {
   mock.restoreAll()
 })
 
-test('parameter overrides inline resolve for build', async (_t) => {
+await test('parameter overrides inline resolve for build', async () => {
   /* c8 ignore start */
   const spawnMock = mock.fn()
   const writeMock = mock.fn()
   /* c8 ignore end */
   const argv = [
-    null,
-    null,
+    undefined,
+    undefined,
     'build',
     '-t',
     path.join(__dirname, 'fixtures', 'parameters-inline.yml')
@@ -109,13 +110,16 @@ test('parameter overrides inline resolve for build', async (_t) => {
       argv
     },
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
+      // eslint-disable-next-line @typescript-eslint/require-await
       async unlink() {}
     },
-    async '../../src/spawn.js'(...args) {
-      spawnMock(...args)
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      spawnMock(...arguments_)
     }
   })
   await expand()
@@ -188,14 +192,14 @@ Conditions:
   mock.restoreAll()
 })
 
-test('parameter overrides inline resolve for build (two parameters)', async (_t) => {
+await test('parameter overrides inline resolve for build (two parameters)', async () => {
   /* c8 ignore start */
   const spawnMock = mock.fn()
   const writeMock = mock.fn()
   /* c8 ignore end */
   const argv = [
-    null,
-    null,
+    undefined,
+    undefined,
     'build',
     '-t',
     path.join(__dirname, 'fixtures', 'parameters-inline-two.yml')
@@ -206,13 +210,16 @@ test('parameter overrides inline resolve for build (two parameters)', async (_t)
       argv
     },
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
+      // eslint-disable-next-line @typescript-eslint/require-await
       async unlink() {}
     },
-    async '../../src/spawn.js'(...args) {
-      spawnMock(...args)
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      spawnMock(...arguments_)
     }
   })
   await expand()
@@ -302,13 +309,13 @@ Conditions:
   mock.restoreAll()
 })
 
-test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async (_t) => {
+await test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async () => {
   /* c8 ignore start */
   const spawnMock = mock.fn()
   /* c8 ignore end */
   const argv = [
-    null,
-    null,
+    undefined,
+    undefined,
     'deploy',
     '-t',
     path.join(__dirname, 'fixtures', 'parameters.yml'),
@@ -320,8 +327,9 @@ test('parameter overrides plugin resolve for deploy (overrite existing parameter
     'node:process': {
       argv
     },
-    async '../../src/spawn.js'(...args) {
-      spawnMock(...args)
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      spawnMock(...arguments_)
     }
   })
   await expand()
@@ -348,7 +356,7 @@ test('parameter overrides plugin resolve for deploy (overrite existing parameter
   mock.restoreAll()
 })
 
-test('error handling', async (t) => {
+await test('error handling', async (t) => {
   const baseTemplate = {
     AWSTemplateFormatVersion: '2010-09-09T00:00:00Z',
     Transform: ['AWS::Serverless-2016-10-31'],
@@ -368,7 +376,7 @@ test('error handling', async (t) => {
     }
   }
 
-  await t.test('unsupported resolver', async (_t) => {
+  await t.test('unsupported resolver', async () => {
     const template = structuredClone(baseTemplate)
     template.Metadata.expand.config.parameterOverrides = [
       {
@@ -400,9 +408,9 @@ test('error handling', async (t) => {
         argv,
         log() {}
       }),
-      (err) => {
+      (error) => {
         assert.equal(
-          err.message,
+          error.message,
           'unsupported file ./parameter-name.toml must be .mjs, .json, .yaml, or .yml'
         )
         return true
@@ -410,7 +418,7 @@ test('error handling', async (t) => {
     )
   })
 
-  await t.test('parameter not found', async (_t) => {
+  await t.test('parameter not found', async () => {
     const template = structuredClone(baseTemplate)
     template.Metadata.expand.config.parameterOverrides = [
       {
@@ -436,15 +444,15 @@ test('error handling', async (t) => {
         argv,
         log() {}
       }),
-      (err) => {
-        assert.equal(err.message, 'parameter Name not found in template')
+      (error) => {
+        assert.equal(error.message, 'parameter Name not found in template')
         return true
       }
     )
   })
 
   for (const type of ['mjs', 'yaml', 'yml', 'json']) {
-    await t.test(`matching value in ${type} file resolver`, async (_t) => {
+    await t.test(`matching value in ${type} file resolver`, async () => {
       const template = structuredClone(baseTemplate)
       template.Metadata.expand.config.parameterOverrides = [
         {
@@ -479,7 +487,7 @@ test('error handling', async (t) => {
       assert.deepEqual(argv, ['--parameter-overrides', "Name='test'"])
     })
 
-    await t.test(`missing value in ${type} file resolver`, async (_t) => {
+    await t.test(`missing value in ${type} file resolver`, async () => {
       const template = structuredClone(baseTemplate)
       template.Metadata.expand.config.parameterOverrides = [
         {
@@ -511,9 +519,9 @@ test('error handling', async (t) => {
           argv,
           log() {}
         }),
-        (err) => {
+        (error) => {
           assert.equal(
-            err.message,
+            error.message,
             `parameter Name resolver ./parameter-name.${type} missing missing`
           )
           return true
@@ -523,7 +531,7 @@ test('error handling', async (t) => {
 
     await t.test(
       `missing value with default value in ${type} file resolver`,
-      async (_t) => {
+      async () => {
         const template = structuredClone(baseTemplate)
         template.Metadata.expand.config.parameterOverrides = [
           {

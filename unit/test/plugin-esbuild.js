@@ -9,7 +9,7 @@ import { lifecycle as esbuildPlugin } from '../../src/plugins/esbuild-node.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('esbuild plugin noop', async (t) => {
+await test('esbuild plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'esbuild-single-lambda.yaml'),
     'utf8'
@@ -19,19 +19,20 @@ test('esbuild plugin noop', async (t) => {
     let templatePath
     /* c8 ignore next */
     const writeMock = mock.fn()
-    await t.test(`${command}: noop`, async (_t) => {
+    await t.test(`${command}: noop`, async () => {
       const expand = await esmock.p('../../src/expand.js', {
         'node:process': {
           argv: [
-            null,
-            null,
+            undefined,
+            undefined,
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'esbuild-single-lambda.yaml')
           ]
         },
-        async '../../src/spawn.js'(...args) {
-          templatePath = args[1][args[1].indexOf('-t') + 1]
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async '../../src/spawn.js'(...arguments_) {
+          templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
           template = await readFile(templatePath, 'utf8')
         }
       })
@@ -44,24 +45,25 @@ test('esbuild plugin noop', async (t) => {
   }
 })
 
-test("esbuild doesn't crash when template has no resources", async (_t) => {
+await test("esbuild doesn't crash when template has no resources", async () => {
   /* c8 ignore next */
   const expand = await esmock.p('../../src/expand.js', {
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-no-resources.yaml')
       ]
     },
+    // eslint-disable-next-line @typescript-eslint/require-await
     async '../../src/spawn.js'() {}
   })
   await expand()
 })
 
-test('single lambda', async (_t) => {
+await test('single lambda', async () => {
   let templatePath
   /* c8 ignore start */
   const writeMock = mock.fn()
@@ -69,24 +71,27 @@ test('single lambda', async (_t) => {
   /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
-      async unlink(...args) {
-        unlinkMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async unlink(...arguments_) {
+        unlinkMock(...arguments_)
       }
     },
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-single-lambda.yaml')
       ]
     },
-    async '../../src/spawn.js'(...args) {
-      templatePath = args[1][args[1].indexOf('-t') + 1]
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
     }
   })
   await expand()
@@ -148,7 +153,7 @@ Resources:
   mock.restoreAll()
 })
 
-test('single lambda (global runtime)', async (_t) => {
+await test('single lambda (global runtime)', async () => {
   let templatePath
   /* c8 ignore start */
   const writeMock = mock.fn()
@@ -156,24 +161,27 @@ test('single lambda (global runtime)', async (_t) => {
   /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
-      async unlink(...args) {
-        unlinkMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async unlink(...arguments_) {
+        unlinkMock(...arguments_)
       }
     },
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-single-lambda-global.yaml')
       ]
     },
-    async '../../src/spawn.js'(...args) {
-      templatePath = args[1][args[1].indexOf('-t') + 1]
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
     }
   })
   await expand()
@@ -237,7 +245,7 @@ Resources:
   mock.restoreAll()
 })
 
-test('single lambda with base directory', async (_t) => {
+await test('single lambda with base directory', async () => {
   let templatePath
   /* c8 ignore start */
   const writeMock = mock.fn()
@@ -245,17 +253,19 @@ test('single lambda with base directory', async (_t) => {
   /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
-      async unlink(...args) {
-        unlinkMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async unlink(...arguments_) {
+        unlinkMock(...arguments_)
       }
     },
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '--base-dir',
         './hello-world',
@@ -263,8 +273,9 @@ test('single lambda with base directory', async (_t) => {
         path.join(__dirname, 'fixtures', 'esbuild-single-lambda-base-dir.yaml')
       ]
     },
-    async '../../src/spawn.js'(...args) {
-      templatePath = args[1][args[1].indexOf('-t') + 1]
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
     }
   })
   await expand()
@@ -326,12 +337,12 @@ Resources:
   mock.restoreAll()
 })
 
-test('lambda missing entry point', async (_t) => {
+await test('lambda missing entry point', async () => {
   const expand = await esmock.p('../../src/expand.js', {
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-no-entry-point.yaml')
@@ -344,7 +355,7 @@ test('lambda missing entry point', async (_t) => {
   mock.restoreAll()
 })
 
-test('absolute config path', async (_t) => {
+await test('absolute config path', async () => {
   try {
     const template = await readFile(
       path.join(__dirname, 'fixtures', 'esbuild-no-entry-point.yaml'),
@@ -360,8 +371,8 @@ test('absolute config path', async (_t) => {
     const expand = await esmock.p('../../src/expand.js', {
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'build',
           '-t',
           path.join(
@@ -382,7 +393,7 @@ test('absolute config path', async (_t) => {
   }
 })
 
-test('two node lambda', async (_t) => {
+await test('two node lambda', async () => {
   let templatePath
   /* c8 ignore start */
   const writeMock = mock.fn()
@@ -390,24 +401,27 @@ test('two node lambda', async (_t) => {
   /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
-      async unlink(...args) {
-        unlinkMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async unlink(...arguments_) {
+        unlinkMock(...arguments_)
       }
     },
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-two-lambdas.yaml')
       ]
     },
-    async '../../src/spawn.js'(...args) {
-      templatePath = args[1][args[1].indexOf('-t') + 1]
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
     }
   })
   await expand()
@@ -495,12 +509,12 @@ Resources:
   mock.restoreAll()
 })
 
-test('lambda missing entry point', async (_t) => {
+await test('lambda missing entry point', async () => {
   const expand = await esmock.p('../../src/expand.js', {
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-no-entry-point.yaml')
@@ -513,7 +527,7 @@ test('lambda missing entry point', async (_t) => {
   mock.restoreAll()
 })
 
-test('non node lambda', async (_t) => {
+await test('non node lambda', async () => {
   let templatePath
   /* c8 ignore start */
   const writeMock = mock.fn()
@@ -521,25 +535,28 @@ test('non node lambda', async (_t) => {
   /* c8 ignore end */
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
-      async unlink(...args) {
-        unlinkMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async unlink(...arguments_) {
+        unlinkMock(...arguments_)
       }
     },
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(__dirname, 'fixtures', 'esbuild-non-node-lambda.yaml'),
         '--debug'
       ]
     },
-    async '../../src/spawn.js'(...args) {
-      templatePath = args[1][args[1].indexOf('-t') + 1]
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
     }
   })
   await expand()
@@ -613,7 +630,7 @@ Resources:
   mock.restoreAll()
 })
 
-test('ignore rules', async (t) => {
+await test('ignore rules', async (t) => {
   const baseTemplate = {
     AWSTemplateFormatVersion: '2010-09-09T00:00:00Z',
     Transform: ['AWS::Serverless-2016-10-31'],
@@ -641,7 +658,7 @@ test('ignore rules', async (t) => {
     }
   }
 
-  await t.test('non node runtime', async (_t) => {
+  await t.test('non node runtime', async () => {
     const template = structuredClone(baseTemplate)
     const copy = structuredClone(template)
 
@@ -657,7 +674,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('non zip package type', async (_t) => {
+  await t.test('non zip package type', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Properties.PackageType = 'NonZip'
@@ -675,7 +692,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('inline code', async (_t) => {
+  await t.test('inline code', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Properties.InlineCode = 'x'
@@ -693,7 +710,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('code uri object', async (_t) => {
+  await t.test('code uri object', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Properties.CodeUri = {}
@@ -711,7 +728,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('code uri s3 location', async (_t) => {
+  await t.test('code uri s3 location', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Properties.CodeUri = 's3:'
@@ -729,7 +746,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('fail if build method already specified', async (_t) => {
+  await t.test('fail if build method already specified', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Metadata = { BuildMethod: 'x' }
@@ -744,9 +761,9 @@ test('ignore rules', async (t) => {
         parse() {},
         log() {}
       }),
-      (err) => {
+      (error) => {
         assert.equal(
-          err.message,
+          error.message,
           'lambda HelloWorldFunction already has Metadata.BuildMethod specified'
         )
         return true
@@ -756,7 +773,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('fail if build properties already specified', async (_t) => {
+  await t.test('fail if build properties already specified', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Metadata = { BuildProperties: 'x' }
@@ -771,9 +788,9 @@ test('ignore rules', async (t) => {
         parse() {},
         log() {}
       }),
-      (err) => {
+      (error) => {
         assert.equal(
-          err.message,
+          error.message,
           'lambda HelloWorldFunction already has Metadata.BuildProperties specified'
         )
         return true
@@ -783,10 +800,10 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('fail if missing handler', async (_t) => {
+  await t.test('fail if missing handler', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
-    template.Resources.HelloWorldFunction.Properties.Handler = null
+    template.Resources.HelloWorldFunction.Properties.Handler = undefined
     const copy = structuredClone(template)
 
     await assert.rejects(
@@ -798,8 +815,8 @@ test('ignore rules', async (t) => {
         parse() {},
         log() {}
       }),
-      (err) => {
-        assert.equal(err.message, 'lambda HelloWorldFunction missing handler')
+      (error) => {
+        assert.equal(error.message, 'lambda HelloWorldFunction missing handler')
         return true
       }
     )
@@ -807,7 +824,7 @@ test('ignore rules', async (t) => {
     assert.deepEqual(template, copy)
   })
 
-  await t.test('fail if missing code uri', async (_t) => {
+  await t.test('fail if missing code uri', async () => {
     const template = structuredClone(baseTemplate)
     template.Resources.HelloWorldFunction.Properties.Runtime = 'nodejs20.x'
     template.Resources.HelloWorldFunction.Properties.CodeUri = ''
@@ -820,11 +837,10 @@ test('ignore rules', async (t) => {
         command: 'build',
         log() {},
         lifecycle: 'expand',
-        parse() {},
-        log() {}
+        parse() {}
       }),
-      (err) => {
-        assert.equal(err.message, 'lambda HelloWorldFunction missing codeUri')
+      (error) => {
+        assert.equal(error.message, 'lambda HelloWorldFunction missing codeUri')
         return true
       }
     )

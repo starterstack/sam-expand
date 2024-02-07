@@ -6,12 +6,13 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('use build config', async (t) => {
+await test('use build config', async (t) => {
   for (const command of ['package', 'deploy']) {
-    await t.test('use .aws-sam/build template', async (_t) => {
+    await t.test('use .aws-sam/build template', async () => {
       const mockLifecycle = mock.fn()
       const expand = await esmock.p('../../src/expand.js', {
         [path.join(__dirname, 'fixtures', 'build', 'do-nothing-plugin.mjs')]: {
+          // eslint-disable-next-line @typescript-eslint/require-await
           async lifecycle(plugin) {
             return mockLifecycle(plugin)
           }
@@ -20,8 +21,9 @@ test('use build config', async (t) => {
           env: {
             INIT_CWD: path.join(__dirname, 'fixtures', 'build')
           },
-          argv: [null, null, command]
+          argv: [undefined, undefined, command]
         },
+        // eslint-disable-next-line @typescript-eslint/require-await
         async '../../src/spawn.js'() {}
       })
       await expand()

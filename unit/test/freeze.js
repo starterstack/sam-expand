@@ -2,7 +2,7 @@ import freeze from '../../src/freeze.js'
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-test('simple object frozen', async () => {
+await test('simple object frozen', () => {
   const object = {
     a: 42
   }
@@ -16,7 +16,7 @@ test('simple object frozen', async () => {
   })
 })
 
-test('nested object', async () => {
+await test('nested object', () => {
   const object = {
     a: {
       b: {

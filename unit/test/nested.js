@@ -7,7 +7,7 @@ import { readFile, writeFile, unlink } from 'node:fs/promises'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('nested', async (t) => {
+await test('nested', async (t) => {
   for (const { expected, argv } of [
     {
       expected: [
@@ -54,18 +54,19 @@ test('nested', async (t) => {
   ]) {
     await t.test(
       `sam ${argv.slice(2).join(' ').replace(__dirname, '.')}`,
-      async (_t) => {
-        let spawnArgs
+      async () => {
+        let spawnArguments
         const expand = await esmock('../../src/expand.js', {
           'node:process': {
             argv
           },
-          async '../../src/spawn.js'(...args) {
-            spawnArgs = args
+          // eslint-disable-next-line @typescript-eslint/require-await
+          async '../../src/spawn.js'(...arguments_) {
+            spawnArguments = arguments_
           }
         })
         await expand()
-        assert.deepEqual(spawnArgs, expected)
+        assert.deepEqual(spawnArguments, expected)
       }
     )
   }
@@ -87,7 +88,7 @@ await test('nested with not found location', async () => {
   })
 })
 
-test('relative path with no dot', async (_t) => {
+await test('relative path with no dot', async () => {
   try {
     const template = await readFile(
       path.join(__dirname, 'fixtures', 'nested.yml'),
@@ -101,8 +102,8 @@ test('relative path with no dot', async (_t) => {
       async '../../src/spawn.js'() {},
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'build',
           '-t',
           path.join(__dirname, 'fixtures', 'nested-relative.yml')
@@ -115,7 +116,7 @@ test('relative path with no dot', async (_t) => {
   }
 })
 
-test('absolute path with no dot', async (_t) => {
+await test('absolute path with no dot', async () => {
   try {
     const template = await readFile(
       path.join(__dirname, 'fixtures', 'nested.yml'),
@@ -132,8 +133,8 @@ test('absolute path with no dot', async (_t) => {
       async '../../src/spawn.js'() {},
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'build',
           '-t',
           path.join(__dirname, 'fixtures', 'nested-absolute.yml')

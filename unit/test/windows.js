@@ -2,7 +2,7 @@ import { test, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
 
-test('windows with no git bash', async (_t) => {
+await test('windows with no git bash', async () => {
   const log = console.error
   const mockLog = mock.fn()
   console.error = mockLog
@@ -14,8 +14,8 @@ test('windows with no git bash', async (_t) => {
         }
       },
       'node:process': {
-        exit(code) {
-          throw new Error(code)
+        exit() {
+          throw new Error('failed')
         }
       }
     })
@@ -28,8 +28,8 @@ test('windows with no git bash', async (_t) => {
   console.error = log
 })
 
-test('windows with git bash', async (_t) => {
-  let spawnArgs
+await test('windows with git bash', async () => {
+  let spawnArguments
   await assert.doesNotReject(async function ok() {
     const expand = await esmock('../../src/expand.js', {
       'node:os': {
@@ -42,11 +42,12 @@ test('windows with git bash', async (_t) => {
           SHELL: 'bash'
         }
       },
-      async '../../src/spawn.js'(...args) {
-        spawnArgs = args
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async '../../src/spawn.js'(...arguments_) {
+        spawnArguments = arguments_
       }
     })
     await expand()
   })
-  assert.deepEqual(spawnArgs, ['sam', ['--help']])
+  assert.deepEqual(spawnArguments, ['sam', ['--help']])
 })

@@ -4,17 +4,17 @@ import { parseArgs } from 'node:util'
 /** @typedef {(name: string, options?: { parameter: boolean }) => string | undefined } ArgvReader */
 
 /**
- * @param {string[]} args
+ * @param {string[]} argv
  * @returns {ArgvReader}
  */
 
-export default function create(args) {
+export default function create(argv) {
   return function get(name, options) {
     if (options?.parameter) {
-      const parameterIndex = args.findIndex((x) => x.startsWith(`${name}=`))
+      const parameterIndex = argv.findIndex((x) => x.startsWith(`${name}=`))
       return parameterIndex === -1
         ? undefined
-        : sanitizeValue(args?.[parameterIndex]?.split('=')?.[1])
+        : sanitizeValue(argv?.[parameterIndex]?.split('=')?.[1])
     } else {
       const { values } = parseArgs({
         options: {
@@ -24,7 +24,7 @@ export default function create(args) {
         },
         allowPositionals: true,
         strict: false,
-        args
+        args: argv
       })
       const value = values[name]
       return value ? sanitizeValue(String(value)) : undefined

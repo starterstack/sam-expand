@@ -16,19 +16,19 @@ await test('run scripts hook plugin noop', async (t) => {
   let templatePath
   /* c8 ignore next */
   const writeMock = mock.fn()
-  await t.test(`validate: noop`, async (_t) => {
+  await t.test(`validate: noop`, async () => {
     const expand = await esmock.p('../../src/expand.js', {
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'script-hooks.yaml')
         ]
       },
-      async '../../src/spawn.js'(...args) {
-        templatePath = args[1][args[1].indexOf('-t') + 1]
+      async '../../src/spawn.js'(...arguments_) {
+        templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
         template = await readFile(templatePath, 'utf8')
       }
     })
@@ -40,7 +40,7 @@ await test('run scripts hook plugin noop', async (t) => {
   })
 })
 
-test('run scripts hook plugin hooks', async (t) => {
+await test('run scripts hook plugin hooks', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
     'utf8'
@@ -50,25 +50,28 @@ test('run scripts hook plugin hooks', async (t) => {
     const writeMock = mock.fn()
     const spawnMock = mock.fn()
     /* c8 ignore end */
-    await t.test(`${command}: hooks`, async (_t) => {
+    await t.test(`${command}: hooks`, async () => {
       const expand = await esmock.p('../../src/expand.js', {
         'node:fs/promises': {
-          async writeFile(...args) {
-            writeMock(...args)
+          // eslint-disable-next-line @typescript-eslint/require-await
+          async writeFile(...arguments_) {
+            writeMock(...arguments_)
           },
+          // eslint-disable-next-line @typescript-eslint/require-await
           async unlink() {}
         },
         'node:process': {
           argv: [
-            null,
-            null,
+            undefined,
+            undefined,
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'script-hooks.yaml')
           ]
         },
-        async '../../src/spawn.js'(...args) {
-          spawnMock(...args)
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async '../../src/spawn.js'(...arguments_) {
+          spawnMock(...arguments_)
         }
       })
       await expand()
@@ -94,7 +97,7 @@ test('run scripts hook plugin hooks', async (t) => {
   }
 })
 
-test('run scripts hook plugin noop', async (t) => {
+await test('run scripts hook plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
     'utf8'
@@ -103,19 +106,20 @@ test('run scripts hook plugin noop', async (t) => {
   let templatePath
   /* c8 ignore next */
   const writeMock = mock.fn()
-  await t.test(`validate: noop`, async (_t) => {
+  await t.test(`validate: noop`, async () => {
     const expand = await esmock.p('../../src/expand.js', {
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'script-hooks.yaml')
         ]
       },
-      async '../../src/spawn.js'(...args) {
-        templatePath = args[1][args[1].indexOf('-t') + 1]
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async '../../src/spawn.js'(...arguments_) {
+        templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
         template = await readFile(templatePath, 'utf8')
       }
     })
@@ -127,7 +131,7 @@ test('run scripts hook plugin noop', async (t) => {
   })
 })
 
-test('run scripts hook plugin hooks with file resolver', async (t) => {
+await test('run scripts hook plugin hooks with file resolver', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks-with-resolvers.yaml'),
     'utf8'
@@ -138,25 +142,28 @@ test('run scripts hook plugin hooks with file resolver', async (t) => {
     const writeMock = mock.fn()
     const spawnMock = mock.fn()
     /* c8 ignore end */
-    await t.test(`${command}: hooks`, async (_t) => {
+    await t.test(`${command}: hooks`, async () => {
       const expand = await esmock.p('../../src/expand.js', {
         'node:fs/promises': {
-          async writeFile(...args) {
-            writeMock(...args)
+          // eslint-disable-next-line @typescript-eslint/require-await
+          async writeFile(...arguments_) {
+            writeMock(...arguments_)
           },
+          // eslint-disable-next-line @typescript-eslint/require-await
           async unlink() {}
         },
         'node:process': {
           argv: [
-            null,
-            null,
+            undefined,
+            undefined,
             command,
             '-t',
             path.join(__dirname, 'fixtures', 'script-hooks-with-resolvers.yaml')
           ]
         },
-        async '../../src/spawn.js'(...args) {
-          spawnMock(...args)
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async '../../src/spawn.js'(...arguments_) {
+          spawnMock(...arguments_)
         }
       })
       await expand()
@@ -182,7 +189,7 @@ test('run scripts hook plugin hooks with file resolver', async (t) => {
   }
 })
 
-test('run scripts hook plugin hooks with absolute file resolver', async (_t) => {
+await test('run scripts hook plugin hooks with absolute file resolver', async () => {
   /* c8 ignore start */
   const writeMock = mock.fn()
   const spawnMock = mock.fn()
@@ -222,15 +229,17 @@ Resources:
     )
     const expand = await esmock.p('../../src/expand.js', {
       'node:fs/promises': {
-        async writeFile(...args) {
-          writeMock(...args)
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async writeFile(...arguments_) {
+          writeMock(...arguments_)
         },
+        // eslint-disable-next-line @typescript-eslint/require-await
         async unlink() {}
       },
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'build',
           '-t',
           path.join(
@@ -240,8 +249,9 @@ Resources:
           )
         ]
       },
-      async '../../src/spawn.js'(...args) {
-        spawnMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async '../../src/spawn.js'(...arguments_) {
+        spawnMock(...arguments_)
       }
     })
     await assert.doesNotReject(expand())
@@ -256,20 +266,22 @@ Resources:
   }
 })
 
-test('run scripts hook plugin hooks with bad exports (file)', async (_t) => {
+await test('run scripts hook plugin hooks with bad exports (file)', async () => {
   /* c8 ignore next */
   const writeMock = mock.fn()
   const expand = await esmock.p('../../src/expand.js', {
     'node:fs/promises': {
-      async writeFile(...args) {
-        writeMock(...args)
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
       },
+      // eslint-disable-next-line @typescript-eslint/require-await
       async unlink() {}
     },
     'node:process': {
       argv: [
-        null,
-        null,
+        undefined,
+        undefined,
         'build',
         '-t',
         path.join(
@@ -279,6 +291,7 @@ test('run scripts hook plugin hooks with bad exports (file)', async (_t) => {
         )
       ]
     },
+    // eslint-disable-next-line @typescript-eslint/require-await
     async '../../src/spawn.js'() {}
   })
   await assert.rejects(expand(), {
@@ -286,7 +299,7 @@ test('run scripts hook plugin hooks with bad exports (file)', async (_t) => {
   })
 })
 
-test('run scripts hook plugin noop', async (t) => {
+await test('run scripts hook plugin noop', async (t) => {
   const templateContents = await readFile(
     path.join(__dirname, 'fixtures', 'script-hooks.yaml'),
     'utf8'
@@ -295,19 +308,20 @@ test('run scripts hook plugin noop', async (t) => {
   let templatePath
   /* c8 ignore next */
   const writeMock = mock.fn()
-  await t.test(`validate: noop`, async (_t) => {
+  await t.test(`validate: noop`, async () => {
     const expand = await esmock.p('../../src/expand.js', {
       'node:process': {
         argv: [
-          null,
-          null,
+          undefined,
+          undefined,
           'validate',
           '-t',
           path.join(__dirname, 'fixtures', 'script-hooks.yaml')
         ]
       },
-      async '../../src/spawn.js'(...args) {
-        templatePath = args[1][args[1].indexOf('-t') + 1]
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async '../../src/spawn.js'(...arguments_) {
+        templatePath = arguments_[1][arguments_[1].indexOf('-t') + 1]
         template = await readFile(templatePath, 'utf8')
       }
     })

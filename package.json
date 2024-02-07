@@ -75,7 +75,6 @@
     "npm": ">= 10"
   },
   "eslintIgnore": [
-    "unit",
     "index.d.ts",
     "src/plugins/types.js"
   ],

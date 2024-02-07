@@ -7,7 +7,7 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test('valid schema metadata', async (t) => {
+await test('valid schema metadata', async (t) => {
   for (const { expected, argv } of [
     {
       expected: [
@@ -58,8 +58,8 @@ test('valid schema metadata', async (t) => {
   ]) {
     await t.test(
       `sam ${argv.slice(2).join(' ').replace(__dirname, '.')}`,
-      async (_t) => {
-        let spawnArgs
+      async () => {
+        let spawnArguments
         const expand = await esmock('../../src/expand.js', {
           'node:process': {
             argv,
@@ -67,12 +67,13 @@ test('valid schema metadata', async (t) => {
               INIT_CWD: __dirname
             }
           },
-          async '../../src/spawn.js'(...args) {
-            spawnArgs = args
+          // eslint-disable-next-line @typescript-eslint/require-await
+          async '../../src/spawn.js'(...arguments_) {
+            spawnArguments = arguments_
           }
         })
         await assert.doesNotReject(expand)
-        assert.deepEqual(expected, spawnArgs)
+        assert.deepEqual(expected, spawnArguments)
       }
     )
   }

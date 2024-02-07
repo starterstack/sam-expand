@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import shouldInline from '../../src/plugins/should-inline-parameter-value.js'
 
-test('inline parameter values', async (t) => {
+await test('inline parameter values', async (t) => {
   await t.test('simple value', () => {
     assert.equal(shouldInline('no need'), false)
   })

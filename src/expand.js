@@ -189,14 +189,14 @@ export default async function expand() {
     ? await parse.samConfig(samConfigPath)
     : undefined
 
-  const configEnv = String(values['config-env'] ?? 'default')
-  log('configEnv %O', configEnv)
+  const configEnvironment = String(values['config-env'] ?? 'default')
+  log('configEnv %O', configEnvironment)
 
   /** @type {string | undefined } */
   const region =
     values.region ??
-    config?.[configEnv]?.[command]?.parameters?.region ??
-    config?.[configEnv]?.global?.parameters?.region ??
+    config?.[configEnvironment]?.[command]?.parameters?.region ??
+    config?.[configEnvironment]?.global?.parameters?.region ??
     process.env['AWS_REGION'] ??
     process.env['AWS_DEFAULT_REGION']
 
@@ -214,7 +214,7 @@ export default async function expand() {
     argvReader,
     templateFile,
     temporaryFiles,
-    configEnv,
+    configEnv: configEnvironment,
     region,
     log,
     baseDirectory
@@ -242,7 +242,7 @@ export default async function expand() {
         argvReader,
         region,
         log,
-        configEnv,
+        configEnv: configEnvironment,
         baseDirectory
       })
     }
@@ -263,7 +263,7 @@ export default async function expand() {
       argvReader,
       region,
       log,
-      configEnv,
+      configEnv: configEnvironment,
       baseDirectory
     })
   }

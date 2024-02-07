@@ -36,7 +36,7 @@ import { formatWithOptions } from 'node:util'
  * ```
  * @type {Log}
  **/
-export default function log(format, ...args) {
+export default function log(format, ...arguments_) {
   const now = new Date()
   const pad2 = padLeft(2)
   const pad3 = padLeft(3)
@@ -62,7 +62,7 @@ export default function log(format, ...args) {
   const message = `\u001B[0m | ${formatWithOptions(
     { colors: true },
     format,
-    ...args
+    ...arguments_
   )}`
   console.log(`${datePrefix}${timePrefix}${message}`)
 }

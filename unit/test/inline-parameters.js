@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import inlineParameters from '../../src/plugins/inline-parameters.js'
 
-test('inline parameters', async (t) => {
+await test('inline parameters', async (t) => {
   await t.test('simple ref', () => {
     const value = 'this is the value'
     const template = {
