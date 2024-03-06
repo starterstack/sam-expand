@@ -107,7 +107,7 @@
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "prettier-config-standard": "7.0.0",
-    "typedoc": "0.25.10",
+    "typedoc": "0.25.11",
     "typescript": "5.3.3"
   },
   "dependencies": {
