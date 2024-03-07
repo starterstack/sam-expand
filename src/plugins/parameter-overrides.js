@@ -64,8 +64,7 @@ export const schema = {
             defaultValue: { type: 'string', nullable: true }
           },
           required: ['name', 'exportName'],
-          additionalProperties: false,
-          nullable: true
+          additionalProperties: false
         }
       }
     },

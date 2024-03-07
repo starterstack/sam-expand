@@ -28,12 +28,21 @@ export async function template(templatePath) {
 export async function samConfig(configPath) {
   const extname = path.extname(configPath)
   if (extname === '.toml') {
-    return freeze(tomlParse(await readFile(configPath, 'utf8')))
+    return parse(await readFile(configPath, 'utf8'), 'toml')
   } else if (extname === '.yaml' || extname === '.yml') {
-    return freeze(yamlParse(await readFile(configPath, 'utf8')))
+    return parse(await readFile(configPath, 'utf8'), 'yaml')
   } else {
     throw new TypeError(
       `unsupported samconfig ${configPath}, must be toml or yaml`
     )
   }
+}
+
+/** @param { string } data
+/** @param { 'toml' | 'yaml' } type
+ * @returns {any}
+ **/
+
+export function parse(data, type) {
+  return type === 'toml' ? freeze(tomlParse(data)) : freeze(yamlParse(data))
 }

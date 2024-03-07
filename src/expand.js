@@ -8,6 +8,8 @@
  * ```yaml
  * Metadata:
  *   expand:
+ *     typescript:
+ *       import: tsx
  *     plugins:
  *       - '@starterstack/sam-expand/plugins/esbuild-node'
  *       - '@starterstack/sam-expand/plugins/run-script-hooks'
@@ -29,7 +31,7 @@
  **/
 
 import process from 'node:process'
-import { yamlParse, yamlDump } from 'yaml-cfn'
+import { yamlDump } from 'yaml-cfn'
 import { stat, writeFile, unlink } from 'node:fs/promises'
 import spawn from './spawn.js'
 import createArgvReader from './read-argv.js'
@@ -66,7 +68,7 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
  *   command: string,
  *   argv: string[],
  *   argvReader: ArgvReader,
- *   parse: import('yaml-cfn').yamlParse,
+ *   parse: import('./parse.js').parse,
  *   dump: import('yaml-cfn').yamlDump,
  *   spawn: import('./spawn.js').Spawn,
  *   configEnv: string,
@@ -294,6 +296,10 @@ async function expandAll({
   const templateDirectory = templateDirectoryFromFile(templateFile)
 
   if (template.Metadata?.expand) {
+    const typescriptImport = template.Metadata.expand.typescript?.import
+    if (typescriptImport) {
+      await import(typescriptImport)
+    }
     await validatePluginSchemas({
       templateDirectory,
       template: freeze(template),
@@ -406,7 +412,7 @@ async function runPlugins({
       await pluginModule({
         template,
         templateDirectory,
-        parse: yamlParse,
+        parse: parse.parse,
         dump: yamlDump,
         lifecycle,
         spawn,
@@ -428,16 +434,42 @@ async function runPlugins({
  * @returns {Promise<void>}
  **/
 async function validatePluginSchemas({ templateDirectory, template, log }) {
+  /** @type {string[]} */
   const plugins = template?.Metadata?.expand?.plugins ?? []
+
+  const required = plugins.length > 0 ? ['plugins'] : []
+
+  if (plugins.some((plugin) => plugin.endsWith('.mts'))) {
+    required.push('typescript')
+  }
+
+  if (!required.includes('typescript')) {
+    /** @type {import('./plugins/parameter-overrides.js').Schema} */
+    const parameterOverrides =
+      template?.Metadata?.expand?.config?.parameterOverrides ?? []
+    if (parameterOverrides.some((x) => x.location.endsWith('.mts'))) {
+      required.push('typescript')
+    }
+  }
 
   const expandSchema = {
     type: 'object',
     required: [],
     properties: {
       expand: {
-        required: plugins.length > 0 ? ['plugins'] : [],
+        required,
         type: 'object',
         properties: {
+          typescript: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['import'],
+            properties: {
+              import: {
+                type: 'string'
+              }
+            }
+          },
           plugins: {
             type: 'array',
             items: {
@@ -463,7 +495,7 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
       : plugin
 
     log('import plugin %O', { pluginPath })
-    /** @type {{ metadataConfig: string, schema: PluginSchema<unknown> }}*/
+    /** @type {{ metadataConfig: string, schema: import('ajv').JSONSchemaType<any> }} */
     const { metadataConfig, schema } = await import(pluginPath)
 
     if (metadataConfig || schema) {
@@ -478,6 +510,15 @@ async function validatePluginSchemas({ templateDirectory, template, log }) {
         'object',
         `plugin: ${plugin} does not export const schema: PluginSchema<T>`
       )
+
+      if (
+        metadataConfig &&
+        schema &&
+        !expandSchema.properties.expand.required.includes('config') &&
+        !schema.nullable
+      ) {
+        expandSchema.properties.expand.required.push('config')
+      }
 
       /** @type {string[]} */
       const required = expandSchema.properties.expand.properties.config.required

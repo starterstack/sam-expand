@@ -2,6 +2,9 @@ declare module '@starterstack/sam-expand/parse' {
 	export function template(templatePath: string): Promise<any>;
 
 	export function samConfig(configPath: string): Promise<any>;
+	/** @param data
+	/** */
+	export function parse(data: string, type: 'toml' | 'yaml'): any;
 }
 
 declare module '@starterstack/sam-expand/log' {
@@ -15,7 +18,7 @@ declare module '@starterstack/sam-expand/spawn' {
 }
 
 declare module '@starterstack/sam-expand/resolve' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlDump } from 'yaml-cfn';
 	export function resolveFile(options: PluginOptions & {
 		location: string;
 		exportName: string;
@@ -32,7 +35,7 @@ declare module '@starterstack/sam-expand/resolve' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof yamlParse;
+		parse: typeof parse.parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -48,7 +51,7 @@ declare module '@starterstack/sam-expand/resolve' {
 }
 
 declare module '@starterstack/sam-expand/plugins' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlDump } from 'yaml-cfn';
 	export type Plugin = Plugin_1;
 	export type PluginOptions = PluginOptions_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
@@ -64,7 +67,7 @@ declare module '@starterstack/sam-expand/plugins' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof yamlParse;
+		parse: typeof parse.parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -82,7 +85,7 @@ declare module '@starterstack/sam-expand/plugins' {
 }
 
 declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlDump } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
 
 
@@ -113,7 +116,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof yamlParse;
+		parse: typeof parse.parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -131,7 +134,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 }
 
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlDump } from 'yaml-cfn';
 	export const metadataConfig: "script";
 
 	export const lifecycles: Lifecycles;
@@ -171,7 +174,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof yamlParse;
+		parse: typeof parse.parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -189,7 +192,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 }
 
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
-	import type { yamlParse, yamlDump } from 'yaml-cfn';
+	import type { yamlDump } from 'yaml-cfn';
 	export const lifecycles: Lifecycles;
 
 	export const schema: PluginSchema<{
@@ -212,7 +215,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof yamlParse;
+		parse: typeof parse.parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;

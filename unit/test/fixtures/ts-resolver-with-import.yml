@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Name:
+    Type: String
+Metadata:
+  expand:
+    typescript:
+      import: tsx
+    plugins:
+      - ../../../src/plugins/parameter-overrides.js
+    config:
+      parameterOverrides:
+        - location: ./do-nothing-plugin.mts
+          overrides:
+            - name: Name
+              exportName: name
+
+Resources:
+  WaitConditionHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle

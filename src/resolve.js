@@ -32,13 +32,14 @@ export async function resolveFile(options) {
       ? path.join(templateDirectory, location)
       : location
   const extname = path.extname(fullPath)
-  if (!['.mjs', '.json', '.yaml', '.yml'].includes(extname)) {
+
+  if (!['.mts', '.mjs', '.json', '.yaml', '.yml', '.toml'].includes(extname)) {
     throw new Error(
-      `unsupported file ${location} must be .mjs, .json, .yaml, or .yml`
+      `unsupported file ${location} must be .mjs, .mts, .json, .yaml, .yml, or .toml`
     )
   }
 
-  if (extname === '.mjs') {
+  if (extname === '.mjs' || extname === '.mts') {
     const { default: module } = await import(fullPath)
 
     /** @type {FileResolver} */
@@ -54,7 +55,11 @@ export async function resolveFile(options) {
 
     return (await value) ?? defaultValue
   } else {
-    const { [exportName]: value } = parse(await readFile(fullPath, 'utf8'))
+    const type = extname === '.toml' ? 'toml' : 'yaml'
+    const { [exportName]: value } = parse(
+      await readFile(fullPath, 'utf8'),
+      type
+    )
     return value ?? defaultValue ?? undefined
   }
 }

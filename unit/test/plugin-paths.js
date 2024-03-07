@@ -47,14 +47,7 @@ await test('plugin path resolution', async (t) => {
         }
       },
       'node:process': {
-        argv: [
-          undefined,
-          undefined,
-          'validate',
-          '-t',
-          './region.yml',
-          '--debug'
-        ],
+        argv: [undefined, undefined, 'validate', '-t', './region.yml'],
         env: {},
         cwd() {
           return path.join(__dirname, 'fixtures')

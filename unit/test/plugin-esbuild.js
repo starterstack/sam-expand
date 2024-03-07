@@ -550,8 +550,7 @@ await test('non node lambda', async () => {
         undefined,
         'build',
         '-t',
-        path.join(__dirname, 'fixtures', 'esbuild-non-node-lambda.yaml'),
-        '--debug'
+        path.join(__dirname, 'fixtures', 'esbuild-non-node-lambda.yaml')
       ]
     },
     // eslint-disable-next-line @typescript-eslint/require-await

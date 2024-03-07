@@ -80,7 +80,10 @@ export const lifecycle = async function expand({
     )
 
     log('esbuild config %O', esbuildConfigPath)
-    const esbuildConfig = parse(await readFile(esbuildConfigPath, 'utf8'))
+    const esbuildConfig = parse(
+      await readFile(esbuildConfigPath, 'utf8'),
+      'yaml'
+    )
     for (const [key, value] of Object.entries(template.Resources ?? {})) {
       if (value?.Type !== 'AWS::Serverless::Function') {
         continue

@@ -2,7 +2,7 @@ import { test, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import esmock from 'esmock'
 import { readFile } from 'node:fs/promises'
-import { yamlParse as parse } from 'yaml-cfn'
+import { parse } from '../../src/parse.js'
 
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -380,7 +380,7 @@ await test('error handling', async (t) => {
     const template = structuredClone(baseTemplate)
     template.Metadata.expand.config.parameterOverrides = [
       {
-        location: './parameter-name.toml',
+        location: './parameter-name.x',
         overrides: [
           {
             name: 'Name',
@@ -409,9 +409,8 @@ await test('error handling', async (t) => {
         log() {}
       }),
       (error) => {
-        assert.equal(
-          error.message,
-          'unsupported file ./parameter-name.toml must be .mjs, .json, .yaml, or .yml'
+        assert.ok(
+          error.message.startsWith('unsupported file ./parameter-name.x')
         )
         return true
       }
@@ -444,14 +443,13 @@ await test('error handling', async (t) => {
         argv,
         log() {}
       }),
-      (error) => {
-        assert.equal(error.message, 'parameter Name not found in template')
-        return true
+      {
+        message: 'parameter Name not found in template'
       }
     )
   })
 
-  for (const type of ['mjs', 'yaml', 'yml', 'json']) {
+  for (const type of ['mjs', 'yaml', 'yml', 'json', 'toml']) {
     await t.test(`matching value in ${type} file resolver`, async () => {
       const template = structuredClone(baseTemplate)
       template.Metadata.expand.config.parameterOverrides = [
@@ -519,12 +517,8 @@ await test('error handling', async (t) => {
           argv,
           log() {}
         }),
-        (error) => {
-          assert.equal(
-            error.message,
-            `parameter Name resolver ./parameter-name.${type} missing missing`
-          )
-          return true
+        {
+          message: `parameter Name resolver ./parameter-name.${type} missing missing`
         }
       )
     })

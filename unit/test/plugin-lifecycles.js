@@ -12,6 +12,7 @@ await test('plugin lifecycles', async (t) => {
     await t.test(command, async () => {
       let getMetadataConfig
       let getSchema
+      /* c8 ignore next */
       const mockLifecycle = mock.fn()
       const expand = await esmock.p('../../src/expand.js', {
         [path.join(__dirname, 'fixtures', 'do-nothing-plugin.mjs')]: {
@@ -38,7 +39,7 @@ await test('plugin lifecycles', async (t) => {
             undefined,
             command,
             '-t',
-            path.join(__dirname, 'fixtures', 'region.yml')
+            path.join(__dirname, 'fixtures', 'plugin-lifecycles.yml')
           ]
         },
         // eslint-disable-next-line @typescript-eslint/require-await
