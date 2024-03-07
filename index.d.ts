@@ -2,8 +2,7 @@ declare module '@starterstack/sam-expand/parse' {
 	export function template(templatePath: string): Promise<any>;
 
 	export function samConfig(configPath: string): Promise<any>;
-	/** @param data
-	/** */
+
 	export function parse(data: string, type: 'toml' | 'yaml'): any;
 }
 

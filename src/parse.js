@@ -4,6 +4,7 @@
  * @summary
  * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
  *
+ * Provides a parse method that parses yaml, json, or toml.
  * @module
  **/
 
@@ -38,8 +39,9 @@ export async function samConfig(configPath) {
   }
 }
 
-/** @param { string } data
-/** @param { 'toml' | 'yaml' } type
+/**
+ * @param { string } data
+ * @param { 'toml' | 'yaml' } type
  * @returns {any}
  **/
 
