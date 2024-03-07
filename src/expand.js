@@ -4,6 +4,8 @@
  * @summary
  * Expands the template using metadata defined in [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html).
  *
+ * Plugins add their own schemas to config.
+ *
  * @example
  * ```yaml
  * Metadata:
@@ -57,6 +59,7 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
 
 /**
  * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
+ * @typedef {{ expand: { typescript?: { import: string }, plugins?: string[], config?: any }}} MetadataExpandSchema
  * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
  * @typedef {import('./read-argv.js').ArgvReader} ArgvReader
