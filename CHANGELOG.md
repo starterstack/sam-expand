@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.10](https://github.com/starterstack/sam-expand/compare/v0.2.9...v0.2.10) (2024-03-07)
+
+
+### Bug Fixes
+
+* **expand:** expand metadata schema type ([67d49bb](https://github.com/starterstack/sam-expand/commit/67d49bb1a478dbc21dccb386f40c7d974c956d51))
+
 ## [0.2.9](https://github.com/starterstack/sam-expand/compare/v0.2.8...v0.2.9) (2024-03-07)
 
 
