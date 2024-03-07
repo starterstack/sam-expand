@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://github.com/starterstack/sam-expand/compare/v0.2.7...v0.2.8) (2024-03-07)
+
+
+### Bug Fixes
+
+* support for typescript plugins and resolvers ([9263103](https://github.com/starterstack/sam-expand/commit/9263103df4a97cf1a35dfa6cae1f196ee92e6e3a))
+
 ## [0.2.7](https://github.com/starterstack/sam-expand/compare/v0.2.6...v0.2.7) (2024-02-03)
 
 
