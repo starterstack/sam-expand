@@ -22,35 +22,35 @@
   "exports": {
     "./parse": {
       "import": "./src/parse.js",
-      "types": "./src/parse.d.ts"
+      "types": "./index.d.ts"
     },
     "./log": {
       "import": "./src/log.js",
-      "types": "./src/log.d.ts"
+      "types": "./index.d.ts"
     },
     "./spawn": {
       "import": "./src/spawn.js",
-      "types": "./src/spawn.d.ts"
+      "types": "./index.d.ts"
     },
     "./resolve": {
       "import": "./src/resolve.js",
-      "types": "./src/resolve.d.ts"
+      "types": "./index.d.ts"
     },
     "./plugins": {
       "import": "./src/plugins/types.js",
-      "types": "./src/plugins/types.d.ts"
+      "types": "./index.d.ts"
     },
     "./plugins/parameter-overrides": {
       "import": "./src/plugins/parameter-overrides.js",
-      "types": "./src/plugins/parameter-overrides.d.ts"
+      "types": "./index.d.ts"
     },
     "./plugins/run-script-hooks": {
       "import": "./src/plugins/run-script-hooks.js",
-      "types": "./src/plugins/run-script-hooks.d.ts"
+      "types": "./index.d.ts"
     },
     "./plugins/esbuild-node": {
       "import": "./src/plugins/esbuild-node.js",
-      "types": "./src/plugins/esbuild-node.d.ts"
+      "types": "./index.d.ts"
     }
   },
   "bin": {
