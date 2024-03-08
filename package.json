@@ -9,7 +9,7 @@
     "build": "tsc",
     "lint": "eslint --no-error-on-unmatched-pattern",
     "postbuild": "dts-buddy && rm -rf src/*.d.*ts && rm -rf src/plugins/*.d.*ts",
-    "test": "c8 -r lcov -e 'mjs,js,cjs,mts' -- npm --prefix unit t || (c8 report; exit 1)",
+    "test": "c8 -r lcov -e 'js,mjs,mts' -- npm --prefix unit t || (c8 report; exit 1)",
     "prepublishOnly": "npm test && npm run build && git diff --exit-code --quiet",
     "typedoc": "typedoc --tsconfig tsconfig.json 'src/**/*.js' --logLevel Verbose"
   },
@@ -117,15 +117,5 @@
     "ajv": "8.12.0",
     "better-ajv-errors": "1.2.0",
     "yaml-cfn": "0.3.2"
-  },
-  "c8": {
-    "extension": [
-      ".mts",
-      ".cts",
-      ".ts",
-      ".mjs",
-      ".cjs",
-      ".js"
-    ]
   }
 }
