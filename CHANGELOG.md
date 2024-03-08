@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.12](https://github.com/starterstack/sam-expand/compare/v0.2.11...v0.2.12) (2024-03-08)
+
+
+### Bug Fixes
+
+* typescript type path issues ([1d511be](https://github.com/starterstack/sam-expand/commit/1d511be081a0303a935dd466d79c9462dea82577))
+
 ## [0.2.11](https://github.com/starterstack/sam-expand/compare/v0.2.10...v0.2.11) (2024-03-08)
 
 
