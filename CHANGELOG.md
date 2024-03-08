@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.11](https://github.com/starterstack/sam-expand/compare/v0.2.10...v0.2.11) (2024-03-08)
+
+
+### Bug Fixes
+
+* **parse:** types ([7c85d08](https://github.com/starterstack/sam-expand/commit/7c85d0813facafaba2c2703b218b27440889c5b2))
+
 ## [0.2.10](https://github.com/starterstack/sam-expand/compare/v0.2.9...v0.2.10) (2024-03-07)
 
 

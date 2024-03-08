@@ -1,6 +1,6 @@
 {
   "name": "@starterstack/sam-expand",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "A tool to give sam templates more power.",
   "scripts": {
     "prepare": "husky install",
