@@ -2,8 +2,8 @@ declare module '@starterstack/sam-expand/parse' {
 	export function template(templatePath: string): Promise<any>;
 
 	export function samConfig(configPath: string): Promise<any>;
-
 	export function parse(data: string, type: 'toml' | 'yaml'): any;
+	export type Parse = (data: string, type: 'toml' | 'yaml') => any;
 }
 
 declare module '@starterstack/sam-expand/log' {
@@ -34,7 +34,7 @@ declare module '@starterstack/sam-expand/resolve' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof parse.parse;
+		parse: Parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -46,6 +46,7 @@ declare module '@starterstack/sam-expand/resolve' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	type Parse = (data: string, type: 'toml' | 'yaml') => any;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -66,7 +67,7 @@ declare module '@starterstack/sam-expand/plugins' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof parse.parse;
+		parse: Parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -80,6 +81,7 @@ declare module '@starterstack/sam-expand/plugins' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	type Parse = (data: string, type: 'toml' | 'yaml') => any;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -115,7 +117,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof parse.parse;
+		parse: Parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -129,6 +131,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	type Parse = (data: string, type: 'toml' | 'yaml') => any;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -173,7 +176,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof parse.parse;
+		parse: Parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -187,6 +190,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	type Parse = (data: string, type: 'toml' | 'yaml') => any;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 
@@ -214,7 +218,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		command: string;
 		argv: string[];
 		argvReader: ArgvReader;
-		parse: typeof parse.parse;
+		parse: Parse;
 		dump: typeof yamlDump;
 		spawn: Spawn;
 		configEnv: string;
@@ -228,6 +232,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	type Parse = (data: string, type: 'toml' | 'yaml') => any;
 	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
 }
 

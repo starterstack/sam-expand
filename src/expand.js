@@ -71,7 +71,7 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
  *   command: string,
  *   argv: string[],
  *   argvReader: ArgvReader,
- *   parse: import('./parse.js').parse,
+ *   parse: import('./parse.js').Parse,
  *   dump: import('yaml-cfn').yamlDump,
  *   spawn: import('./spawn.js').Spawn,
  *   configEnv: string,
