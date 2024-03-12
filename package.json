@@ -97,7 +97,7 @@
     "@types/json-schema": "7.0.15",
     "@types/node": "20.11.25",
     "@typescript-eslint/eslint-plugin": "7.1.1",
-    "@typescript-eslint/parser": "7.1.1",
+    "@typescript-eslint/parser": "7.2.0",
     "c8": "9.1.0",
     "commitizen": "4.3.0",
     "dts-buddy": "0.4.4",
