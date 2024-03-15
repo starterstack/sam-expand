@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.15](https://github.com/starterstack/sam-expand/compare/v0.2.14...v0.2.15) (2024-03-15)
+
+
+### Bug Fixes
+
+* **script hooks:** sync lifecycle ([2ef2d85](https://github.com/starterstack/sam-expand/commit/2ef2d8561a8c851bf69e3b9ccf5e2555118e4179))
+
 ## [0.2.14](https://github.com/starterstack/sam-expand/compare/v0.2.13...v0.2.14) (2024-03-15)
 
 
