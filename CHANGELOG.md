@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.14](https://github.com/starterstack/sam-expand/compare/v0.2.13...v0.2.14) (2024-03-15)
+
+
+### Bug Fixes
+
+* inline parameters with space too ([40b39d1](https://github.com/starterstack/sam-expand/commit/40b39d1a832b47a9d343d460b88bd7af865ff9ae))
+
 ## [0.2.13](https://github.com/starterstack/sam-expand/compare/v0.2.12...v0.2.13) (2024-03-15)
 
 
