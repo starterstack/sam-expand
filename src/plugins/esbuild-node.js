@@ -72,7 +72,7 @@ export const lifecycle = async function expand({
   command,
   baseDirectory
 }) {
-  if (command === 'build' && lifecycle === 'expand') {
+  if ((command === 'sync' || command === 'build') && lifecycle === 'expand') {
     log('esbuild lifecycle %O', { command, expand })
     const esbuildConfigPath = resolvePath(
       templateDirectory,

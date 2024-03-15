@@ -58,7 +58,7 @@ if (windows && !/bash/.test(String(process.env['SHELL']))) {
 }
 
 /**
- * @typedef {'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
+ * @typedef {'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand'} Lifecycle
  * @typedef {{ expand: { typescript?: { import: string }, plugins?: string[], config?: any }}} MetadataExpandSchema
  * @typedef {Array<Lifecycle>} Lifecycles
  * @typedef {import('./log.js').Log} Log
@@ -179,7 +179,7 @@ export default async function expand() {
 
   log('use template %O', templateFile)
 
-  if (templateArgumentGiven && command === 'build') {
+  if (templateArgumentGiven && (command === 'build' || command === 'sync')) {
     argv.splice(argv.indexOf(templateArgumentGiven), 2)
   }
 
@@ -227,6 +227,7 @@ export default async function expand() {
 
   const hookCommand =
     command === 'build' ||
+    command === 'sync' ||
     command === 'package' ||
     command === 'deploy' ||
     command === 'delete'
@@ -251,7 +252,7 @@ export default async function expand() {
         baseDirectory
       })
     }
-    if (command === 'build') {
+    if (command === 'build' || command === 'sync') {
       argv.push('-t', expandedPath)
     }
   }
@@ -315,7 +316,9 @@ async function expandAll({
 
   for (const lifecycle of expandLifecycles) {
     await runPlugins({
-      template: command === 'build' ? template : freeze(template),
+      template: ['build', 'sync'].includes(command)
+        ? template
+        : freeze(template),
       templateDirectory,
       config,
       lifecycle,
@@ -359,7 +362,7 @@ async function expandAll({
     }
   }
 
-  if (command === 'build') {
+  if (command === 'build' || command === 'sync') {
     const extname = path.extname(templateFile)
     const templateBaseName = path.basename(templateFile, extname)
     const templateDirectory = path.dirname(templateFile)

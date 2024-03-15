@@ -3,7 +3,7 @@
 /**
  * @remarks
  * Override values from json/yaml files, or custom .mjs files.
- * with --parameter-overrides for sam build, and deploy.
+ * with --parameter-overrides for sam build, sync, and deploy.
  *
  * @summary
  * Override parameter values.
@@ -37,7 +37,7 @@ import shouldInline from './should-inline-parameter-value.js'
 import inlineParameters from './inline-parameters.js'
 
 /** @type {import('./types.js').Lifecycles} */
-export const lifecycles = ['expand', 'pre:build', 'pre:deploy']
+export const lifecycles = ['expand']
 
 /**
  * @typedef {{ name: string, exportName: string, defaultValue?: string }} Override
@@ -78,9 +78,10 @@ export const metadataConfig = 'parameterOverrides'
 /** @type {import('./types.js').Plugin} */
 export const lifecycle = async function expand(options) {
   const { template, argv, command } = options
-  if (command !== 'build' && command !== 'deploy') {
+  if (command !== 'build' && command !== 'deploy' && command !== 'sync') {
     return
   }
+
   /** @type {Schema} */
   const parameterOverrides =
     template.Metadata.expand.config?.['parameterOverrides']

@@ -24,7 +24,7 @@ declare module '@starterstack/sam-expand/resolve' {
 		defaultValue?: string | undefined;
 	}): Promise<string | undefined>;
 	export type FileResolver = (options: PluginOptions) => Promise<Record<string, string | undefined | Promise<string | undefined>>>;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
 		template: any;
@@ -56,7 +56,7 @@ declare module '@starterstack/sam-expand/plugins' {
 	export type PluginOptions = PluginOptions_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
 	export type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions_1 = {
@@ -106,7 +106,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
@@ -165,7 +165,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
@@ -207,7 +207,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
