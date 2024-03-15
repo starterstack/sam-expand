@@ -86,7 +86,7 @@ await test('parameter overrides plugin resolve for deploy', async () => {
       "MJSNameWithDefault='someValue'",
       "MJSName='test'",
       "MJSASyncNoName='someValue'",
-      "MJSASyncName='async name'"
+      "MJSASyncName='async_name'"
     ]
   ])
   mock.restoreAll()
@@ -129,8 +129,8 @@ await test('parameter overrides inline resolve for build', async () => {
     [
       'build',
       '--parameter-overrides',
-      "Name3='value for name3'",
-      "Name1='value for name1'",
+      "Name3='value_for_name3'",
+      "Name1='value_for_name1'",
       '-t',
       path.join(__dirname, 'fixtures', 'parameters-inline.expanded.yml')
     ]
@@ -229,8 +229,8 @@ await test('parameter overrides inline resolve for build (two parameters)', asyn
     [
       'build',
       '--parameter-overrides',
-      "Name3='value for name3'",
-      "Name1='value for name1'",
+      "Name3='value_for_name3'",
+      "Name1='value_for_name1'",
       '-t',
       path.join(__dirname, 'fixtures', 'parameters-inline-two.expanded.yml')
     ]
@@ -309,6 +309,71 @@ Conditions:
   mock.restoreAll()
 })
 
+await test('parameter overrides with only inline', async () => {
+  /* c8 ignore start */
+  const spawnMock = mock.fn()
+  const writeMock = mock.fn()
+  /* c8 ignore end */
+  const argv = [
+    undefined,
+    undefined,
+    'build',
+    '-t',
+    path.join(__dirname, 'fixtures', 'parameters-only-inline.yml')
+  ]
+
+  const expand = await esmock.p('../../src/expand.js', {
+    'node:process': {
+      argv
+    },
+    'node:fs/promises': {
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async writeFile(...arguments_) {
+        writeMock(...arguments_)
+      },
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async unlink() {}
+    },
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async '../../src/spawn.js'(...arguments_) {
+      spawnMock(...arguments_)
+    }
+  })
+  await expand()
+  assert.equal(spawnMock.mock.callCount(), 1)
+  assert.deepEqual(spawnMock.mock.calls[0].arguments, [
+    'sam',
+    [
+      'build',
+      '-t',
+      path.join(__dirname, 'fixtures', 'parameters-only-inline.expanded.yml')
+    ]
+  ])
+  assert.equal(writeMock.mock.callCount(), 1)
+  assert.equal(
+    writeMock.mock.calls[0].arguments[1],
+    `AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters: {}
+Metadata:
+  expand:
+    plugins:
+      - ../../../src/plugins/parameter-overrides.js
+    config:
+      parameterOverrides:
+        - location: ./parameter-name.mjs
+          overrides: []
+Resources:
+  Thing:
+    Type: Custom::Thingy
+    Properties:
+      ServiceToken: with space
+`
+  )
+  mock.restoreAll()
+})
+
 await test('parameter overrides plugin resolve for deploy (overrite existing parameter)', async () => {
   /* c8 ignore start */
   const spawnMock = mock.fn()
@@ -349,7 +414,7 @@ await test('parameter overrides plugin resolve for deploy (overrite existing par
       "YMLName='test'",
       "MJSNameWithDefault='someValue'",
       "MJSASyncNoName='someValue'",
-      "MJSASyncName='async name'",
+      "MJSASyncName='async_name'",
       "MJSName='test'"
     ]
   ])

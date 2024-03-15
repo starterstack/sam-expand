@@ -5,13 +5,13 @@ export default async function resolver() {
       return 'test'
     },
     get asyncName() {
-      return Promise.resolve('async name')
+      return Promise.resolve('async_name')
     },
     get asyncNoName() {
       return Promise.resolve()
     },
     get name1() {
-      return 'value for name1'
+      return 'value_for_name1'
     },
     get name2() {
       return 'value for name 2\nmultiline :)'
@@ -20,7 +20,10 @@ export default async function resolver() {
       return 'value for name 4\nmultiline :)'
     },
     get name3() {
-      return 'value for name3'
+      return 'value_for_name3'
+    },
+    get space() {
+      return 'with space'
     }
   }
 }

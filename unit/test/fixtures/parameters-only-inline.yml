@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Space:
+    Type: String
+Metadata:
+  expand:
+    plugins:
+      - '../../../src/plugins/parameter-overrides.js'
+    config:
+      parameterOverrides:
+        - location: ./parameter-name.mjs
+          overrides:
+            - name: Space
+              exportName: space
+Resources:
+  Thing:
+    Type: Custom::Thingy
+    Properties:
+      ServiceToken: !Ref Space

@@ -3,5 +3,5 @@
  * @returns {Boolean}
  */
 export default function shouldInlineParameterValue(value) {
-  return String(value).length > 4096 || /[\n\r"']/.test(String(value))
+  return String(value).length > 4096 || /[\s"']/.test(String(value))
 }

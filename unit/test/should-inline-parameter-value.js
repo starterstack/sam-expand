@@ -3,8 +3,8 @@ import assert from 'node:assert/strict'
 import shouldInline from '../../src/plugins/should-inline-parameter-value.js'
 
 await test('inline parameter values', async (t) => {
-  await t.test('simple value', () => {
-    assert.equal(shouldInline('no need'), false)
+  await t.test('space', () => {
+    assert.equal(shouldInline('has space'), true)
   })
   await t.test('largest value', () => {
     assert.equal(shouldInline('n'.repeat(4096)), false)
