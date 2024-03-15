@@ -144,7 +144,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	export const schema: HookSchema;
 
 	export const lifecycle: Plugin;
-	export type Hook = 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
+	export type Hook = 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
 	export type File = {
 		location: string;
 		exportName: string;

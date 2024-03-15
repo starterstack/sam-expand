@@ -33,7 +33,7 @@
 import { resolveFile } from '../resolve.js'
 
 /**
- * @typedef {'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
+ * @typedef {'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' } Hook
  * @typedef {{ location: string, exportName: string, defaultValue?: string }} File
  * @typedef {{ command: string, args: Array<{ value?: string, file?: File }>}} Command
  **/
@@ -46,6 +46,8 @@ import { resolveFile } from '../resolve.js'
  **/
 /** @type {Hook[]} */
 const hooks = [
+  'pre:sync',
+  'post:sync',
   'pre:build',
   'post:build',
   'pre:package',
