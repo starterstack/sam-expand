@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.13](https://github.com/starterstack/sam-expand/compare/v0.2.12...v0.2.13) (2024-03-15)
+
+
+### Bug Fixes
+
+* add sync ([f16a4f0](https://github.com/starterstack/sam-expand/commit/f16a4f04f74c1e2e2d4d8ef9e17c0941bddc5a87))
+
 ## [0.2.12](https://github.com/starterstack/sam-expand/compare/v0.2.11...v0.2.12) (2024-03-08)
 
 
