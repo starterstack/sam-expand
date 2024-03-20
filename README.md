@@ -17,6 +17,8 @@ npx sam-expand build
 npx sam-expand deploy
 ```
 
+See [starterstack](https://github.com/starterstack/starterstack) for use with custom plugins
+
 ### TypeDocs 📄
 
 https://starterstack.github.io/sam-expand
