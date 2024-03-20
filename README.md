@@ -17,8 +17,6 @@ npx sam-expand build
 npx sam-expand deploy
 ```
 
-![Made with VHS](./sam-expand.gif)
-
 ### TypeDocs 📄
 
 https://starterstack.github.io/sam-expand
