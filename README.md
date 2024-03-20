@@ -9,18 +9,21 @@
 
 A tool to give [sam](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) templates more power.
 
-### Example usage
+### Example usage 🚀
 
 ```sh
 npm install @starterstack/sam-expand
 npx sam-expand build
-npx sam-expand package
-npx sam-expand deploy \
-  --guided \
-  --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+npx sam-expand deploy
 ```
 
-### Git commits
+![Made with VHS](./sam-expand.gif)
+
+### TypeDocs 📄
+
+https://starterstack.github.io/sam-expand
+
+### Git commits 🔧
 
 Commit messages are [Commitizen friendly](https://github.com/commitizen/cz-cli#making-your-repo-commitizen-friendly)
 
