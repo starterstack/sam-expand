@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.16](https://github.com/starterstack/sam-expand/compare/v0.2.15...v0.2.16) (2024-03-20)
+
+
+### Bug Fixes
+
+* mention starterstack ([33359b3](https://github.com/starterstack/sam-expand/commit/33359b3329a5158104ffa103ab3b8387654f490d))
+
 ## [0.2.15](https://github.com/starterstack/sam-expand/compare/v0.2.14...v0.2.15) (2024-03-15)
 
 
