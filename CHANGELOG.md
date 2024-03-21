@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.17](https://github.com/starterstack/sam-expand/compare/v0.2.16...v0.2.17) (2024-03-21)
+
+
+### Bug Fixes
+
+* document plugin examples ([632650f](https://github.com/starterstack/sam-expand/commit/632650f3fabe4307b5c5520f1868eb2e3e2f243e))
+
 ## [0.2.16](https://github.com/starterstack/sam-expand/compare/v0.2.15...v0.2.16) (2024-03-20)
 
 
