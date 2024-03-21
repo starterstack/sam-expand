@@ -17,7 +17,19 @@ npx sam-expand build
 npx sam-expand deploy
 ```
 
+### Plugins 🤖
+
+All plugins must be ESM compatible, either as relative javascript .mjs / typescript .mts files, or as a published npm module.
+
+- [@starterstack/sam-expand/plugins/esbuild-node](https://starterstack.github.io/sam-expand/modules/plugins_esbuild_node.html)
+- [@starterstack/sam-expand/plugins/parameter-overrides](https://starterstack.github.io/sam-expand/modules/plugins_parameter_overrides.html)
+- [@starterstack/sam-expand/plugins/run-script-hooks](https://starterstack.github.io/sam-expand/modules/plugins_run_script_hooks.html)
+
 See [starterstack](https://github.com/starterstack/starterstack) for use with custom plugins
+
+- [git.mjs](https://github.com/starterstack/starterstack/blob/main/packages/git.mjs)
+- [stack-stage-config.mjs](https://github.com/starterstack/starterstack/blob/main/packages/stack-stage-config.mjs)
+- [slic-watch-plugin.mts](https://github.com/starterstack/starterstack/blob/main/packages/slic-watch-plugin.mts)
 
 ### TypeDocs 📄
 

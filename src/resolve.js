@@ -2,7 +2,7 @@
 
 /**
  * @summary
- * Resolve mjs, yaml/json files.
+ * Resolve mjs, mts, yaml, json, and toml files.
  *
  * @module
  **/

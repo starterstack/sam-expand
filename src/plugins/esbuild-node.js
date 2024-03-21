@@ -7,7 +7,7 @@
  *
  * @example
  *
- * // esbuild-config.yaml for ESM
+ * esbuild-config.yaml for ESM
  * ```yaml
  * Bundle: true
  * Format: esm
