@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.18](https://github.com/starterstack/sam-expand/compare/v0.2.17...v0.2.18) (2024-03-29)
+
+
+### Bug Fixes
+
+* update node, and dependencies ([73590f7](https://github.com/starterstack/sam-expand/commit/73590f7b82d7939077a97981c1aa72134df3df33))
+
 ## [0.2.17](https://github.com/starterstack/sam-expand/compare/v0.2.16...v0.2.17) (2024-03-21)
 
 
