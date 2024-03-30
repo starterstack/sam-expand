@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.19](https://github.com/starterstack/sam-expand/compare/v0.2.18...v0.2.19) (2024-03-30)
+
+
+### Bug Fixes
+
+* replace @ltd/j-toml with toml (because of lgpl license) ([aa3452b](https://github.com/starterstack/sam-expand/commit/aa3452b879ff75186c1f89f24decbdfded135870))
+
 ## [0.2.18](https://github.com/starterstack/sam-expand/compare/v0.2.17...v0.2.18) (2024-03-29)
 
 
