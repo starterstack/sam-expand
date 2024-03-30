@@ -113,9 +113,9 @@
     "typescript": "5.4.3"
   },
   "dependencies": {
-    "@ltd/j-toml": "1.38.0",
     "ajv": "8.12.0",
     "better-ajv-errors": "1.2.0",
+    "toml": "3.0.0",
     "yaml-cfn": "0.3.2"
   }
 }

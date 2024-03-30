@@ -13,7 +13,7 @@
 import { yamlParse } from 'yaml-cfn'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { parse as tomlParse } from '@ltd/j-toml'
+import { parse as tomlParse } from 'toml'
 import freeze from './freeze.js'
 
 /** @param { string } templatePath
