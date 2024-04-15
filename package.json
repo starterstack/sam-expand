@@ -91,7 +91,7 @@
     }
   },
   "devDependencies": {
-    "@commitlint/cli": "19.2.1",
+    "@commitlint/cli": "19.2.2",
     "@commitlint/config-conventional": "19.2.2",
     "@sindresorhus/tsconfig": "5.0.0",
     "@types/json-schema": "7.0.15",
