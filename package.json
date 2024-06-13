@@ -98,7 +98,7 @@
     "@types/node": "20.14.2",
     "@typescript-eslint/eslint-plugin": "7.13.0",
     "@typescript-eslint/parser": "7.13.0",
-    "c8": "10.1.1",
+    "c8": "10.1.2",
     "commitizen": "4.3.0",
     "dts-buddy": "0.4.7",
     "eslint-config-standard": "17.1.0",
