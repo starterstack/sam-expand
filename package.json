@@ -106,7 +106,7 @@
     "eslint-plugin-unicorn": "55.0.0",
     "esmock": "2.6.7",
     "husky": "9.1.4",
-    "lint-staged": "15.2.7",
+    "lint-staged": "15.2.8",
     "prettier-config-standard": "7.0.0",
     "tsx": "4.16.5",
     "typedoc": "0.26.5",
