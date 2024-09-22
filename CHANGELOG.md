@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.20](https://github.com/starterstack/sam-expand/compare/v0.2.19...v0.2.20) (2024-09-22)
+
+
+### Bug Fixes
+
+* **husky scripts:** remove shebang ([1dc8d69](https://github.com/starterstack/sam-expand/commit/1dc8d69e75918fff5301c61694fcd0a81d127292))
+* typedoc upgrade ([302b596](https://github.com/starterstack/sam-expand/commit/302b59641965b51565bdbb837af2b3418c6b82d9))
+* types since typescript upgrade ([d86b0bb](https://github.com/starterstack/sam-expand/commit/d86b0bb6f417477065f1487e9adf00c266a59509))
+* update eslint ([a94e37b](https://github.com/starterstack/sam-expand/commit/a94e37bc3058b08f059923f404a7343dde206258))
+
 ## [0.2.19](https://github.com/starterstack/sam-expand/compare/v0.2.18...v0.2.19) (2024-03-30)
 
 
