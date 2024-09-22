@@ -74,10 +74,6 @@
     "node": ">= 20 < 21",
     "npm": ">= 10"
   },
-  "eslintIgnore": [
-    "index.d.ts",
-    "src/plugins/types.js"
-  ],
   "lint-staged": {
     "*.{ts,js,mjs,mts,cjs,mts}": [
       "npm run lint --fix",
@@ -93,11 +89,13 @@
   "devDependencies": {
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-conventional": "19.5.0",
+    "@eslint/eslintrc": "3.1.0",
+    "@eslint/js": "9.11.0",
     "@sindresorhus/tsconfig": "6.0.0",
     "@types/json-schema": "7.0.15",
     "@types/node": "22.5.5",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
+    "@typescript-eslint/eslint-plugin": "8.6.0",
+    "@typescript-eslint/parser": "8.6.0",
     "c8": "10.1.2",
     "commitizen": "4.3.0",
     "dts-buddy": "0.5.3",
@@ -105,6 +103,7 @@
     "eslint-plugin": "1.0.1",
     "eslint-plugin-unicorn": "55.0.0",
     "esmock": "2.6.7",
+    "globals": "15.9.0",
     "husky": "9.1.6",
     "lint-staged": "15.2.10",
     "prettier-config-standard": "7.0.0",
