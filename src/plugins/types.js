@@ -1,7 +1,6 @@
 // @ts-check
 
 /**
- * @summary
  * Type definitions for plugins.
  *
  * @module

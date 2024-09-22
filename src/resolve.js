@@ -1,7 +1,6 @@
 // @ts-check
 
 /**
- * @summary
  * Resolve mjs, mts, yaml, json, and toml files.
  *
  * @module

@@ -3,7 +3,6 @@
 /**
  * @typedef {(data: string, type: 'toml' | 'yaml') => any} Parse
  *
- * @summary
  * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
  *
  * Provides a parse method that parses yaml, json, or toml.

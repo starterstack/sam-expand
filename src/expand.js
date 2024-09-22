@@ -1,7 +1,6 @@
 //@ts-check
 
 /**
- * @summary
  * Expands the template using metadata defined in [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html).
  *
  * Plugins add their own schemas to config.

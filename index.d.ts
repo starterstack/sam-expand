@@ -3,6 +3,11 @@ declare module '@starterstack/sam-expand/parse' {
 
 	export function samConfig(configPath: string): Promise<any>;
 	export function parse(data: string, type: "toml" | "yaml"): any;
+	/**
+	 * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+	 *
+	 * Provides a parse method that parses yaml, json, or toml.
+	 */
 	export type Parse = (data: string, type: "toml" | "yaml") => any;
 
 	export {};
@@ -17,6 +22,9 @@ declare module '@starterstack/sam-expand/log' {
 
 declare module '@starterstack/sam-expand/spawn' {
 	export default function spawn(cmd: string, args: string[], options?: import("node:child_process").SpawnOptions): Promise<void | string>;
+	/**
+	 * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+	 */
 	export type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
 
 	export {};
@@ -52,7 +60,15 @@ declare module '@starterstack/sam-expand/resolve' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	/**
+	 * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+	 *
+	 * Provides a parse method that parses yaml, json, or toml.
+	 */
 	type Parse = (data: string, type: "toml" | "yaml") => any;
+	/**
+	 * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+	 */
 	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
 
 	export {};
@@ -89,7 +105,15 @@ declare module '@starterstack/sam-expand/plugins' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	/**
+	 * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+	 *
+	 * Provides a parse method that parses yaml, json, or toml.
+	 */
 	type Parse = (data: string, type: "toml" | "yaml") => any;
+	/**
+	 * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+	 */
 	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
 
 	export {};
@@ -141,7 +165,15 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	/**
+	 * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+	 *
+	 * Provides a parse method that parses yaml, json, or toml.
+	 */
 	type Parse = (data: string, type: "toml" | "yaml") => any;
+	/**
+	 * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+	 */
 	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
 
 	export {};
@@ -200,7 +232,15 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	/**
+	 * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+	 *
+	 * Provides a parse method that parses yaml, json, or toml.
+	 */
 	type Parse = (data: string, type: "toml" | "yaml") => any;
+	/**
+	 * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+	 */
 	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
 
 	export {};
@@ -244,7 +284,15 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
+	/**
+	 * Parse [SAM template](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) yaml/json files, and [SAM config](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html) yaml/toml files.
+	 *
+	 * Provides a parse method that parses yaml, json, or toml.
+	 */
 	type Parse = (data: string, type: "toml" | "yaml") => any;
+	/**
+	 * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
+	 */
 	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
 
 	export {};

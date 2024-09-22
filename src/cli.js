@@ -3,7 +3,6 @@
 /**
  * @remarks Drop-in replacement for the [SAM cli](https://github.com/aws/aws-sam-cli).
  *
- * @summary
  * Expands the template in [expand](./expand.js).
  *
  * @module

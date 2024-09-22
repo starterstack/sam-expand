@@ -5,7 +5,6 @@
  * Override values from json/yaml/toml files, or exports from .mjs and .mts files.
  * with --parameter-overrides for sam build, sync, and deploy.
  *
- * @summary
  * Override parameter values.
  *
  * @example

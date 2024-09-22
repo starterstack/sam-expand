@@ -3,7 +3,6 @@
 /**
  * @typedef {(cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>} Spawn
  *
- * @summary
  * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
  *
  * @example
@@ -30,7 +29,6 @@ import { Buffer } from 'node:buffer'
 const windows = os.platform() === 'win32'
 
 /**
- * @summary
  * [node:child_process](https://nodejs.org/docs/latest/api/child_process.html#child-process).spawn wrapper.
  *
  * @example

@@ -1,5 +1,4 @@
 /**
- * @summary
  * Recursive object freezer.
  * @module
  **/

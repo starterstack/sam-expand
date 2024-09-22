@@ -4,7 +4,6 @@
  * @remarks
  * Pre and Post Script hooks for build, package, deploy, and delete.
  *
- * @summary
  * Run scripts with defined arguments.
  *
  * @example
