@@ -4,17 +4,14 @@
 	"names": [
 		"template",
 		"samConfig",
-		"parse",
 		"Parse",
 		"Log",
 		"Spawn",
 		"resolveFile",
-		"FileResolver",
 		"Lifecycle",
 		"ArgvReader",
-		"PluginOptions",
 		"Plugin",
-		"PluginSchema",
+		"PluginOptions",
 		"Lifecycles",
 		"lifecycles",
 		"schema",
@@ -24,19 +21,19 @@
 		"Schema",
 		"Hook",
 		"File",
-		"Command",
-		"HookSchema"
+		"Command"
 	],
 	"sources": [
-		"src/parse.d.ts",
-		"src/log.d.ts",
-		"src/spawn.d.ts",
-		"src/resolve.d.ts",
-		"src/expand.d.ts",
-		"src/read-argv.d.ts",
-		"src/plugins/parameter-overrides.d.ts",
-		"src/plugins/run-script-hooks.d.ts",
-		"src/plugins/esbuild-node.d.ts"
+		"src/parse.js",
+		"src/log.js",
+		"src/spawn.js",
+		"src/resolve.js",
+		"src/expand.js",
+		"src/read-argv.js",
+		"src/plugins/types.js",
+		"src/plugins/parameter-overrides.js",
+		"src/plugins/run-script-hooks.js",
+		"src/plugins/esbuild-node.js"
 	],
 	"sourcesContent": [
 		null,
@@ -47,8 +44,9 @@
 		null,
 		null,
 		null,
+		null,
 		null
 	],
-	"mappings": ";iBAGgBA,QAAQA;;iBAIRC,SAASA;iBACTC,KAAKA;aACTC,KAAKA;;;;;aCRLC,GAAGA;;;;;aCAHC,KAAKA;;;;;iBCWDC,WAAWA;;;;;aAKfC,YAAYA;MCeZC,SAASA;MC1BTC,UAAUA;MDuCVC,aAAaA;;;;;;;;;;;;;;;;MH5CbN,GAAGA;;;;MDQHD,KAAKA;MERLE,KAAKA;;;;;aE4DLM,MAAMA;aAhBND,aAAaA;aAiBbE,YAAYA;aApBZC,UAAUA;MAVVL,SAASA;;MC1BTC,UAAUA;;;;;;;;;;;;;;;;;;;MJLVL,GAAGA;;;;MDQHD,KAAKA;MERLE,KAAKA;;;;;cIAJS,UAAUA;;;cAQVC,MAAMA;cACNC,cAAcA;;cAEdC,SAASA;aACVC,QAAQA;;;;;aAKRC,MAAMA;;;;MF2CNR,MAAMA;MACNC,YAAYA;MApBZC,UAAUA;MAVVL,SAASA;;MC1BTC,UAAUA;MDuCVC,aAAaA;;;;;;;;;;;;;;;;;;MH5CbN,GAAGA;;;;MDQHD,KAAKA;MERLE,KAAKA;;;;;cKDJW,cAAcA;;cAEdF,UAAUA;;cAEVC,MAAMA;;cAENE,SAASA;aACVG,IAAIA;aACJC,IAAIA;;;;;aAKJC,OAAOA;;;;;;;aAOPC,UAAUA;;;;;MHyCVZ,MAAMA;MACNC,YAAYA;MApBZC,UAAUA;MAVVL,SAASA;;MC1BTC,UAAUA;MDuCVC,aAAaA;;;;;;;;;;;;;;;;;;MH5CbN,GAAGA;;;;MDQHD,KAAKA;MERLE,KAAKA;;;;;cMAJS,UAAUA;;cAEVC,MAAMA;;;cAGNC,cAAcA;;cAEdC,SAASA;MJqDVN,MAAMA;MACNC,YAAYA;MApBZC,UAAUA;MAVVL,SAASA;;MC1BTC,UAAUA;MDuCVC,aAAaA;;;;;;;;;;;;;;;;;;MH5CbN,GAAGA;;;;MDQHD,KAAKA;MERLE,KAAKA",
+	"mappings": ";iBAqBsBA,QAAQA;;iBASRC,SAASA;;aA3B4BC,KAAKA;;;;;;;aCAXC,GAAGA;;;;;;;aCAmEC,KAAKA;;;;;;;iBCuB1GC,WAAWA;;;;;;MCkC4KC,SAASA;MCzD/HC,UAAUA;;;;;;;;;;;;;;;;;MJA5CJ,GAAGA;;;;MDAGD,KAAKA;MEA2DE,KAAKA;;;;;;;aE8ExEI,MAAMA;aEnE1BC,aAAaA;;aFgDlBC,UAAUA;MAFoKJ,SAASA;;MCzD/HC,UAAUA;;;;;;;;;;;;;;;;;;;MJA5CJ,GAAGA;;;;MDAGD,KAAKA;MEA2DE,KAAKA;;;;;;;cKoCnHO,UAAUA;;;cAWVC,MAAMA;cAyBNC,cAAcA;;cAGdC,SAASA;aApCoDC,QAAQA;;;;;aACZC,MAAMA;;;;MHsCpBR,MAAMA;;MAnB/BE,UAAUA;MAFoKJ,SAASA;;MCzD/HC,UAAUA;;;;;;;;;;;;;;;;;;;MJA5CJ,GAAGA;;;;MDAGD,KAAKA;MEA2DE,KAAKA;;;;;;;cMuDnHS,cAAcA;;cAGdF,UAAUA;;cAGVC,MAAMA;;cAoENE,SAASA;aAjG8IG,IAAIA;aAC1FC,IAAIA;;;;;aACHC,OAAOA;;;;;;;;;;MJ4C9BX,MAAMA;;MAnB/BE,UAAUA;MAFoKJ,SAASA;;MCzD/HC,UAAUA;;;;;;;;;;;;;;;;;;;MJA5CJ,GAAGA;;;;MDAGD,KAAKA;MEA2DE,KAAKA;;;;;;;cO6CnHO,UAAUA;;cAGVC,MAAMA;;;cAWNC,cAAcA;;cAGdC,SAASA;MLgBkCN,MAAMA;;MAnB/BE,UAAUA;MAFoKJ,SAASA;;MCzD/HC,UAAUA;;;;;;;;;;;;;;;;;;;MJA5CJ,GAAGA;;;;MDAGD,KAAKA;MEA2DE,KAAKA",
 	"ignoreList": []
 }

@@ -39,9 +39,7 @@ import { resolveFile } from '../resolve.js'
  **/
 
 /** @typedef {import('./types.js').PluginSchema<{
- *    hooks: {
- *      [keyof(Hook)]?: Array<Command>
- *    }
+ *    hooks: Record<keyof(Hook), Array<Command> | undefined>
  *  }>} HookSchema
  **/
 /** @type {Hook[]} */

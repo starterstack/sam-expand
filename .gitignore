@@ -6,3 +6,4 @@ npm-debug.log
 src/**/*.ts
 coverage
 docs
+distribution

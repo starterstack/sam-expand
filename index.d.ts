@@ -2,18 +2,24 @@ declare module '@starterstack/sam-expand/parse' {
 	export function template(templatePath: string): Promise<any>;
 
 	export function samConfig(configPath: string): Promise<any>;
-	export function parse(data: string, type: 'toml' | 'yaml'): any;
-	export type Parse = (data: string, type: 'toml' | 'yaml') => any;
+	export function parse(data: string, type: "toml" | "yaml"): any;
+	export type Parse = (data: string, type: "toml" | "yaml") => any;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/log' {
 	export default function log(format: string, ...args: any): void;
 	export type Log = (format: string, ...args: any) => void;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/spawn' {
-	export default function spawn(cmd: string, args: string[], options?: import('node:child_process').SpawnOptions): Promise<void | string>;
-	export type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+	export default function spawn(cmd: string, args: string[], options?: import("node:child_process").SpawnOptions): Promise<void | string>;
+	export type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/resolve' {
@@ -21,10 +27,10 @@ declare module '@starterstack/sam-expand/resolve' {
 	export function resolveFile(options: PluginOptions & {
 		location: string;
 		exportName: string;
-		defaultValue?: string | undefined;
+		defaultValue?: string;
 	}): Promise<string | undefined>;
 	export type FileResolver = (options: PluginOptions) => Promise<Record<string, string | undefined | Promise<string | undefined>>>;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = "pre:package" | "post:package" | "pre:sync" | "post:sync" | "pre:build" | "post:build" | "pre:deploy" | "post:deploy" | "pre:delete" | "post:delete" | "pre:expand" | "expand" | "post:expand";
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
 		template: any;
@@ -46,8 +52,10 @@ declare module '@starterstack/sam-expand/resolve' {
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
-	type Parse = (data: string, type: 'toml' | 'yaml') => any;
-	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+	type Parse = (data: string, type: "toml" | "yaml") => any;
+	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/plugins' {
@@ -56,7 +64,7 @@ declare module '@starterstack/sam-expand/plugins' {
 	export type PluginOptions = PluginOptions_1;
 	export type PluginSchema<T> = PluginSchema_1<T>;
 	export type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = "pre:package" | "post:package" | "pre:sync" | "post:sync" | "pre:build" | "post:build" | "pre:deploy" | "post:deploy" | "pre:delete" | "post:delete" | "pre:expand" | "expand" | "post:expand";
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions_1 = {
@@ -76,13 +84,15 @@ declare module '@starterstack/sam-expand/plugins' {
 		lifecycle: Lifecycle;
 	};
 	type Plugin_1 = (options: PluginOptions_1) => Promise<void>;
-	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
+	type PluginSchema_1<T> = import("ajv").JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
-	type Parse = (data: string, type: 'toml' | 'yaml') => any;
-	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+	type Parse = (data: string, type: "toml" | "yaml") => any;
+	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
@@ -106,7 +116,7 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = "pre:package" | "post:package" | "pre:sync" | "post:sync" | "pre:build" | "post:build" | "pre:deploy" | "post:deploy" | "pre:delete" | "post:delete" | "pre:expand" | "expand" | "post:expand";
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
@@ -126,13 +136,15 @@ declare module '@starterstack/sam-expand/plugins/parameter-overrides' {
 		lifecycle: Lifecycle;
 	};
 	type Plugin_1 = (options: PluginOptions) => Promise<void>;
-	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
+	type PluginSchema_1<T> = import("ajv").JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
-	type Parse = (data: string, type: 'toml' | 'yaml') => any;
-	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+	type Parse = (data: string, type: "toml" | "yaml") => any;
+	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
@@ -144,7 +156,7 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 	export const schema: HookSchema;
 
 	export const lifecycle: Plugin;
-	export type Hook = 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:package' | 'post:package' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete';
+	export type Hook = "pre:sync" | "post:sync" | "pre:build" | "post:build" | "pre:package" | "post:package" | "pre:deploy" | "post:deploy" | "pre:delete" | "post:delete";
 	export type File = {
 		location: string;
 		exportName: string;
@@ -158,14 +170,12 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		}>;
 	};
 	export type HookSchema = PluginSchema<{
-		hooks: {
-			[keyof(Hook)]?: Array<Command>;
-		};
+		hooks: Record<keyof Hook, Array<Command> | undefined>;
 	}>;
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = "pre:package" | "post:package" | "pre:sync" | "post:sync" | "pre:build" | "post:build" | "pre:deploy" | "post:deploy" | "pre:delete" | "post:delete" | "pre:expand" | "expand" | "post:expand";
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
@@ -185,13 +195,15 @@ declare module '@starterstack/sam-expand/plugins/run-script-hooks' {
 		lifecycle: Lifecycle;
 	};
 	type Plugin_1 = (options: PluginOptions) => Promise<void>;
-	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
+	type PluginSchema_1<T> = import("ajv").JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
-	type Parse = (data: string, type: 'toml' | 'yaml') => any;
-	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+	type Parse = (data: string, type: "toml" | "yaml") => any;
+	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
+
+	export {};
 }
 
 declare module '@starterstack/sam-expand/plugins/esbuild-node' {
@@ -207,7 +219,7 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 	type Plugin = Plugin_1;
 	type PluginSchema<T> = PluginSchema_1<T>;
 	type Lifecycles = Lifecycles_1;
-	type Lifecycle = 'pre:package' | 'post:package' | 'pre:sync' | 'post:sync' | 'pre:build' | 'post:build' | 'pre:deploy' | 'post:deploy' | 'pre:delete' | 'post:delete' | 'pre:expand' | 'expand' | 'post:expand';
+	type Lifecycle = "pre:package" | "post:package" | "pre:sync" | "post:sync" | "pre:build" | "post:build" | "pre:deploy" | "post:deploy" | "pre:delete" | "post:delete" | "pre:expand" | "expand" | "post:expand";
 	type Lifecycles_1 = Array<Lifecycle>;
 	type ArgvReader = ArgvReader_1;
 	type PluginOptions = {
@@ -227,13 +239,15 @@ declare module '@starterstack/sam-expand/plugins/esbuild-node' {
 		lifecycle: Lifecycle;
 	};
 	type Plugin_1 = (options: PluginOptions) => Promise<void>;
-	type PluginSchema_1<T> = import('ajv').JSONSchemaType<T>;
+	type PluginSchema_1<T> = import("ajv").JSONSchemaType<T>;
 	type Log = (format: string, ...args: any) => void;
 	type ArgvReader_1 = (name: string, options?: {
 		parameter: boolean;
 	}) => string | undefined;
-	type Parse = (data: string, type: 'toml' | 'yaml') => any;
-	type Spawn = (cmd: string, args: string[], options?: import('node:child_process').SpawnOptions) => Promise<void | string>;
+	type Parse = (data: string, type: "toml" | "yaml") => any;
+	type Spawn = (cmd: string, args: string[], options?: import("node:child_process").SpawnOptions) => Promise<void | string>;
+
+	export {};
 }
 
 //# sourceMappingURL=index.d.ts.map
