@@ -108,7 +108,7 @@
     "lint-staged": "15.2.10",
     "prettier-config-standard": "7.0.0",
     "tsx": "4.19.1",
-    "typedoc": "0.26.9",
+    "typedoc": "0.26.10",
     "typescript": "5.5.4"
   },
   "dependencies": {
