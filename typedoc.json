@@ -6,11 +6,5 @@
     "Socket": "https://socket.dev/npm/package/@starterstack/sam-expand",
     "starterstack": "https://github.com/orgs/starterstack/repositories"
   },
-  "sidebarLinks": {
-    "GitHub": "https://github.com/starterstack/sam-expand",
-    "npm": "https://www.npmjs.com/package/@starterstack/sam-expand",
-    "Socket": "https://socket.dev/npm/package/@starterstack/sam-expand",
-    "starterstack": "https://github.com/orgs/starterstack/repositories"
-  },
   "highlightLanguages": ["typescript", "javascript", "yaml", "sh"]
 }
