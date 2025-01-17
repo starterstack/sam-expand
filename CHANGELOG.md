@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.21](https://github.com/starterstack/sam-expand/compare/v0.2.20...v0.2.21) (2025-01-17)
+
+
+### Bug Fixes
+
+* **typeconfig:** update lib to align with node 22 ([82eb380](https://github.com/starterstack/sam-expand/commit/82eb3806d85aeb8a19eeead434595746649b1f0c))
+* typedoc duplicate links ([15b36fc](https://github.com/starterstack/sam-expand/commit/15b36fcb0f9637ed8f2c57dfebed726a9f751ca7))
+
 ## [0.2.20](https://github.com/starterstack/sam-expand/compare/v0.2.19...v0.2.20) (2024-09-22)
 
 
