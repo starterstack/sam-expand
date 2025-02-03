@@ -88,7 +88,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
-    "@commitlint/config-conventional": "19.6.0",
+    "@commitlint/config-conventional": "19.7.1",
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.19.0",
     "@sindresorhus/tsconfig": "7.0.0",
