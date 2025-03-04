@@ -93,7 +93,7 @@
     "@eslint/js": "9.21.0",
     "@sindresorhus/tsconfig": "7.0.0",
     "@types/json-schema": "7.0.15",
-    "@types/node": "22.13.8",
+    "@types/node": "22.13.9",
     "@typescript-eslint/eslint-plugin": "8.25.0",
     "@typescript-eslint/parser": "8.25.0",
     "c8": "10.1.3",
