@@ -43,7 +43,7 @@ jobs:
           if [[ -n "${version:-}" ]]; then
             echo "result=${version:?}" >> "${GITHUB_OUTPUT:?}"
           fi
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         name: prepare pull request
         if: ${{ steps.release.outputs.pr && !contains(fromJSON(steps.release.outputs.pr).labels, 'release:next') }}
         with:
