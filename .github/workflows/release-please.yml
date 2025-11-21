@@ -27,7 +27,7 @@ jobs:
         uses: google-github-actions/release-please-action@v4
         with:
           release-type: node
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: get previous version
         id: previous-version
         if: ${{ steps.release.outputs.pr && !contains(fromJSON(steps.release.outputs.pr).labels, 'release:next') }}
